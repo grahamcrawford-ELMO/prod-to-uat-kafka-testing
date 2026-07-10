@@ -1,4 +1,4 @@
-# Kafka Migration Testing — automated test ladder (Learning workstream)
+# Kafka Migration Testing — automated test ladder
 
 Runs the T0–T5 ladder from the EDATA "Kafka Migration Testing" plan against
 Snowflake for a configured list of tables, and writes a tracker-ready summary.
