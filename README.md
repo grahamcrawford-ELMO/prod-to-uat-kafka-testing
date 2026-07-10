@@ -3,7 +3,7 @@
 Runs the T0–T5 ladder from the EDATA "Kafka Migration Testing" plan against
 Snowflake for a configured list of tables, and writes a tracker-ready summary.
 
-## Setup (Windows, same machine as your dbt setup)
+## Setup
 
 ```powershell
 pip install snowflake-connector-python pyyaml
