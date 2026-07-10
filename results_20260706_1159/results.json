@@ -1,0 +1,166 @@
+[
+  {
+    "table": "LEARNING_CPD_PLAN",
+    "expected_blocked": [
+      "KAFKA_IMPORT"
+    ],
+    "tiers": {
+      "T0": {
+        "status": "FAIL",
+        "drift": [
+          {
+            "column": "RECORD_ID",
+            "prod_ord": 2,
+            "uat_ord": null,
+            "prod_type": "NUMBER",
+            "uat_type": null
+          },
+          {
+            "column": "USER_ID",
+            "prod_ord": 3,
+            "uat_ord": 2,
+            "prod_type": "NUMBER",
+            "uat_type": "NUMBER"
+          },
+          {
+            "column": "CPD Plan Name",
+            "prod_ord": 4,
+            "uat_ord": 3,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Category",
+            "prod_ord": 5,
+            "uat_ord": 4,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Instructions",
+            "prod_ord": 6,
+            "uat_ord": 5,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Start Date",
+            "prod_ord": 7,
+            "uat_ord": 6,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan End Date",
+            "prod_ord": 8,
+            "uat_ord": 7,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan CPD Points Required",
+            "prod_ord": 9,
+            "uat_ord": 8,
+            "prod_type": "NUMBER",
+            "uat_type": "NUMBER"
+          },
+          {
+            "column": "CPD Plan Allow External Training",
+            "prod_ord": 10,
+            "uat_ord": 9,
+            "prod_type": "BOOLEAN",
+            "uat_type": "BOOLEAN"
+          },
+          {
+            "column": "CPD Plan Is Visible",
+            "prod_ord": 11,
+            "uat_ord": 10,
+            "prod_type": "BOOLEAN",
+            "uat_type": "BOOLEAN"
+          },
+          {
+            "column": "CPD Plan Created Date",
+            "prod_ord": 12,
+            "uat_ord": 11,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan Modified Date",
+            "prod_ord": 13,
+            "uat_ord": 12,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan Course Type",
+            "prod_ord": 14,
+            "uat_ord": 13,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Course Name",
+            "prod_ord": 15,
+            "uat_ord": 14,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Course Category",
+            "prod_ord": 16,
+            "uat_ord": 15,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CPD Plan Course Completion Date",
+            "prod_ord": 17,
+            "uat_ord": 16,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan Course Start Date",
+            "prod_ord": 18,
+            "uat_ord": 17,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan Course Due Date",
+            "prod_ord": 19,
+            "uat_ord": 18,
+            "prod_type": "TIMESTAMP_TZ",
+            "uat_type": "TIMESTAMP_TZ"
+          },
+          {
+            "column": "CPD Plan Course CPD Points Acquired",
+            "prod_ord": 20,
+            "uat_ord": 19,
+            "prod_type": "NUMBER",
+            "uat_type": "FLOAT"
+          },
+          {
+            "column": "CLIENT_NAME",
+            "prod_ord": 21,
+            "uat_ord": 20,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          },
+          {
+            "column": "CLIENT_REGION",
+            "prod_ord": 22,
+            "uat_ord": 21,
+            "prod_type": "TEXT",
+            "uat_type": "TEXT"
+          }
+        ]
+      }
+    },
+    "verdict": "T0 DRIFT",
+    "notes": [
+      "Schema drift \u2014 everything below is unreliable until schemas agree."
+    ]
+  }
+]

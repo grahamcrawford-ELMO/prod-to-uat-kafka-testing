@@ -1,0 +1,34 @@
+[
+  {
+    "table": "LEARNING_ENROLMENT",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": []
+      },
+      "T1": {
+        "status": "ERROR",
+        "error": "ProgrammingError: 090150 (22000): Single-row subquery returns more than one row."
+      },
+      "T2": {
+        "status": "ERROR",
+        "error": "ProgrammingError: 090150 (22000): Single-row subquery returns more than one row."
+      },
+      "T3": {
+        "status": "ERROR",
+        "error": "ProgrammingError: 090150 (22000): Single-row subquery returns more than one row."
+      },
+      "T4": {
+        "status": "SKIPPED",
+        "reason": "T3 clean"
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "ERROR",
+    "notes": []
+  }
+]

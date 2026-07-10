@@ -1,0 +1,29 @@
+[
+  {
+    "table": "RECRUITMENT_REQUISITION",
+    "expected_blocked": [
+      "KAFKA_IMPORT"
+    ],
+    "tiers": {
+      "T0": {
+        "status": "FAIL",
+        "drift": [
+          {
+            "column": "Requisition # Reopened",
+            "prod_ord": 24,
+            "uat_ord": 24,
+            "prod_type": "NUMBER",
+            "uat_type": "TEXT"
+          }
+        ],
+        "queries": [
+          "\n            SELECT COALESCE(p.column_name, u.column_name) AS column_name,\n                   p.ordinal_position, u.ordinal_position, p.data_type, u.data_type\n            FROM (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI_PRD' AND table_name = 'RECRUITMENT_REQUISITION') p\n            FULL JOIN (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'RECRUITMENT_REQUISITION') u\n              ON p.column_name = u.column_name\n            WHERE p.column_name IS NULL OR u.column_name IS NULL\n               OR p.ordinal_position != u.ordinal_position\n               OR p.data_type != u.data_type\n            ORDER BY COALESCE(p.ordinal_position, u.ordinal_position)"
+        ]
+      }
+    },
+    "verdict": "T0 DRIFT",
+    "notes": [
+      "Schema drift \u2014 everything below is unreliable until schemas agree."
+    ]
+  }
+]

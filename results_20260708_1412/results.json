@@ -1,0 +1,810 @@
+[
+  {
+    "table": "RECRUITMENT_APPLICATION_TIME_TO_HIRE",
+    "expected_blocked": [
+      "GRAIN"
+    ],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": [],
+        "queries": [
+          "\n            SELECT COALESCE(p.column_name, u.column_name) AS column_name,\n                   p.ordinal_position, u.ordinal_position, p.data_type, u.data_type\n            FROM (SELECT * FROM PROD_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'RECRUITMENT_APPLICATION_TIME_TO_HIRE') p\n            FULL JOIN (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'RECRUITMENT_APPLICATION_TIME_TO_HIRE') u\n              ON p.column_name = u.column_name\n            WHERE p.column_name IS NULL OR u.column_name IS NULL\n               OR p.ordinal_position != u.ordinal_position\n               OR p.data_type != u.data_type\n            ORDER BY COALESCE(p.ordinal_position, u.ordinal_position)"
+        ]
+      },
+      "T1": {
+        "status": "FAIL",
+        "prod_rows": 271553,
+        "uat_rows": 271267,
+        "diff": 286,
+        "threshold_pct": 0.1,
+        "queries": [
+          "\n            SELECT p.n, u.n, p.n - u.n\n            FROM (SELECT COUNT(*) AS n FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) p,\n                 (SELECT COUNT(*) AS n FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) u"
+        ]
+      },
+      "T2": {
+        "dups": {
+          "prod": {
+            "dup_key_count": 0
+          },
+          "uat": {
+            "dup_key_count": 0
+          }
+        },
+        "sample_columns": [
+          "JOB_APPLICATION_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "n"
+        ],
+        "sample_rows": {},
+        "status": "PASS",
+        "threshold_pct": 0.1,
+        "denominator": 271553,
+        "grain_unique": true,
+        "grain_usable": true,
+        "queries": [
+          "\n                SELECT \"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100",
+          "\n                SELECT \"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100"
+        ]
+      },
+      "T3": {
+        "counts": {
+          "in_prod_not_uat": 446,
+          "in_uat_not_prod": 160
+        },
+        "cte": "WITH prod AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+        "key_diff": {
+          "in_prod_not_uat": 315,
+          "in_uat_not_prod": 29
+        },
+        "key_columns": [
+          "JOB_APPLICATION_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "key_samples": {
+          "in_prod_not_uat": [
+            [
+              18933,
+              "orangecitycouncil",
+              "SYD"
+            ],
+            [
+              30005,
+              "globalec",
+              "SYD"
+            ],
+            [
+              10445,
+              "cdpsl",
+              "SYD"
+            ],
+            [
+              18172,
+              "gracehospital",
+              "SYD"
+            ],
+            [
+              16455,
+              "ballycara",
+              "SYD"
+            ],
+            [
+              39218,
+              "staraviation",
+              "SYD"
+            ],
+            [
+              6962,
+              "lunaparksydney",
+              "SYD"
+            ],
+            [
+              2,
+              "dgc",
+              "SYD"
+            ],
+            [
+              4201,
+              "scecs",
+              "SYD"
+            ],
+            [
+              2057,
+              "sgch",
+              "SYD"
+            ],
+            [
+              467164,
+              "mlgoz",
+              "SYD"
+            ],
+            [
+              18414,
+              "automicgroup",
+              "SYD"
+            ],
+            [
+              35211,
+              "gladgroup",
+              "SYD"
+            ],
+            [
+              10397,
+              "cdpsl",
+              "SYD"
+            ],
+            [
+              8613,
+              "fujifilm",
+              "SYD"
+            ],
+            [
+              629,
+              "wildernessschool",
+              "SYD"
+            ],
+            [
+              13161,
+              "lifelinedirect",
+              "SYD"
+            ],
+            [
+              2752,
+              "stpauls",
+              "SYD"
+            ],
+            [
+              19,
+              "uat3",
+              "SYD"
+            ],
+            [
+              18007,
+              "gracehospital",
+              "SYD"
+            ],
+            [
+              7477,
+              "asdam",
+              "SYD"
+            ],
+            [
+              25349,
+              "uqu",
+              "SYD"
+            ],
+            [
+              18752,
+              "orangecitycouncil",
+              "SYD"
+            ],
+            [
+              2548,
+              "theroyce",
+              "SYD"
+            ],
+            [
+              49381,
+              "gegroup",
+              "SYD"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              61755,
+              "awcc",
+              "SYD"
+            ],
+            [
+              293,
+              "aushp",
+              "SYD"
+            ],
+            [
+              115108,
+              "securitas",
+              "SYD"
+            ],
+            [
+              1,
+              "grupocobra",
+              "SYD"
+            ],
+            [
+              1162,
+              "reliablehire",
+              "SYD"
+            ],
+            [
+              37868,
+              "busyatwork",
+              "SYD"
+            ],
+            [
+              1940,
+              "synertec",
+              "SYD"
+            ],
+            [
+              54694,
+              "cdmn",
+              "SYD"
+            ],
+            [
+              6001,
+              "drillco",
+              "SYD"
+            ],
+            [
+              2741,
+              "connellgriffin",
+              "SYD"
+            ],
+            [
+              506,
+              "rangecare",
+              "SYD"
+            ],
+            [
+              18560,
+              "mercyhospital",
+              "SYD"
+            ],
+            [
+              23949,
+              "mulpha",
+              "SYD"
+            ],
+            [
+              63852,
+              "svdpqld",
+              "SYD"
+            ],
+            [
+              365,
+              "corde",
+              "SYD"
+            ],
+            [
+              1798,
+              "boyercorp",
+              "SYD"
+            ],
+            [
+              11671,
+              "gclegal",
+              "SYD"
+            ],
+            [
+              10201,
+              "brownfwg",
+              "SYD"
+            ],
+            [
+              29327,
+              "echocommunity",
+              "SYD"
+            ],
+            [
+              457,
+              "rangecare",
+              "SYD"
+            ],
+            [
+              3735,
+              "westbeachparks",
+              "SYD"
+            ],
+            [
+              508,
+              "instantwindscreens",
+              "SYD"
+            ],
+            [
+              9042,
+              "lskd",
+              "SYD"
+            ],
+            [
+              24913,
+              "racp",
+              "SYD"
+            ],
+            [
+              219814,
+              "catercare",
+              "SYD"
+            ]
+          ]
+        },
+        "status": "FAIL",
+        "threshold_pct": 0.1,
+        "denominator": 271553,
+        "samples": {
+          "in_prod_not_uat": [
+            [
+              4154,
+              1,
+              29,
+              "acem",
+              "SYD"
+            ],
+            [
+              13794,
+              5,
+              118,
+              "buildcorp",
+              "SYD"
+            ],
+            [
+              63912,
+              27,
+              646,
+              "awcc",
+              "SYD"
+            ],
+            [
+              45079,
+              15,
+              366,
+              "earlysettler",
+              "SYD"
+            ],
+            [
+              10,
+              17210,
+              413046,
+              "elmosandpit3",
+              "SYD"
+            ],
+            [
+              16063,
+              37,
+              882,
+              "carpentaria",
+              "SYD"
+            ],
+            [
+              379,
+              17396,
+              417509,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              25811,
+              22,
+              512,
+              "aeris",
+              "SYD"
+            ],
+            [
+              1026,
+              17418,
+              418035,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              671,
+              0,
+              1,
+              "mckinleyplowman",
+              "SYD"
+            ],
+            [
+              15801,
+              14,
+              341,
+              "fantech",
+              "SYD"
+            ],
+            [
+              35567,
+              8,
+              197,
+              "gladgroup",
+              "SYD"
+            ],
+            [
+              2088,
+              11,
+              269,
+              "beaumonttiles",
+              "SYD"
+            ],
+            [
+              16818,
+              30,
+              712,
+              "goodwin",
+              "SYD"
+            ],
+            [
+              18698,
+              40,
+              978,
+              "orangecitycouncil",
+              "SYD"
+            ],
+            [
+              40196,
+              6,
+              164,
+              "cea",
+              "SYD"
+            ],
+            [
+              3260,
+              25,
+              595,
+              "bdac",
+              "SYD"
+            ],
+            [
+              5,
+              17222,
+              413334,
+              "mla",
+              "SYD"
+            ],
+            [
+              13,
+              18961,
+              455064,
+              "csm2",
+              "SYD"
+            ],
+            [
+              4112,
+              26,
+              625,
+              "scecs",
+              "SYD"
+            ],
+            [
+              5112,
+              17,
+              409,
+              "aemoservices",
+              "SYD"
+            ],
+            [
+              5424,
+              35,
+              847,
+              "gsl",
+              "SYD"
+            ],
+            [
+              4195,
+              22,
+              527,
+              "scecs",
+              "SYD"
+            ],
+            [
+              21425,
+              36,
+              865,
+              "easternguruma",
+              "SYD"
+            ],
+            [
+              27210,
+              14,
+              331,
+              "planetfitness",
+              "SYD"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              2,
+              null,
+              null,
+              "internal",
+              "SYD"
+            ],
+            [
+              1,
+              null,
+              null,
+              "covermore",
+              "SYD"
+            ],
+            [
+              12551,
+              1,
+              6,
+              "dickerdata",
+              "SYD"
+            ],
+            [
+              10,
+              null,
+              null,
+              "payrollapi",
+              "SYD"
+            ],
+            [
+              3,
+              null,
+              null,
+              "bankaust",
+              "SYD"
+            ],
+            [
+              10884,
+              1,
+              25,
+              "stabilisedpavements",
+              "SYD"
+            ],
+            [
+              10,
+              null,
+              null,
+              "elmosandpit2",
+              "SYD"
+            ],
+            [
+              1387,
+              null,
+              null,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              2732,
+              null,
+              null,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "payrollsandpit",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "internalsalesnz",
+              "SYD"
+            ],
+            [
+              3004,
+              null,
+              null,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "tuh",
+              "SYD"
+            ],
+            [
+              4371,
+              null,
+              null,
+              "msssecurity",
+              "SYD"
+            ],
+            [
+              9,
+              null,
+              null,
+              "covermore",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "csm",
+              "SYD"
+            ],
+            [
+              10201,
+              1,
+              42,
+              "brownfwg",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "elmosandpit3",
+              "SYD"
+            ],
+            [
+              221546,
+              0,
+              0,
+              "catercare",
+              "SYD"
+            ],
+            [
+              101,
+              null,
+              null,
+              "mla",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "elmosandpit2",
+              "SYD"
+            ],
+            [
+              2,
+              null,
+              null,
+              "csm2",
+              "SYD"
+            ],
+            [
+              9042,
+              1,
+              46,
+              "lskd",
+              "SYD"
+            ],
+            [
+              10,
+              null,
+              null,
+              "am",
+              "SYD"
+            ],
+            [
+              3427,
+              null,
+              null,
+              "msssecurity",
+              "SYD"
+            ]
+          ]
+        },
+        "sample_columns": [
+          "JOB_APPLICATION_ID",
+          "Time to Hire Days",
+          "Time to Hire Hours",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "queries": [
+          "WITH prod AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT 'in_prod_not_uat' AS direction, COUNT(*) FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat)\nUNION ALL\nSELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod)",
+          "SELECT COUNT(*) FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "SELECT COUNT(*) FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "WITH prod AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat) LIMIT 25",
+          "WITH prod AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       t.\"Time to Hire Days\" AS \"Time to Hire Days\",\n       t.\"Time to Hire Hours\" AS \"Time to Hire Hours\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod) LIMIT 25"
+        ]
+      },
+      "T4": {
+        "status": "ACCEPTED",
+        "shared_keys": 286432,
+        "mismatched_columns": {
+          "Time to Hire Days": 213,
+          "Time to Hire Hours": 213
+        },
+        "column_status": {
+          "Time to Hire Days": "ACCEPTED_THRESHOLD",
+          "Time to Hire Hours": "ACCEPTED_THRESHOLD"
+        },
+        "accepted_reasons": {},
+        "threshold_pct": 0.1,
+        "excluded_columns": {},
+        "sql": "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(p.\"Time to Hire Days\", u.\"Time to Hire Days\")) AS \"Time to Hire Days\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Time to Hire Hours\", u.\"Time to Hire Hours\")) AS \"Time to Hire Hours\"\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE u USING (\"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+        "column_samples": {
+          "Time to Hire Days": [
+            [
+              10,
+              "tmsdemo5",
+              "SYD",
+              17210,
+              null
+            ],
+            [
+              10,
+              "tmsdemo6",
+              "SYD",
+              17210,
+              null
+            ],
+            [
+              2,
+              "tmsdemopreprod",
+              "SYD",
+              17263,
+              null
+            ],
+            [
+              10,
+              "tmsdemo20",
+              "SYD",
+              17210,
+              null
+            ],
+            [
+              2,
+              "tmsdemo24",
+              "SYD",
+              17263,
+              null
+            ]
+          ],
+          "Time to Hire Hours": [
+            [
+              10,
+              "wintecdemo",
+              "SYD",
+              413046,
+              null
+            ],
+            [
+              10,
+              "demogold",
+              "SYD",
+              413046,
+              null
+            ],
+            [
+              12,
+              "mla",
+              "SYD",
+              413356,
+              null
+            ],
+            [
+              2,
+              "elmosandpit2",
+              "SYD",
+              414317,
+              null
+            ],
+            [
+              21,
+              "mla",
+              "SYD",
+              415920,
+              null
+            ]
+          ]
+        },
+        "column_sample_columns": [
+          "JOB_APPLICATION_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "PROD value",
+          "UAT value"
+        ],
+        "queries": [
+          "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(p.\"Time to Hire Days\", u.\"Time to Hire Days\")) AS \"Time to Hire Days\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Time to Hire Hours\", u.\"Time to Hire Hours\")) AS \"Time to Hire Hours\"\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE u USING (\"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+          "SELECT \"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Time to Hire Days\" AS prod_value, u.\"Time to Hire Days\" AS uat_value\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE u USING (\"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(p.\"Time to Hire Days\", u.\"Time to Hire Days\")\nLIMIT 5",
+          "SELECT \"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Time to Hire Hours\" AS prod_value, u.\"Time to Hire Hours\" AS uat_value\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_TIME_TO_HIRE u USING (\"JOB_APPLICATION_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(p.\"Time to Hire Hours\", u.\"Time to Hire Hours\")\nLIMIT 5"
+        ]
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "DIFFS FOUND",
+    "notes": []
+  }
+]

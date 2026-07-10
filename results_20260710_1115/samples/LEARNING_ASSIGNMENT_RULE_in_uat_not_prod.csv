@@ -1,0 +1,101 @@
+Assignment Rule ID,COURSE_ID,Assignment Rule Name,Assignment Rule Description,Assignment Rule Created Date,Assignment Rule Modified Date,Assignment Rule Is Active,Assignment Rule Is Confirmed,Assignment Rule Is Required Course,Assignment Rule Is Recommended Course,CLIENT_NAME,CLIENT_REGION
+40,23,New Team Member Induction - CARARRA (V4) - Obsolete,Replaced by Induction Suite Adding: Personal Protective Equipment (PPE) Policy Acknowledgement,,,True,True,True,False,aea,SYD
+5,7,People leader,Any role that has people reporting,,,True,True,True,False,cardinia,SYD
+172,976,Rail Fire Emergency Technician,Rail Fire Emergency Technician,,,True,True,True,False,sydneymetro,SYD
+16,8,Member Services,,,,True,True,True,False,qbank,SYD
+56,98,CCP Vehicle Pawns Policy,This policy provides guidelines to ensure best practice assessment and management of vehicle pawns.,,,False,True,True,False,cashconverters,SYD
+93,2733,WA - Pilbara Port Authority (PPA),Additional courses required from Sarah Hopkins,,,True,True,True,False,msssecurity,SYD
+48,10,MPS Laboratory Staff,Mandatory ELMO modules for laboratory staff per MPS-PP-0003,,,True,True,True,False,sonic,SYD
+4,68,Site based Security Personnel,,,,True,True,True,False,wicetcontractor,SYD
+23,158,Apprentice Evidence Collection,,,,True,True,True,False,emmetts,SYD
+260,1002,Infrastructure & Enterprise Applications Manager (TNA) 2025,Infrastructure & Enterprise Applications Manager (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+9,42,Mandatory Training Refresher 2025 (Managers),Auto-assign mandatory training refresher 2025 training for managers.,,,False,True,True,False,automicgroup,SYD
+1024,10953,BPH - (2018/07) Nursing Administration,Mandatory Training Requirements for new staff commencing with the Nursing Administration/Nurse bank,,,True,True,True,False,healthscope,SYD
+66,41,HW - SUP430,Clinical Lead Nurse,,,False,True,True,False,anglicaresa,SYD
+374,2598,ICM Sydney eLearns for Melbourne by ID#,ICM Sydney eLearns allocated to Melbourne learners with Casino Special Employee Licence-NSW as determined by Sydney compliance team by ID# as their position title may have more than one incumbent or they have yet to change their position title. Related ICM eLearns from ICM Program: Customer Service plus ICM 2: Conflict of Interest,,,True,True,True,False,crownlearn,SYD
+106,93,DS - OP723,Speech Pathologist,,,False,True,True,False,anglicaresasandbox,SYD
+34,71,Workforce Australia - Provider Performance Framework,Department module providing education on the overarching assessment framework for Workforce Australia providers.,,,False,True,True,False,etcltd,SYD
+105,138,D&W - Autism Services - OP925,Senior Therapist. Updated May 2026.,,,True,True,True,False,anglicaresa,SYD
+84,302,SWI Modification - CCA - IRT - Kirrawee,SWI Modification - CCA - IRT - Kirrawee,,,True,True,True,False,catercare,SYD
+113,138,Finance Support Officer,Mandatory Induction Training,,,True,True,True,False,becampbell,SYD
+72,604,"Saaniya Shrestha - etrainu and ELMO 2024, 2025","Saaniya Shrestha - etrainu and ELMO 2024, 2025",,,True,True,True,False,lifecoop,SYD
+215,135,Head of Operations (TNA) 2025,Head of Operations (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+27,49,"All ""all staff"" modules",add any new and old courses for ALL employees in this rule,,,True,True,True,False,dplh,SYD
+23,342,Plan Management,allocate to all plan management team members,,,True,True,True,False,aspire,SYD
+8,17,Corporate Services New Starters,"All employees starting in the IT, Finance, Marsales, Office of the CEO, P3O or Translations Divisions.",,,True,True,True,False,deafconnect,SYD
+482,22,DISA ASELCC - OP723,"Speech Pathologist, ASELCC",,,False,True,True,False,anglicaresa,SYD
+56,619,Mary Ann Puno - etrainu and ELMO 2024,Mary Ann Puno - etrainu and ELMO 2024,,,True,True,True,False,lifecoop,SYD
+558,133,DHM Mailroom staff training,DHM Mailroom staff training,,,True,True,True,False,sonic,SYD
+6,17,Administration Assistant & Facilities & Assets,This filter should be used for all Office Managers & Administration Assistants.,,,False,True,True,False,rw,SYD
+8,45,Induction Rule- Commercial- NEW,Induction Rule- Commercial- NEW,,,False,True,True,False,achmea,SYD
+7,79,Standard onboarding courses,,,,False,False,True,False,bfg,SYD
+14,10,All Office staff,This rule will automatically enrol staff members with a role based on an office setting into courses that they need to complete. It will also highlight recommended courses for them.,,,False,True,True,False,icms,SYD
+232,854,BRISTILE ROOFING VIC SOP TRAINING - DEPARTMENT = OPERATIONS,BRISTILE ROOFING VIC SOP TRAINING - DEPARTMENT = OPERATIONS,,,True,True,True,False,brickworks,SYD
+230,105,CORP - OP176,Debtors Officer,,,True,True,True,False,anglicaresasandbox,SYD
+10,156,WFV Outdoor,,,,False,True,True,False,cardinia,SYD
+399,129,CRP - CFO - MAN68,Group Chief Financial Officer (CFO). Updated March 2026.,,,True,True,False,True,anglicaresa,SYD
+60,605,"Michele Carpenter - etrainu and ELMO 2024, 2025","Michele Carpenter - etrainu and ELMO 2024, 2025",,,True,True,True,False,lifecoop,SYD
+38,518,Sexual and Sex-Based Harassment Awareness (Leaders - Positive Duty Training),This manager course looks at sexual and sex-based harassment in the workplace. Learning outcomes for leaders include: - Define sexual harassment and sex-based harassment - Identify the different types of sexual harassment and sex-based harassment - Respond appropriately if you witness or experience sexual harassment or sex-based harassment - Explain the complaint procedures available to staff - Implement various strategies for managing complaints - Identify relevant internal policies and resources,,,False,True,False,True,nextsense,SYD
+4,122,New Hire - Employee,This contains a suite of employee courses to be completed by the new starter,,,True,True,True,False,guidedogs,SYD
+378,572,Asset Engineering Technician - Bridge and Structures 2025,Asset Engineering Technician - Bridge and Structures 2025,,,True,True,True,False,sydneymetro,SYD
+181,646,Taylor SYMONS - 2025 New Joiner,Taylor SYMONS - 2025 New Joiner,,,True,True,True,False,lifecoop,SYD
+3,49,All Entities - Manager Courses Only,,,,False,True,True,False,smilepartners,SYD
+442,163,COM_CYF - OP907,"Placement Support Worker, New Carers",,,True,True,True,False,anglicaresasandbox,SYD
+83,4,Onboarding of new users,WHS training,,,False,True,False,True,elmosandpit4,SYD
+79,103,A&I - Structual Engineer,,,,True,True,False,True,pwcs,SYD
+380,917,Director Incident Readiness & Response 2025,Director Incident Readiness & Response 2025,,,True,True,True,False,sydneymetro,SYD
+120,74,National Account Manager Distributors,Mandatory Induction Training,,,True,True,True,False,becampbell,SYD
+49,880,FY25 Core Step 1,Step 1 of onboarding modules required for all staff,,,True,True,True,False,mystatelimited,SYD
+5,60,The BUSY Schools Policy,The BUSY Schools Policies - Existing Employee Distribution,,,False,True,True,False,busyatwork,SYD
+27,45,Mandatory Learning Rule - FY25 - People Leader,Mandatory Learning pathway for team members who are in a people leader position.,,,False,True,True,False,flybuys,SYD
+319,597,Principal Engineer - Building and Tunnel Services (TNA) 2025,Principal Engineer - Building and Tunnel Services (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+7,113,"Plant 1A - Plate - Weld 2, 3, 4 & Supervisor",Dynamically assign necessary SOP & VOC documents to this employee group. Note: This is the area Matt Band refers to as Plate Boat B but includes the Supervisors for both Plate Boat A & B.,,,True,True,True,False,telwater,SYD
+30,229,Work Instruction - Leading Hand (Pastoral),This Assignment Rule is for the enrollment of the Work Instructions relating to Leading Hands in Pastoral.,,,False,True,True,False,aaco,SYD
+40,208,Work Instruction - Workshop Supervisor,This Assignment Rule is for the enrollment of the Work Instructions relating to Workshop Supervisors.,,,False,True,True,False,aaco,SYD
+7,61,Compliance Training,"Induction and Compliance Training consists of 7 modules: Code of Conduct, Privacy Awareness, WHS Awareness, Information Security Management and Concession Deed KPI's, Information Disclosures for Corporate Whistleblowers and Electronic Communication and Social Media",,,False,True,True,False,nswlrs,SYD
+8,46,"Client Care - Falls, Mobility & Sensory Impairment - BAH","Assignment for all relative roles within BAH for Client Care - Falls, Mobility & Sensory Impairment for the rollout of the 2025 matrix - 20/01/2025",,,False,True,True,False,brightwatercare,SYD
+143,266,COMS_SEWB - OP958,Children's Worker,,,False,True,True,False,anglicaresa,SYD
+22,174,Onboarding Assignment Rule for Non-Client Facing Staff - Orientation and Core Competency Learning Courses,"Onboarding Assignment Rule for Non-Client Facing Staff - Orientation, Core Competency (Non-Client Facing Staff) learning courses, and other courses that form part of Orientation and Core Competency including Modern Slavery (Orientation), Cyber Security Part 1 (Core Competency), Managing Psychosocial Hazards at Work (Core Competency), Support at Home Program to new starters on their start date. Completion time is 7 hr.",,,False,True,True,False,allaboutliving,SYD
+5,88,Office Management Team,Office Management Team,,,True,True,True,False,athomehealth,SYD
+155,626,Gulya Harrisson - ELMO and etrainu courses,Gulya Harrisson - ELMO and etrainu courses,,,True,True,True,False,lifecoop,SYD
+16,154,Income Recovery (NEW),New team members who complete income recovery roles.,,,True,True,True,False,sgch,SYD
+4,63,Test assignment course,,,,False,True,True,False,corona,SYD
+65,50,Ancillary Works Supervisor,Course requirements for Ancillary Works Supervisor,,,True,True,True,False,wicet,SYD
+4,29,SOP005,,,,False,True,True,False,annaliseai,SYD
+52,106,ACS - Residential Aged Care (RAC) - OP224,Gardening & Maintenance Officer. Updated September 2025.,,,False,True,True,False,anglicaresa,SYD
+100,2141,VIC - La Trobe University,Training modules for all La Trobe University Security Guards,,,True,True,True,False,msssecurity,SYD
+320,827,Senior Engineer Building and Tunnel Services (TNA) 2025,Senior Engineer Building and Tunnel Services (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+84,112,Production Manager AP,Mandatory Induction Training,,,True,True,True,False,becampbell,SYD
+17,41,Credit and Verifications,,,,True,True,True,False,qbank,SYD
+81,65,HW - SUP018,Senior Clinician - Allied Health,,,False,True,False,True,anglicaresa,SYD
+6,40,Contact Centre & Customer Ops Consultants,All Contact Centre & Customer Operations employees except from Team leaders and above.,,,True,True,True,False,liteneasy,SYD
+29,6,Transitioning Funding Trainer,This filter should be used for all Transitioning Funding Trainers.,,,False,True,True,False,rw,SYD
+865,136,ACS - Community Aged Care (CAC) - OP1146,Community Enrolled Nurse. Last updated September 2025.,,,False,True,True,False,anglicaresa,SYD
+383,884,Engineering & Maintenance Delivery Trainer,Engineering & Maintenance Delivery Trainer,,,True,True,True,False,sydneymetro,SYD
+13,192,Mandatory Training Courses for all based in NZ,Scheduled for all based in NZ.,,,True,True,True,False,pacificins,SYD
+78,392,Blending - Supply and Stores Process Manager - Core Training,,,,False,True,True,False,dgc,SYD
+21,943,Volunteers - Assignment Rule 5,"JF Matrix courses for all Home Visiting, Program Support, Read with Me & Playgroup Only",,,True,True,True,False,benevolent,SYD
+17,11,Marketing Coordinator Training Suite,This training suite includes all courses that are relevant to the position of Marketing Coordinator.,,,True,True,True,False,primebuild,SYD
+264,107,Cyber Security Analyst (TNA) 2025,Cyber Security Analyst (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+117,134,Jindalee refresher training 2026 (Sharps and Restraint),"Following audit recommendations assigning: Sharps Use & Disposal v2, and Animal Restraint and Handling (2304)",,,True,True,True,False,aea,SYD
+17,207,Family Support Services Team Leader,,,,True,True,True,False,wcfoundation,SYD
+91,112,DS - IGS - OP42 / OP72,Customer Liaison - Individual Groups and Services,,,False,True,True,False,anglicaresa,SYD
+86,682,Ara Monebit - etrainu and ELMO 2024 2025,Ara Monebit - etrainu and ELMO 2024 2025,,,True,True,True,False,lifecoop,SYD
+19,27,"Plant 1B - MP Keel, Metal Prep - Gunnels",Dynamically assign necessary SOP & VOC documents to this employee group.,,,True,True,True,False,telwater,SYD
+235,909,Customer Journey Coordinator Stations Workplace Trainer (TNA) 2025,Customer Journey Coordinator Stations Workplace Trainer (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+4,93,VIC STAFF,VIC STAFF (no credit card or car),,,True,True,True,False,vacc,SYD
+268,352,Manager Project Development (TNA) 2025,Manager Project Development (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+336,886,Asset Management Lead (TNA) 2025,Asset Management Lead (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+45,180,All RHS Psychs,All RHS Psychs,,,False,True,True,False,altiusgroup,SYD
+101,472,"Nigel Pinder - etrainu and ELMO 2024, 2025","Nigel Pinder - etrainu and ELMO 2024, 2025",,,True,True,True,False,lifecoop,SYD
+5,23,Admin & Support Induction Training,,,,True,True,True,False,brownandhurley,SYD
+221,156,HOU - SUP603,Tenancy Services Coordinator,,,True,True,False,True,anglicaresasandbox,SYD
+2,93,New Employee Orientation,This rule is applicable to all New Employees at Grosvenor. All courses will need to be completed on day one of employment.,,,False,True,True,False,gegroup,SYD
+9,47,Onboarding - May 2019,,,,True,True,True,False,evolvehousing,SYD
+234,893,Customer Journey Coordinator Trains Workplace Trainer (TNA) 2024,Customer Journey Coordinator Trains Workplace Trainer (TNA) 2024,,,True,True,True,False,sydneymetro,SYD
+260,107,Infrastructure & Enterprise Applications Manager (TNA) 2025,Infrastructure & Enterprise Applications Manager (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+191,40,CS - Social & Economic Wellbeing (SEW)- OP405,Financial Counsellor. Updated September 2025,,,True,True,False,True,anglicaresa,SYD
+322,862,Senior Engineer Electrical (TNA) 2025,Senior Engineer Electrical (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+13,101,Developing Resilience,Developing Resilience,,,False,True,True,False,costagroup,SYD
+349,615,Principal Engineer - Rollingstock (TNA) 2025,Principal Engineer - Rollingstock (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+39,279,Technical Training,This assignment rule ensures that all users who join teams that have technical training available to them are assigned the appropriate content,,,True,True,True,False,tuh,SYD

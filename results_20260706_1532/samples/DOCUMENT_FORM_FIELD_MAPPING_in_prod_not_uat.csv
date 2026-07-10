@@ -1,0 +1,26 @@
+CLIENT_NAME,CLIENT_REGION,DOCUMENT_TEMPLATE_COLLATE_ID,DOCUMENT_TEMPLATE_ID,FORM_FIELD_COLLATE_ID,DOCUMENT_COLUMN_LABEL,DOCUMENT_COLUMN_DESCRIPTION,DOCUMENT_COLUMN_TYPE,DOCUMENT_COLUMN_DATA_TYPE,DOCUMENT_COLUMN_NAME,NS_DOCUMENT_COLUMN_NAME,IS_CURRENT
+resourceco,SYD,92,92,2098,Size,,menu,VARCHAR,S17,S17,True
+brosnan,SYD,189,296,1790,Is there anything you would change about your current position (anything specific to your position)?,,single_text,VARCHAR,S50,S50,True
+brownfwg,SYD,139,296,940,New Department,,single_text,VARCHAR,S6,S6,False
+sycltd,SYD,68,244,729,Application closing date (if applicable),,date,DATE_TIME,D1,D1,False
+brightfoodgroup,SYD,78,178,889,Name and contact number of witness 3,,textarea,VARCHAR,S22,S22,True
+msfaustralia,SYD,215,224,1723,Proposed Role Title:,,textarea,VARCHAR,S3,S3,True
+pwcs,SYD,11,11,84,Please briefly describe the change you are trying to make.,,textarea,VARCHAR,S2,S2,True
+brownandhurley,SYD,15,173,157,Notice of Termination,Date Employee gave notice,date,DATE_TIME,D1,D1,True
+bshg,SYD,928,966,8139,KPI - Indv.Target3,,textarea,VARCHAR,S26,S26,True
+hospice,SYD,38,40,448,Extra Information,"Any additional information, is there a meeting that you must be at?",textarea,VARCHAR,S11,S11,True
+tasmancargo,SYD,7,104,485,Fund Address,,address,VARCHAR,S7,S7,False
+ecan,SYD,808,908,9370,Work Visa Expiry Date,"If you have selected ""Work Visa"" from the above check box, please provide work visa expiry date here",date,DATE_TIME,D4,D4,True
+moorestephensqldnsw,SYD,718,3041,16244,Reports to (Name) / Line Partner,e.g approver for leave and expenses,textarea,VARCHAR,S13,S13,True
+hydraulinkowneroperators,SYD,15,15,168,Comments,Please provide any other details regarding the termination,textarea,VARCHAR,S14,S14,True
+adventistauc,SYD,127,414,3948,Exit Processing Tasks,Select all that are applicable,checkbox,VARCHAR,S3,S3,True
+sctlogistics,SYD,2502,3019,3684,REASON FOR CHANGE / ADDITIONAL DETAILS,,textarea,VARCHAR,S5,S5,True
+vodafonekiribati,SYD,84,86,728,Reason for Travel,,textarea,VARCHAR,S3,S3,True
+araluen,SYD,84,134,1214,Difficulties encountered during the Drill?,,textarea,VARCHAR,S34,S34,True
+keikiearlylearning,SYD,38,40,442,Extra Information,"Any additional information, is there a meeting that you must be at?",textarea,VARCHAR,S6,S6,True
+vodafonekiribati,SYD,5,736,2082,Personal Email,,textarea,VARCHAR,S38,S38,True
+afsgroup,SYD,46,177,1691,Hi Vis Polo Shirt (Short Sleeve),Please Select the desired size,menu,VARCHAR,S15,S15,True
+foxtel,SYD,11,11,97,Other detail,,textarea,VARCHAR,S11,S11,True
+labourhireauthority,SYD,267,291,3782,DAY 1,,checkbox,VARCHAR,S17,S17,True
+brightfoodgroup,SYD,37,122,442,Extra Information,"Any additional information, is there a meeting that you must be at?",textarea,VARCHAR,S6,S6,True
+pymblelc,SYD,139,559,1063,Address,,address,VARCHAR,S10,S10,True

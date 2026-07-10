@@ -1,0 +1,39 @@
+[
+  {
+    "table": "LEARNING_COURSE",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "FAIL",
+        "drift": [
+          {
+            "column": "Course Allow Self Unenrol",
+            "prod_ord": 15,
+            "uat_ord": 15,
+            "prod_type": "NUMBER",
+            "uat_type": "BOOLEAN"
+          },
+          {
+            "column": "Course Duration",
+            "prod_ord": 16,
+            "uat_ord": 16,
+            "prod_type": "NUMBER",
+            "uat_type": "FLOAT"
+          },
+          {
+            "column": "Course Units",
+            "prod_ord": 17,
+            "uat_ord": 17,
+            "prod_type": "NUMBER",
+            "uat_type": "FLOAT"
+          }
+        ],
+        "sql": "\n            SELECT COALESCE(p.column_name, u.column_name) AS column_name,\n                   p.ordinal_position, u.ordinal_position, p.data_type, u.data_type\n            FROM (SELECT * FROM PROD_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'LEARNING_COURSE') p\n            FULL JOIN (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'LEARNING_COURSE') u\n              ON p.column_name = u.column_name\n            WHERE p.column_name IS NULL OR u.column_name IS NULL\n               OR p.ordinal_position != u.ordinal_position\n               OR p.data_type != u.data_type\n            ORDER BY COALESCE(p.ordinal_position, u.ordinal_position)"
+      }
+    },
+    "verdict": "T0 DRIFT",
+    "notes": [
+      "Schema drift \u2014 everything below is unreliable until schemas agree."
+    ]
+  }
+]

@@ -1,0 +1,1013 @@
+[
+  {
+    "table": "GENERAL_JOB_ROLE",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": []
+      },
+      "T1": {
+        "status": "FAIL",
+        "prod_rows": 44501,
+        "uat_rows": 44410,
+        "diff": 91
+      },
+      "T2": {
+        "dups": {
+          "prod": {
+            "dup_key_count": 0
+          },
+          "uat": {
+            "dup_key_count": 0
+          }
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "n"
+        ],
+        "sample_rows": {},
+        "status": "PASS",
+        "grain_unique": true
+      },
+      "T3": {
+        "counts": {
+          "in_prod_not_uat": 5920,
+          "in_uat_not_prod": 5829
+        },
+        "cte": "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Description\", '') AS \"Job Role Description\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       NULLIF(t.\"Job Role Skills and Experience\", '') AS \"Job Role Skills and Experience\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       t.\"Job Role Modified Date\" AS \"Job Role Modified Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Description\", '') AS \"Job Role Description\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       NULLIF(t.\"Job Role Skills and Experience\", '') AS \"Job Role Skills and Experience\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       t.\"Job Role Modified Date\" AS \"Job Role Modified Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+        "key_diff": {
+          "in_prod_not_uat": 287,
+          "in_uat_not_prod": 196
+        },
+        "key_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "key_samples": {
+          "in_prod_not_uat": [
+            [
+              85,
+              "opp",
+              "GOV"
+            ],
+            [
+              138,
+              "opp",
+              "GOV"
+            ],
+            [
+              22,
+              "opp",
+              "GOV"
+            ],
+            [
+              104,
+              "opp",
+              "GOV"
+            ],
+            [
+              239,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              127,
+              "opp",
+              "GOV"
+            ],
+            [
+              232,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              208,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              244,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              157,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              191,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              27,
+              "opp",
+              "GOV"
+            ],
+            [
+              218,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              16,
+              "opp",
+              "GOV"
+            ],
+            [
+              146,
+              "opp",
+              "GOV"
+            ],
+            [
+              219,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              99,
+              "opp",
+              "GOV"
+            ],
+            [
+              212,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              60,
+              "opp",
+              "GOV"
+            ],
+            [
+              167,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              47,
+              "opp",
+              "GOV"
+            ],
+            [
+              153,
+              "opp",
+              "GOV"
+            ],
+            [
+              174,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              182,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              161,
+              "hrcsandpitgov",
+              "GOV"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              23,
+              "mayers",
+              "SYD"
+            ],
+            [
+              48,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              24,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              68,
+              "mayers",
+              "SYD"
+            ],
+            [
+              10,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              50,
+              "mayers",
+              "SYD"
+            ],
+            [
+              80,
+              "mayers",
+              "SYD"
+            ],
+            [
+              61,
+              "mayers",
+              "SYD"
+            ],
+            [
+              2,
+              "mayers",
+              "SYD"
+            ],
+            [
+              25,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              71,
+              "mayers",
+              "SYD"
+            ],
+            [
+              59,
+              "mayers",
+              "SYD"
+            ],
+            [
+              74,
+              "mayers",
+              "SYD"
+            ],
+            [
+              19,
+              "mayers",
+              "SYD"
+            ],
+            [
+              27,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              98,
+              "taptmedia",
+              "SYD"
+            ],
+            [
+              56,
+              "mayers",
+              "SYD"
+            ],
+            [
+              3,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              31,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              76,
+              "mayers",
+              "SYD"
+            ],
+            [
+              46,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              30,
+              "mayers",
+              "SYD"
+            ],
+            [
+              39,
+              "mayers",
+              "SYD"
+            ],
+            [
+              28,
+              "mayers",
+              "SYD"
+            ],
+            [
+              18,
+              "doorsplus",
+              "SYD"
+            ]
+          ]
+        },
+        "status": "FAIL",
+        "samples": {
+          "in_prod_not_uat": [
+            [
+              33,
+              "Executive Assistant - Adelaide",
+              "Provide executive assistance to executive leadership team (ELT) including CEO, CFO, Group HR Manager, Board Chair and remaining Senior Leadership Team (SLT) members as required. Organize board meetings by scheduling, preparing agendas, and distributing meeting materials. Take minutes during meetings and distribute them to relevant parties. Ensure the company complies with legal and regulatory requirements. Maintain corporate records, including board resolutions and company policies. Act as a point of contact between the board, executives, and stakeholders. Support the ELT and SLT in calendar management and appointment scheduling. Provide domestic and international travel booking support. Coordinate visits and communication with guests, officials and investors. Schedule meetings and events including catering, venue and materials. Host international investors and guests as required on behalf of the ELT. Some personal assistant activities for the ELT as required. Ensure offices are well presented, stocked and serviced at all times including managing related service contracts. Maintain action list for leadership team and follow up completion of items as required. Coordinate relevant projects for the ELT/SLT as required. Coordinate translation and preparation of company documents in conjunction with the company translator.",
+              "Executive Assistant - Adelaide",
+              "Degree Qualifications in related field preferredDemonstrated experience as a Executive Assistant/Company SecretaryAble to work independently and self-guidedPractical and efficient work method with a positive, solutions focused and supportive attitudeExperience understanding and applying (Board) legal and regulatory requirementsExcellent relationship building, liaison and people engagement skillsSound verbal and written communication skills in EnglishExcellent adaptability and able to work under pressureExposure preparing Board documents and minutesMust be able to travel as required and work flexible hours including evenings and weekends",
+              "2026-07-01 23:47:00+00:00",
+              "2026-07-06 02:59:11+00:00",
+              "balco",
+              "SYD"
+            ],
+            [
+              25,
+              "Community Development Officer",
+              "Position objectivesThe position is responsible for the development of social capital and capacity through the empowerment of communities to create safe, resilient, connected and inclusive societies.Key responsibility areasDesign, develop, deliver (project manage) and evaluate community development projects, programs and services in line with Council plans and strategiesEngage, oversee and coordinate consultants, key stakeholders and community to deliver plans, projects and activities.Deliver actions from internal and external (state) policies and strategies.Inform and support the writing, monitoring and reporting for external grant funding opportunities.Design (including policy development), manage, administer, and promote Council\u2019s grants program.Inform and support the development of council reports, budget summaries and department planning.Engage in emergency management, relief and recovery planning, training and activities when relevant.Perform, as directed, other duties that are within the limits of the incumbents\u2019 skill, competence and training.",
+              "Community Development Officer",
+              "Qualifications and experienceDegree or Diploma qualified in Community Development, Public Health, Health Promotion or Social Science with experience, or extensive relevant experience in a similar role i.e. youth work, social work, community services, community developmentPrevious experience in the preparation of reports, program proposals, grants and acquittalsSelection criteriaPrevious experience in project planning, implementation, evaluation and dissemination of results.Ability to communicate effectively and appropriately with diverse range of stakeholders, including community and employees.Demonstrated ability to work in a team environment and positively contribute to the team.",
+              "2026-03-23 23:20:55+00:00",
+              "2026-05-08 04:45:50+00:00",
+              "ngshire",
+              "SYD"
+            ],
+            [
+              257,
+              "Senior HR Business Partner",
+              "PurposeThe Senior HR Business Partner (HRBP) is a strategic advisor and trusted partner to senior leaders, aligning business objectives with people strategies. This role drives organisational effectiveness, builds leadership capability, and fosters a high-performance culture through proactive talent management and data-driven HR solutions. The Senior HRBP partners closely with leadership teams to develop workforce strategies, manage complex employee relations matters, and guide organisational change.Responsibilities\u00a0\u00a0Strategic HR PartnershipCollaborate with business leaders to identify workforce needs and develop aligned HR strategies.Serve as a thought leader on talent planning, succession, and workforce design.Partner with leaders to support organisational design, transformation, and change initiatives.Talent Management & DevelopmentCoach and guide managers on performance management, career development, and team effectiveness.Support and drive initiatives related to learning & development, employee engagement, and leadership development.Lead succession planning and talent review processes for assigned business units.Employee Relations & ComplianceManage complex employee relations issues, investigations, and conflict resolution.Ensure HR policies and practices are applied fairly and consistently in compliance with applicable laws and regulations.Act as a trusted advisor for sensitive employee matters.Workforce Planning & AnalyticsUse data and people analytics to identify trends, risks, and opportunities within the business.Deliver strategic solutions across all aspects of Human resources, including recruitment, training and workplace health and safety.Organisational Culture & EngagementChampion initiatives that drive employee engagement and foster an inclusive, high-performing workplace.Advise leaders on communication strategies and change management to enhance employee experience.Workplace Health & Safety (WHS)Ensure a safe and compliant workplace in line with legislation and organisational policies.Partner with operational leaders and direct reports to identify, assess, and manage risks in the workplace.Promote a proactive safety culture through training, awareness campaigns, and leadership engagement.Return to Work Coordination (RTWC)Serve as one of the primary Return to Work Coordinator for the organisation.Assist in developing, implementing, and monitoringRTW plans for employees following injury or illness (work-related and non-work-related).Liaise with employees, managers, medical practitioners, and insurers to facilitate safe and sustainable return to work outcomes.\u00a0HR GraduateProvide day-to-day supervision, guidance, and support to the HR Graduate, ensuring clarity of priorities, workload, and development objectives.Coach and mentor the HR Graduate to build capability across core HR functions, including recruitment, onboarding, training coordination, compliance, and employee lifecycle processes.Allocate meaningful work and projects that support both business outcomes and the Graduate\u2019s professional development, ensuring exposure to a broad range of HR activities.Review and monitor the HR Graduate\u2019s performance, providing regular feedback, conducting development discussions, and supporting achievement of learning and performance goals.Ensure the HR Graduate maintains accurate documentation, data integrity, and confidentiality across all HR systems and processes.Support the HR Graduate\u2019s transition into the business by fostering strong working relationships with branch leaders and key stakeholders.\u00a0Contribute to succession planning by developing the HR Graduate\u2019s capability to support future workforce and HR operational needs.\u00a0\u00a0Additional RequirementsRegular travel will be required across group business units and operational locations to support leadership teams and their branches.",
+              "Senior HR Business Partner",
+              "Qualifications & ExperienceEducation & ExperienceBachelor\u2019s degree in human resources, Business, or a related discipline (Master\u2019s or postgraduate HR qualification desirable).7\u201310 years of progressive HR experience, including senior advisory or business partnering roles.Previous experience in WHS and/or injury management coordination (WHS certifications desirable).Knowledge of applicable employment and WHS legislation, including workers compensation frameworks.Skills & CompetenciesStrong knowledge of HR, safety, and injury management legislation and practices.Strategic thinker with the ability to influence and build credibility across all levels.Excellent interpersonal, communication, and conflict resolution skills.High level of discretion and emotional intelligence.Strong organisational and project management capabilities.\u00a0DesirableMembership of the Australian Human Resources Institute (AHRI).",
+              "2025-09-03 00:41:13+00:00",
+              "2026-06-12 00:32:31+00:00",
+              "emmetts",
+              "SYD"
+            ],
+            [
+              30,
+              "Human Resource Advisor",
+              "The Human Resource Advisor is responsible for supporting the Manager People and Culture in the development and function of human resources across the organisation.",
+              "HRA",
+              "Minimum of three (3) years employment experience in a Human Resource role\n Experience using a range of information technology systems and software and proven ability to learn new systems with ease\n Creative problem-solving skills with the ability to provide practical solutions for complex issues\n Excellent communication skills with the ability to develop strong working relationships with people at all levels of the organisation\n Strong interpersonal skills including coaching, negotiating and influencing\n Demonstrated ability to handle sensitive and highly personal information on a daily basis and maintain confidentiality in a mature and non-judgmental manner\n Sound knowledge of the requirements of the Fair Work Act and National Employment Standards\n Capacity to engage constructively and respectfully with diverse cultural backgrounds and genders, and to achieve mutually beneficial outcomes \n Commitment to best practice HR service delivery and support and the tenacity to follow up\n Demonstrated ability to manage conflicting priorities to deliver against agreed deadlines in a fast-paced environment \n High level of computer competency in Microsoft Office applications (Outlook, Word, Excel)\n Experience in maintaining employee records and producing HR metric data reports (leave liabilities, training liabilities, employee data, etc)\n Relevant tertiary qualification in Human Resources or business (Desirable)\n Knowledge of the Social, Community, Home Care and Disability Services Award 2010 (Desirable)\n Previous experience in a non-Government, not-for-profit or human service environment (Desirable) \n Familiarity with ELMO software (Desirable)",
+              "2026-05-25 01:00:50+00:00",
+              "2026-05-25 01:00:50+00:00",
+              "cccsa",
+              "SYD"
+            ],
+            [
+              1,
+              "Administration Assistant",
+              "The purpose of this position is to provide general office administration support services to the Distribution Operations and Finance teams, responding to calls from external and internal customers, general office support and support of field staff members with general enquiries.",
+              "Administration Assistant",
+              "Essential:\n\n\n\tAttention to detail and accurate data entry\n\tComputer skills including the use of Word and Excel \n\tPlanning and coordination skills\n\tMethodical approach to work management\n\tAbility to work in a discrete, confidential and ethical manner.\n\tStrong internal and external customer focus",
+              "2025-09-09 06:04:10+00:00",
+              "2025-10-13 22:17:10+00:00",
+              "electra",
+              "SYD"
+            ],
+            [
+              116,
+              "Supervisor - Mechanical Assembly (Antenna)",
+              "MAIOA Classification: Supervisor/Trainer/Coordinator Level 1MF.PRPO.M1\u00a0Job Responsibilities:Undertake hand soldering, winding, crimping, assembly, gluing and packing of antennas and associated partsUndertake frequency testing of antennas to ensure optimal performance and adherence to quality standards.Maintain cleanliness and organization of the work area to ensure a safe and efficient working environment.Undertakes basic quality control/assurance procedures including the ability to recognise basic quality deviations/faults;Utilises basic statistical process control procedures.Undertakes regular general housekeeping of your workspace / department.Undertake training in accordance with the compliance programs.\u00a0",
+              "Supervisor - Mechanical Assembly (Antenna)",
+              "Skills Required:\u00a0Have a safe work focus with knowledge of safe work practises relevant to your role, (e.g. safe manual handling techniques).Must be organised and detail-oriented, able to meet deadlines.Demonstrated ability to work in a team environment and get along with work colleagues.Excellent attention to detailExperience:Previous experience in a manufacturing rolePrevious experience in production of electronic products is highly desirable.Qualifications, Certifications and Memberships Required:Highschool or Diploma or minimum experience of 3 months in relevant position.\u00a0",
+              "2024-12-02 23:38:51+00:00",
+              "2025-12-17 03:32:42+00:00",
+              "gmeau",
+              "SYD"
+            ],
+            [
+              91,
+              "Partner",
+              "As a Partner, your role will involve being a part owner in a business or firm. This will involve sharing responsibility for the overall success of the business, making strategic decisions, and contributing to business development efforts. Additionally, you will be responsible for managing staff, overseeing financial performance, and ensuring that the business operates within legal and ethical boundaries.",
+              "PR",
+              "Strong leadership and management skills, with the ability to lead teams and manage projects to deliver high-quality results on time and within budget\n\tExcellent communication and interpersonal skills to build relationships with clients and stakeholders and influence decision-making\n\tStrong analytical and problem-solving skills to identify issues and recommend solutions to complex problems\n\tExperience in developing and implementing business strategies and plans that align with organisational goals and objectives\n\tKnowledge of financial management principles and practices, including budgeting, forecasting, and financial analysis\n\tExperience in recruiting and managing staff, including providing coaching and mentoring to support their development and enhance their performance\n\tContinuous learning and development mindset to stay updated with the latest trends and best practices in the industry or field\n\tBachelors or Masters degree or equivalent work experience.",
+              "2025-01-21 04:35:47+00:00",
+              "2025-01-21 04:35:47+00:00",
+              "csmgold1",
+              "SYD"
+            ],
+            [
+              254,
+              "Site Manager",
+              null,
+              "JR326",
+              null,
+              "2025-01-10 22:21:19+00:00",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              37,
+              "Physiotherapist",
+              "Functions of the Role\u00a0This position is pivotal in improving the physical functioning and quality of life for our clients. The role involves assessing, treating, and rehabilitating clients with various age-related conditions, such as frailty, musculoskeletal issues, neurological impairments, and mobility limitations. The Physiotherapist collaborates with a multidisciplinary team to create person-centred care plans that promote independence, enhance mobility, and prevent functional decline.\u00a0Roles and Responsibilities\u00a0Organisation\u00a0Works within the role and responsibilities for the position and complies with all organisational policies, regulations and standards, and the Code of Conduct;\u00a0Maintains professional and technical knowledge by participating in training and development activities;\u00a0Represents the organisation as the first point of contact via a range of communication methods;\u00a0Contributes effectively to team effort by accomplishing related results as needed;\u00a0Always maintains a high level of professionalism.\u00a0Duties and Tasks\u00a0Conduct comprehensive assessments of clients' physical function, including mobility, balance, strength, pain management, and posture;\u00a0Managing a wide variety of client presentations across various funding areas including Support at Home Program (S@H), Commonwealth Home Support Program (CHSP), and NDIS;\u00a0Identify risk factors for falls, immobility, and other physical challenges, and develop tailored physiotherapy care plans;\u00a0Work with clients, their families and care team to set realistic rehabilitation goals that enhance independence and mobility;\u00a0Ensure that care plans are regularly reviewed and updated to reflect changes in the clients' condition and/or goals;\u00a0Assess and manage clients' pain, including implementing strategies for pain relief that optimise mobility and quality of life;\u00a0Provide evidence-based physiotherapy treatments and interventions to address functional decline, improve mobility, and enhance quality of life;\u00a0Implement strength, flexibility, and coordination exercises to improve clients' function and prevent the risk of falls;\u00a0Assist with the rehabilitation of clients recovering from surgery, illness, or injury, including post-stroke, post-fracture, or post-surgical rehabilitation;\u00a0Educate clients', their families and care team on appropriate exercises and strategies to maintain functional mobility and prevent future health issues;\u00a0Conduct falls risk assessments and implement falls prevention strategies, including balance and strength training, education, and environmental modifications;\u00a0Recommend and prescribe appropriate mobility aids (e.g., walkers, canes, wheelchairs) and train clients and team members in their use;\u00a0Assess and adjust the home environment to enhance mobility and reduce falls risks;\u00a0Provide manual handling training to team members.\u00a0Other\u00a0Ensures a strong customer service focus through responsive, effective customer engagement;Contributes effectively to organisational events and activities;\u00a0Work closely with other health professionals (e.g., occupational therapists, nurses, doctors, dietitians) to ensure holistic care for clients;Actively participate in case conferences, multidisciplinary team meetings, and care reviews;\u00a0Share expertise in physiotherapy with other team members through training and supervision, ensuring all team members understand the physiotherapy approach to care;Engage in ongoing professional development to stay up to date with best practice guidelines, treatment techniques, and regulatory changes in aged care.",
+              "PD-0092",
+              "Tertiary qualification in Physiotherapy;\u00a0Current registration with the Australian Health Practitioner Regulation Agency (AHPRA);\u00a0Ability to meet the requirements of Criminal History screening procedures;\u00a0Current Drivers Licence;\u00a0Current First Aid and CPR certificate;\u00a0Experience working in an aged care setting, is highly desirable;\u00a0Sound knowledge of aged care legislation, accreditation standards, and physiotherapy practices for older adults;\u00a0Experience in assessing and managing conditions common in aged care, such as musculoskeletal issues, neurological disorders (e.g., stroke, Parkinson's), and post-surgical rehabilitation;Ability to develop and deliver individualised treatment plans based on evidence-based practices.",
+              "2025-10-20 23:48:57+00:00",
+              "2025-11-04 00:34:16+00:00",
+              "rangecare",
+              "SYD"
+            ],
+            [
+              121,
+              "Tiler",
+              "As a Tiler at Company Name, you will play a crucial role in enhancing the aesthetic appeal and functionality of various spaces through your expertise in tile installation. You will be responsible for ensuring that all tiling work is completed to the highest standards, contributing to the overall quality of our projects.Your main responsibilities will include:Measuring and marking surfaces for tiling according to project specifications.Cutting tiles to size using appropriate tools and techniques.Preparing surfaces for tile application by cleaning, smoothing, and applying adhesives as necessary.Installing tiles in various patterns and layouts, ensuring alignment and uniformity.Grouting and sealing tiles to protect against moisture and enhance durability.Collaborating with other tradespeople to ensure a seamless workflow on-site.Maintaining tools and equipment in good working condition.Adhering to health and safety regulations at all times while working on-site.This position requires attention to detail, precision, and an eye for design, as well as the ability to work independently or as part of a team. Your contribution will be vital in delivering high-quality tiling solutions that meet client expectations and project deadlines.",
+              "TILE",
+              "Required skillsProficient in various tiling techniques including ceramic, porcelain, and natural stone.Strong attention to detail for precise measurements and tile placement.Ability to read and interpret blueprints and technical drawings.Skilled in using hand tools and power tools related to tiling work.Knowledge of different adhesives, grout types, and sealing products.Excellent problem-solving skills and ability to work independently.Required experiencesA minimum of 3 years experience in professional tiling or a related field.Proven track record of successful tile installation on residential and commercial projects.Experience in preparing surfaces for tiling, including measuring, cutting, and fitting tiles accurately.Previous involvement in renovation projects is an advantage.Familiarity with health and safety regulations relevant to construction sites.",
+              "2025-08-15 00:27:44+00:00",
+              "2026-03-16 22:23:25+00:00",
+              "golddemosite3",
+              "SYD"
+            ],
+            [
+              91,
+              "Personal Care Worker",
+              "The Personal Care Worker at Company Name plays a crucial role in supporting individuals with their daily living activities, ensuring their comfort, dignity, and overall wellbeing. This position requires compassion, patience, and a strong commitment to enhancing the quality of life for those in care.Key responsibilities include:Assisting clients with personal hygiene tasks such as bathing, grooming, and dressing.Providing support with mobility and physical activities to promote independence.Administering medication as directed by healthcare professionals and monitoring clients' health conditions.Preparing and serving nutritious meals according to dietary requirements.Engaging clients in social activities to foster companionship and mental stimulation.Maintaining a clean and safe living environment by performing light housekeeping duties.Documenting client progress and reporting any changes in behaviour or health to the appropriate supervisor or healthcare provider.The ideal candidate will demonstrate strong communication skills, empathy, and the ability to work effectively within a team. Flexibility is essential as shifts may vary depending on client needs.",
+              "PCW1",
+              "Required skillsCompassionate and empathetic nature towards clientsStrong communication and interpersonal skillsAbility to follow care plans and instructions accuratelyBasic knowledge of personal care techniques and hygiene practicesGood organisational skills with the ability to manage time effectivelyPhysical stamina to assist clients with mobility and daily activitiesProblem-solving skills to address client needs promptlyRequired experiencesPrevious experience in a caregiving or personal care role preferredExperience working with elderly or disabled individuals is advantageousA valid first aid and CPR certification is desirableFamiliarity with health and safety regulations in a care environmentExperience in maintaining confidentiality and respecting client privacy",
+              "2025-08-15 00:27:43+00:00",
+              "2026-03-16 22:23:25+00:00",
+              "golddemosite3",
+              "SYD"
+            ],
+            [
+              107,
+              "Supervisor Fencing",
+              "The Supervisor Fencing at Mornington Shire Council plays a crucial role in overseeing fencing projects and ensuring high-quality outcomes that meet community standards. This position requires effective leadership, organisation, and communication skills to manage both projects and personnel efficiently. **Key Responsibilities:** The Supervisor Fencing will be responsible for:Leading a team of fencing workers, providing guidance and support to ensure efficient workflow.Planning and coordinating fencing projects from conception to completion, including budgeting and resource allocation.Conducting site assessments to determine project requirements and ensure compliance with safety regulations.Overseeing the installation, repair, and maintenance of various types of fencing structures within the council area.Maintaining accurate records of project progress, materials used, and time spent on tasks.Developing work schedules and assigning tasks to team members based on their skills and experience.Collaborating with other departments or contractors as necessary to achieve project objectives.Monitoring quality control throughout the fencing processes to uphold safety standards and craftsmanship.Providing training and mentoring to team members in best practices related to fencing techniques and safety protocols.Addressing any issues or conflicts that arise during the execution of projects promptly and professionally.In summary, the Supervisor Fencing is essential in ensuring that all fencing operations are conducted safely, efficiently, and effectively while contributing positively to the overall beautification and functionality of community spaces.",
+              "Supervisor Fencing-Stream A-Level 3",
+              "Required skillsStrong leadership and supervisory skillsExcellent communication and interpersonal abilitiesProficient in project management techniquesKnowledge of fencing materials and construction methodsAbility to read and interpret technical drawings and plansProblem-solving skills with a focus on efficiencyStrong organisational and time management skillsSafety management awareness and compliance knowledgeRequired experiencesPrevious experience in a supervisory role within the fencing or construction industryA proven track record of successfully managing projects from inception to completionExperience in training and mentoring team membersHands-on experience with various fencing types (e.g., timber, metal, vinyl)A minimum of 3 years of relevant field experience in fence installation or maintenanceExperience with health, safety, and environmental regulations related to construction workFamiliarity with budgeting and resource allocation for projects",
+              "2025-05-13 22:05:37+00:00",
+              "2026-07-01 23:51:23+00:00",
+              "mornington",
+              "SYD"
+            ],
+            [
+              22,
+              "Production Supervisor",
+              "1. ORGANISATIONAL PURPOSESecondBite is a leading Australian food rescue organisation dedicated to reducing food insecurity in Australia. Through both SecondBite and FareShare brands, we have a vision for an Australia without food insecurity.SecondBite\u2019s purpose is to partner with communities to provide healthy food and nutritious cooked meals \u2013 caring for people and planet.As part of the SecondBite organisation, FareShare operates Australia\u2019s largest non-profit kitchens in Melbourne and Brisbane, where chefs, cooks and volunteers transform this rescued and donated food, as well as produce grown on their own kitchen gardens, into millions of delicious, nutritious meals each year for people experiencing need.We are an equal opportunity employer and embrace diversity in the workplace. Our values are Integrity, Innovation, Collaboration and Respect.2. POSITION PURPOSEThe Production Supervisor is the operational leader responsible for delivering safe, efficient, and high-quality production during their rostered shift at SecondBite\u2019s FareShare Kitchen at either Abbotsford or Morningside. This role ensures that production plans are executed, workflows run smoothly, and staff and volunteers are supported to perform at their best.3. KEY RESPONSIBILITIES3.1 Production Operations, Scheduling & Workflow (50%)\u00b7 Lead daily production activities to ensure safe, efficient, and high-quality meal output.\u00a0\u00b7 Execute production schedules and adjust workflow as needed.\u00a0\u00b7 In collaboration with the Executive Chef and Head of Production, coordinate batch cooking, ingredient preparation, and WIP usage.\u00a0\u00b7 Ensure production aligns with IBP forecasts, Executive Chef recipes and ingredient availability.\u00a0\u00b7 Maintain organised and efficient production areas3.2 Team Leadership, Training & Culture (30%)\u00b7 Supervise and support Production Chefs, Production Assistants, and volunteers.\u00a0\u00b7 Ensure all staff and volunteers are communicated with clearly so that they understand and can safely carry out their allocated tasks for the shift\u00b7 Provide coaching and on-the-job training.\u00a0\u00b7 Foster a positive, inclusive, team-first culture.\u00a0\u00b7 Lead daily briefings and communication updates.\u00b7 Act as the first point of call for questions or concerns from staff and volunteers\u00b7 Promote the FareShare kitchen\u2019s contribution to SecondBite\u2019s vision of reducing food insecurity in Australia\u00b7 Work closely with Inventory and Warehouse teams to ensure ingredient readiness.\u00a0\u00b7 Collaborate with the community and corporate volunteering teams\u00b7 Act as an Ambassador for SecondBite visitors when in the Production Kitchen\u00b7 Communicate risks, delays, or shortages promptly.\u00a0\u00b7 Support cold-chain integrity and WIP staging.3.3 Risk and Safety Management (20%)\u00b7 Model a safety-first culture and behaviour\u00b7 Work with the Head of Production and Executive Chef to ensure site specific safety plan and improvements are identified and actions implemented and imbedded into the culture\u00b7 Report and remedy any near miss/activity that has the potential to damage the reputation of SecondBite or its partners, and/or lead to legal issues\u00b7 Demonstrate commitment to safety by performing duties in accordance with relevant legislation and SecondBite policies, procedures and practices\u00b7 Report hazards and safety concerns in Safety Culture and advise Head of Production\u00a0\u00b7 Report equipment faults promptly\u00b7 Ensure equipment is cleaned and stored correctly.\u00b7 Support scheduled maintenance activities.\u00b7 Ensure all production activities comply with HACCP, OH&S, GMP and food safety requirements.\u00a0\u00b7 Conduct and verify temperature checks and sanitation tasks.\u00a0\u00b7 Complete and validate food safety documentation.\u00a0\u00a0",
+              "Production Supervisor | FBT Above Award",
+              "4. POSITION COMPETENCIES4.1 Qualifications, Skill and Experience\u00b7 Extensive experience in commercial and large-scale kitchen or food production environments\u00b7 Demonstrated knowledge and application of HACCP systems and food safety standards\u00b7 Strong workflow management skills with the ability to plan, coordinate, and optimise kitchen operations\u00b7 Proven leadership capability with experience guiding, supporting, and motivating team members\u00b7 Excellent communication skills across operational teams and management\u00b7 Strong problem-solving ability with a practical and solutions-focused approach\u00b7 Ability to work effectively within diverse, cross-functional team environments\u00b7 Highly developed organisational skills with the ability to manage competing priorities and deadlines4.2 Personal Attributes\u00b7 Articulate and clear communication\u00b7 Calm and confident in both behaviour and decision-making\u00b7 Solutions-focused when addressing challenges and achieving outcomes\u00b7 Strongly committed to safety and quality across all areas of work\u00b7 Collaborative in approach, fostering positive team relationships\u00b7 Adaptable when responding to changing priorities and environments\u00b7 Passionate about community impact and purpose-driven outcomesSome local travel may be required.Pre-Approved additional hours paid or may be taken as time in lieu.",
+              "2026-04-28 02:17:57+00:00",
+              "2026-06-17 23:35:25+00:00",
+              "secondbite",
+              "SYD"
+            ],
+            [
+              38,
+              "Administration Coordinator",
+              "Plan and coordinate administrative procedures and systems and devise ways to streamline processes\n\nRecruit and train personnel and allocate responsibilities and office space\n\nAssess staff performance and provide coaching and guidance to ensure maximum efficiency\n\nEnsure the smooth and adequate flow of information within the company to facilitate other business operations",
+              "AM2",
+              "High school certificate or equivalent; associate's or bachelor's degree in business administration or a related field may be preferred.\nExperience in office administration or related field.\nStrong organizational and time management skills.\nProficiency in Microsoft Office and other relevant software applications.\nExcellent written and verbal communication skills.\nAttention to detail and accuracy in record-keeping.\nAbility to multitask and prioritize tasks effectively.\nFamiliarity with general office procedures and equipment.\nStrong problem-solving and critical thinking skills.\nAbility to work independently and as part of a team.",
+              "2025-01-21 04:35:45+00:00",
+              "2025-01-21 04:35:45+00:00",
+              "csmgold9",
+              "SYD"
+            ],
+            [
+              14,
+              "Customer Services Officer",
+              "The Customer Service Officer is responsible for supporting the\u00a0General Manager Sales & Optimisation\u00a0in\u00a0building meaningful and enduring relationships with our customers to maximise the long-term value for Miraka.Key Result Area\u00a0Duties and Responsibilities\u00a0Expected OutcomesCustomersManage enquiries from new and existing customers and ensure timely response.Build and maintain strong relationships with our customers.Maintain CRM system.Enter and maintain customer details on ERP system.Take receipt of and manage internal/external comms relating to customer complaints ensuring timely response and reporting.Assist with the arrangement of customer visits.Manage time and organise own workload against performance expectations.Ensure all administrative compliance requirements, data entry and an efficient customer engagement journey are met.New Customer Account applications & credit checks.Monthly customer statements.\u00a0Customer satisfaction.Sales & OptimisationAssist with compiling and reporting on market research and insights.Assist the Sales & Optimisation Team in any other data entry as required.Review and maintain standard operating procedures relevant to this role.Sales & Optimisation efficiency.\u00a0\u00a0Environment Health, Safety, Risk Management & ComplianceParticipate and support the health, safety, and risk management plans to ensure OSH compliance and minimise the Company\u2019s exposure in all ways.Provides and maintains a healthy and safe work environment.\u00a0OSH and environmental management plans are implemented and managed.The manufacturing plants are a safe and healthy work.\u00a0Relationship ManagementTakes responsibility for developing effective working relationships and liaison with all Head Office team members to ensure a highly motivated, supportive, and nurturing culture is adopted.Participate and support in the development of a committed culture of success and nurturing the growth and development of its people and resources.Effective working relationships exist with all site team members.\u00a0Company ValuesUnderstand and act in accordance with the Miraka values.The Miraka values are understood, respected and the required outcomes are achievedOther\u00a0\u00a0Carry out any other responsibilities as may be reasonably required and requested from time to time in the interests of Miraka.\u00a0Miraka\u2019s best interests are served at all times.",
+              "Customer Services Officer",
+              "Qualifications and Technical Skills\u00a0School certificate, 6th Form certificate or equivalent.Advance excel and Microsoft office essential.Knowledge of Navision or equivalent ERP system is preferred.\u00a0Experience and knowledge required for effective performance in the position\u00a0Customer focused with excellent communication skills.Have meticulous attention to detail.Are self-motivated and work autonomously.\u00a0Are well organised and have good timekeeping.\u00a0Have clear and accurate communication.\u00a0Are a computer whizz, particularly advanced in Microsoft Office (i.e., Excel and Word).\u00a0Are an adaptable, flexible, and supportive team player.Can build and maintain strong relationships with staff and key stakeholders.Have values which resonate with the Miraka values and are willing to contribute to the wider Miraka team and embrace our unique culture and points of difference.Experience working with M\u0101ori Trusts, Incorporations, and organisation\u2019sDemonstrated understanding of M\u0101ori protocols and values.",
+              "2025-05-07 02:08:33+00:00",
+              "2026-01-16 03:12:08+00:00",
+              "miraka",
+              "SYD"
+            ],
+            [
+              49,
+              "Project Coordinator",
+              "The Project Coordinator supports the planning, coordination, and delivery of civil construction projects to ensure works are completed safely, on time, within budget, and to specification. The role assists with engineering, scheduling, procurement, and quality management activities, providing essential support to the Project Manager and project team to ensure compliance, efficiency, and continual improvement throughout the project lifecycle. The Project Coordinator is authorised to coordinate day-to-day site and project activities, liaise with subcontractors and suppliers, and manage documentation and reporting in line with company policies and procedures.",
+              "PRC001",
+              "Experience in civil construction project coordination or engineering supportStrong understanding of QA systems, documentation and complianceAbility to manage multiple priorities in a fast-paced environmentStrong organisational and communication skillsProactive approach to problem solving and risk managementRelevant qualification in Civil Engineering or Construction (desirable)",
+              "2026-05-01 01:36:19+00:00",
+              "2026-05-01 01:36:19+00:00",
+              "pentacon",
+              "SYD"
+            ],
+            [
+              71,
+              "Associate to the DPP",
+              "Executive Services",
+              "Associate to the DPP",
+              null,
+              "2025-10-28 23:03:54+00:00",
+              "2025-10-28 23:03:54+00:00",
+              "opp",
+              "GOV"
+            ],
+            [
+              59,
+              "Financial Capability Worker - Coober Pedy",
+              "The Financial Capability Worker is responsible for the delivery of financial literacy education, information and coaching and to maintain a strong focus on supporting consumers to change their behaviour and \u2018learn by doing\u2019. This includes basic financial literacy education and support either individually or in group settings.",
+              "FCW-CP",
+              "Experience in assisting families and individuals in the resolution of financial issues at various levels including crisis intervention \n Knowledge of the impact and issues related to financial crisis and associated behaviours in rural and remote locations \n An awareness of relevant legislation \n An awareness of hardship provisions and how to negotiate accessing them with clients \n An understanding of case plans and facilitating a positive approach in working with families, individuals and groups to achieve these goals \n Experience in working in a highly confidential  manner \n A commitment to providing financial literacy and community education \n Demonstrated ability to identify an issue and seek creative solutions \n Effective communication skills (verbal and written), interpersonal skills and time management skills  \n High level of ability in the use of Microsoft Office and Information Technology",
+              "2026-05-25 01:00:51+00:00",
+              "2026-06-12 06:47:54+00:00",
+              "cccsa",
+              "SYD"
+            ],
+            [
+              103,
+              "Administration Officer - Whyalla",
+              "The Administration Officer is responsible for the delivery of effective administration services.",
+              "AO-W",
+              "Experience working in an administration environment \n Prior experience in providing a customer/client service \n Sound knowledge and exposure to administrative systems \n Well-developed communication skills (verbal and written) \n Excellent organisational and time management skills, with the ability to manage conflicting priorities and meet deadlines \n Demonstrated ability to work in a highly confidential manner \n Demonstrated ability to work independently and in a collaborative manner \n High level of ability in the use of Microsoft Office and Information Technology",
+              "2026-05-25 01:00:53+00:00",
+              "2026-06-12 04:26:24+00:00",
+              "cccsa",
+              "SYD"
+            ],
+            [
+              40,
+              "Administration Assistant",
+              "About YouturnYouturn is a not-for-profit organisation established more than 30 years ago to address youth homelessness on the Sunshine Coast. Today it has evolved into a national organisation with a multidisciplinary team of professionals. Trusted to create safe, inclusive, and supportive communities, Youturn offers assistance to vulnerable people of all ages, during their most challenging times.\u00a0At Youturn, our overarching goal is to make a lasting impact in the lives of those we serve. Through our dedicated efforts and partnerships, we aspire to build a society where everyone has the opportunity to lead a fulfilling and dignified life.\u00a0Values Statement\u00a0Supporting young and vulnerable people in their time of need, is at the heart of what we do at Youturn. Our organisational culture is built on trusting relationships that are meaningful and inclusive. We listen to understand, we embrace diversity and we offer a safe space free from judgement.\u00a0To ensure our young and vulnerable people receive individualised support, we invest in team members who embody our values to foster a collaborative culture of excellence.\u00a0The Administrative Officer role at Youturn is pivotal in providing comprehensive support across all operational aspects of the organisation. The incumbent will handle reception, secretarial, administrative (including MBS billing), communication, and organisational tasks in a youth-friendly environment.The primary goal is to offer reception and administrative assistance to all members of the centre, ensuring a high standard of care for young individuals and their families and friends. This position is vital to maintaining a professional and confidential atmosphere while supporting effective service delivery and day-to-day operations. The Administrator is crucial for ensuring that the service is perceived as accessible, welcoming and youth-friendly.Key Responsibilities\u00a0Administration\u00a0Perform various administrative tasks as required, including reception duties, telephone management, calendar maintenance, appointment management, database management, scanning, filing, and correspondence management.\u00a0Provide general administration support including resource preparation, shopping, postage, mail in and out, and other general office administrative duties as required.\u00a0\u00a0Administrative tasks associated with meetings including directed secretarial duties, scheduling, planning and preparation.\u00a0\u00a0Administrative tasks as directed by the Line Manager to support the team with specific priorities including general daily housekeeping activities, facilities management including maintaining office/kitchen supplies, ensuring facilities are cleaned and well-equipped and organising regular and timely maintenance and repairs.\u00a0\u00a0Provide administrative support for committees and sub-committees, including meeting preparation, minute-taking and post-meeting follow-up.\u00a0Assist with the establishment and maintenance of office systems such as file management and cataloguing of resources and stationery.\u00a0Organise bookings of meeting rooms, including arrangement of catering, equipment hire, key deposit and cleaning.\u00a0\u00a0Manage office systems, file and brand management, and promotional materials.\u00a0Ensure confidentiality of young people and Headspace information.\u00a0Handle reception duties such as patient billing, medical history requests and appointment management.\u00a0Ensure timely reminders for Mental Health Care Plans and Reviews.\u00a0Perform other duties as directed that are within the limits of the employee\u2019s skills, competence and training and the scope of the employee\u2019s award classification.\u00a0\u00a0General Duties\u00a0Promote the program, communicate regularly with and build and maintain collaborative working relationships with program partners and all relevant stakeholders in the program.\u00a0Maintain an open-minded and flexible approach to the work whilst maintaining the best practice principles contained within the Code of Conduct, policies and procedures of Youturn.\u00a0Contribute to a positive representation of Youturn through supportive and positive working relationships with staff, young people, their families/carers/kin, stakeholders and the wider community.\u00a0Participate in service staff meetings and professional development with the relevant Line Manager and other staff as appropriate.\u00a0Participate in appropriate education to develop and maintain necessary knowledge and skills required to fulfil the responsibilities of the position.\u00a0As an employee, work in a healthy and safe manner and encourage others to do the same; comply with all warning and safety signage; report or rectify any unsafe conditions; adhere to workplace health and safety policies and procedures.\u00a0Perform other reasonable duties as directed, that are within the employee\u2019s skill, competence, training and scope of the employee\u2019s award classification.\u00a0From time to time, Youturn may require you to work in areas that are not your normal work areas and perform functions that are outside of your usual duties.\u00a0 Youturn may require you to do this so long as you have the skills and training to perform the functions that are outside of your normal work areas or usual duties.\u00a0\u00a0\u00a0",
+              "Administration Assistant",
+              "Essential Experience, Qualifications & Other RequirementsEssentialTertiary qualifications and/or a minimum of 3 years' relevant experience in Office Administration/Reception in a medium-sized organisation, ideally in the Social Support environment or Medical Reception.\u00a0Sound written and oral communication, interpersonal and customer service skills and the capacity to deal confidently and courteously with people at all levels.\u00a0Strong organisational skills, the ability to successfully complete several tasks concurrently, maintain high levels of attention to detail, maintain documentation and record keeping, and meet deadlines.\u00a0Current \u2018C\u2019 class Open Driver\u2019s License.\u00a0Knowledge and/or experience of MBS system and processes for patient billing or the ability to rapidly acquire relevant skills.\u00a0Hold a current Working With Children Check (WWCC) issued by the relevant State or Territory. Example, Blue Card.\u00a0Hold or be eligible to apply for, a Licensed Care Suitability Check issued by the Department of Child Safety, Youth Justice, and Multicultural Affairs.\u00a0Desirable\u00a0Certificate in a relevant discipline (Certificate IV Health Administration/Business Support) and/or substantial experience working in medical administration in a general practice or health sector.\u00a0Selection Criteria\u00a0Experience in an administration role with demonstrated understanding of the challenges, importance and issues of working in a dynamic environment.\u00a0Demonstrated ability to work as part of a team, taking professional approach, acting in the best interest of Youturn and its clients, and being able to demonstrate Youturn Values.\u00a0\u00a0Ability to tactfully respond to crisis situations and to handle information with confidentiality.\u00a0Experience working with young people in a youth-friendly manner.\u00a0Innovative problem-solving skills and ability to adapt to change.\u00a0Understanding of the health and well-being of young people aged 12-25, particularly regarding mental health and substance use issues.\u00a0Well developed proficiency, knowledge and experience in Microsoft Word, Excel, Outlook and PowerPoint.\u00a0\u00a0Strong organisational skills and attention to detail, with a demonstrated ability to manage competing workloads and rapidly changing priorities, including management and the ability to multi-task; prioritise, meet deadlines, and see tasks through to completion and on time.\u00a0\u00a0Excellent interpersonal, written, and oral communication skills, in particular the ability to communicate with a broad cross section of people with a focus on communication with young people.\u00a0Ability to work autonomously and as part of a team, with a willingness to take direction when given.\u00a0Ability to adapt to a changing work environment.\u00a0Experience in minute-taking or the ability to quickly acquire this skill.\u00a0",
+              "2025-04-04 01:31:48+00:00",
+              "2025-09-01 02:22:28+00:00",
+              "youturn",
+              "SYD"
+            ],
+            [
+              75,
+              "Graphic Designer & Content Writer",
+              "\u00a0\u00a0Graphic Design & Content Writer Position Description\u00a0Reports to: Marketing & Brand Team Leader\u00a0Region: Lonsdale, SA\u00a0POSITION STATEMENT:Grow the value of each piece of marketing we do with innovative graphic design and crisp, compelling text that sells the value of our products. The graphic design portfolio will include a combination of digital, print and promotional advertising to support our marketing strategy. Written content will be both project specific, with articles, blogs and case studies along with background writing to enable other content producers to accurately express our value proposition.\u00a0KEY PERFORMANCE INDICATORS:High quality, innovative content, focused on value proposition, 1st timeOntime completion of tasks to meet our marketing planAdherence to company processes and procedures\u00a0PRIMARY ROLES & RESPONSIBILITIES:Associated duties include, but are not limited to:Graphic design of printed materials including product guides, price list,\u00a0 brochures, flyers, in store merchandise and other formats as required to support the execution of our marketing plan.\u00a0Graphic design of promotional material that may include billboards, buses ads, promo give away items, tradeshow assets and other advertising.Graphic design of digital materials including web content, social media, and digital advertisingPlan & write content to support our marketing plan including articles, blogs, case studies, web & social media contentDevelop written value propositions for our key products and educational topics to allow content producers to include content in their projects as neededWrite & design presentations for BDM\u2019s and ASM\u2019s to present to all content channelsAny other tasks as directed by the Marketing & Brand Team Leader\u00a0SKILLS & EXPERIENCE:A degree, or formal training in graphic designMinimum 2 years working in a marketing related graphic design role for a retail product portfolioExperience with copywriting for marketing materialsA high level of attention to detail to get marketing deliverables right first timeA team player, always keen to collaborate with colleagues to get the best result for the businessStrong computer literacy and familiar with Adobe suite, Google drive, Netsuite and cloud services\u00a0A strong work ethic and an ability to work effectively under pressure to ensure that deadlines are metThe ability to be approachable, flexible and adapt to change with a can do attitude\u00a0COMPLIANCE EXPECTATIONS:Honesty, Integrity, Loyalty and ConfidentialityRespect Puretec\u2019s Core Values, Code of Conduct and uphold the Mission and Vision StatementCompliance with applicable or relevant legislation\u00a0",
+              "Graphic Designer & Content Writer",
+              "SKILLS & EXPERIENCE:A degree, or formal training in graphic designMinimum 2 years working in a marketing related graphic design role for a retail product portfolioExperience with copywriting for marketing materialsA high level of attention to detail to get marketing deliverables right first timeA team player, always keen to collaborate with colleagues to get the best result for the businessStrong computer literacy and familiar with Adobe suite, Google drive, Netsuite and cloud services\u00a0A strong work ethic and an ability to work effectively under pressure to ensure that deadlines are metThe ability to be approachable, flexible and adapt to change with a can do attitude",
+              "2025-11-24 23:22:35+00:00",
+              "2026-04-21 04:51:48+00:00",
+              "puretecgroup",
+              "SYD"
+            ],
+            [
+              104,
+              "Assistant Manager - Whyalla and Central Eyre Peninsula",
+              "The Assistant Manager is responsible for providing: \n Support to the Regional Manager with the general running of the regional office\n Operational line management according to the specific needs of the location and the programs delivered in that location \n Maintaining a client case management component and/or deliver community education programs (where client services delivery forms part of the role)\n Provide regional program compliance across a specified program, or programs (as required)\nProvide professional technical leadership/supervision to regional staff (when necessary)",
+              "AM-W",
+              "A degree or diploma in a human service and/or management related area\n Previous leadership experience, with ability to delegate and assign tasks\n Experience in providing client case management\n Effective team management, including staff coaching and development skills\n Strong written and verbal communication\n Demonstrated ability to practice a high level of confidentiality\n Demonstrated high level competency using Microsoft Office applications\n Ability to build and maintain effective working relationships and influence others through stakeholder collaboration and partnerships\n Proven capacity to work effectively within a team as well as the initiative to work unsupervised\n Strong organisational and time management skills with ability to work under pressure and manage conflicting priorities and multi-task\n Strong interpersonal skills with demonstrated experience working in cross-cultural environments \n Previous experience in a leadership role in a social services organisation and/or \u2018not for profit\u2019 (NFP) organisation  (desirable)\n Knowledge of NFP social services programs in South Australia (desirable)\n Experience with file management including collating, maintaining, and reporting on accurate data and information (desirable)\n Report and tender writing skills (desirable)",
+              "2026-05-25 01:00:53+00:00",
+              "2026-06-12 04:48:01+00:00",
+              "cccsa",
+              "SYD"
+            ],
+            [
+              4,
+              "Learning and Development Manager",
+              "Maintains the work structure by updating job requirements and job descriptions for all positions. Maintains organisation staff by establishing a recruiting, testing, and interviewing program; counselling managers on candidate selection; conducting and analysing exit interviews; recommending changes. \u200bPrepares employees for assignments by establishing and conducting orientation and training programs.",
+              "HR3",
+              "Training and development expertise\n\tProject management skills\n\tCommunication skills\n\tLeadership and interpersonal skills\n\tAnalytical and problem-solving skills\n\tTechnical skills (LMS, digital learning technologies, e-learning tools)\n\tBachelors degree in Training and Development, Human Resources, Education, or related field\n\tCertification (CPLP, Human Resource certifications)\n\tAt least five years of experience in Learning and Development, with a proven track record of designing and delivering effective training programs.",
+              "2025-01-21 04:35:43+00:00",
+              "2025-01-21 04:35:43+00:00",
+              "csmgold9",
+              "SYD"
+            ],
+            [
+              7,
+              "Farm and Gardens Crew",
+              "AWARD: Horticulture Award 2020CLASSIFICATION: Level 2POSITION PURPOSEThe purpose of the Farm & Garden Crew is to work with, supervise and assist a team of volunteers while planning, maintain and harvesting seasonal vegetable crops.The FareShare kitchen garden program spans three sites producing high-yield vegetable crops to ensure reliable access to fresh, healthy produce for our meals.KEY RESPONSIBILITIES\u00a0\u00a0\u00a0\u00a0Market gardening (70%)\u2022\u00a0\u00a0\u00a0\u00a0Perform physical tasks required for garden maintenance, including:o\u00a0\u00a0\u00a0\u00a0Planting, weeding, harvesting and post-harvest cleaning crops.o\u00a0\u00a0\u00a0\u00a0Lifting and stacking heavy vegetable crates.\u2022\u00a0\u00a0\u00a0\u00a0Ensure work is performed in an organised fashion.\u2022\u00a0\u00a0\u00a0\u00a0Ensure equipment and location is left clean and tidy at the end of the shift.\u2022\u00a0\u00a0\u00a0\u00a0Operate and maintain irrigation pump equipment and perform irrigation-related maintenance.\u2022\u00a0\u00a0\u00a0\u00a0Use garden equipment/power tools safely to maximise productivityVolunteer supervision (30%)\u2022\u00a0\u00a0\u00a0\u00a0Coordinate and run garden volunteer shifts as directed by line manager.\u2022\u00a0\u00a0\u00a0\u00a0Guide and supervise volunteers in planting, maintaining, harvesting and cleaning activities.Risk and Safety\u00a0\u2022\u00a0\u00a0\u00a0\u00a0Bring to the attention of the line manager any activity that has the potential to damage the reputation of SecondBite | FareShare or its partners, and/or lead to legal issues\u2022\u00a0\u00a0\u00a0\u00a0Demonstrate commitment to safety by performing duties in accordance with relevant legislation and SecondBite | FareShare policies, procedures and practices\u2022\u00a0\u00a0\u00a0\u00a0Immediately report and act on any accidents and hazardsOther Duties\u00a0\u2022\u00a0\u00a0\u00a0\u00a0Maintain and contribute to a healthy work culture\u2022\u00a0\u00a0\u00a0\u00a0Provide accurate and timely information for the line manager and other reporting requirements\u2022\u00a0\u00a0\u00a0\u00a0Undertake regular one on one meetings with the line manager to ensure information/ knowledge is shared\u2022\u00a0\u00a0\u00a0\u00a0Undertake other duties within the employee\u2019s skills and experience as directed by line manager",
+              "Farm and Gardens Crew|Horticulture Lvl 2",
+              "POSITION COMPETENCIESQualifications, Skills and Experience\u00a0\u2022\u00a0\u00a0\u00a0\u00a0Formal qualifications in horticulture.\u2022\u00a0\u00a0\u00a0\u00a0Experience working in a market garden setting.\u2022\u00a0\u00a0\u00a0\u00a0Experience growing vegetables.\u2022\u00a0\u00a0\u00a0\u00a0Experience working with volunteers and/or in not-for-profit organisations or leading a team\u2022\u00a0\u00a0\u00a0\u00a0Current first aid certificate (or willingness to obtain one).Personal Attributes\u2022\u00a0\u00a0\u00a0\u00a0Demonstrated ability to work with a diverse team of people from different backgrounds and abilities.\u2022\u00a0\u00a0\u00a0\u00a0Proven ability to take direction and work independently.\u2022\u00a0\u00a0\u00a0\u00a0Physical fitness to perform the duties of the role, including standing, crouching, lifting, and working outdoors for extended periods.OTHER\u2022\u00a0\u00a0\u00a0\u00a0Regular Saturday shifts will be worked to fulfill the requirements of the causal role\u00a0\u2022\u00a0\u00a0\u00a0\u00a0Ability to travel and work from multiple sites\u00a0\u2022\u00a0\u00a0\u00a0\u00a0Out of hours work may be required occasionally to meet the requirements of the role\u00a0",
+              "2025-05-19 00:30:05+00:00",
+              "2025-12-30 05:25:56+00:00",
+              "secondbite",
+              "SYD"
+            ],
+            [
+              5,
+              "Centre Administrator",
+              "The Administrator of Sunkids Children\u2019s Centre will be involved in all aspects of the daily office duties of the centre.  The Administrator will act in the best interests of Sunkids and Approved Provider to ensure high quality customer service is provided and the centre is following legislative requirements and other standards as specified in the Policy Manual. The philosophy is used as the basis for all decision made.  Building and fostering supportive relationships will be the primary focus of the position.  The Administrator will be responsible for working in collaboration with the Centre Manager. The Administrator should have an understanding about all aspects of the centre\u2019s operations to confidently secure new enrolments and converse with all families.",
+              "CTA",
+              null,
+              "2025-07-28 23:42:35+00:00",
+              "2025-07-28 23:42:35+00:00",
+              "sunkids",
+              "SYD"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              124,
+              "Ranger Team Leader - Pt Campbell",
+              "The Ranger Team Leader plays a pivotal role in leading and supporting a team of Rangers in providing exceptional experiences for visitors to Victoria's Surf Coast & Great Ocean Road region, including its parks and reserves. As a Ranger Team Leader, you are responsible for leading the on-ground management of GORCAPA's estate, consistent with organisational priorities, policies and procedures, ensuring that people can enjoy the outdoors and protecting the things that make our parks and reserves so special. You will lead a team in delivering a variety of projects and services including (but not limited to): working with Traditional Owners in joint management and other partnership arrangements conservation program delivery (such as pest plants and animals, threatened species) visitor infrastructure and asset construction and maintenance (such as roads, walking tracks, day visitor areas and campgrounds) compliance and enforcement activities the delivery of education programs engagement with the community, licensed tour operators and other commercial operations, and volunteers. Ranger Team Leaders are also encouraged to participate in Victoria\u2019s fire and emergency management arrangements as part of Forest Fire Management Victoria (if applicable)",
+              "Ranger Team Leader - Pt Campbell",
+              "1. Qualifications and experience \u2022 Relevant qualifications and skills for the management of GORCAPA's estate, such as environmental science, natural resource management, conservation and land management, outdoor education, community engagement, or a relevant trade. \u2022 Demonstrated experience and a record of achievement working as a Ranger or in an equivalent natural resource management role, with proven ability to supervise staff and deliver complex on ground services and projects. \u2022 Current Victorian driver\u2019s licence. 2. Communication and interpersonal skills \u2022 Ability to give clear direction, provide constructive feedback, and motivate staff delivering works under your supervision. \u2022 Strong interpersonal skills and excellent verbal communication, including the ability to explain concepts to people of different backgrounds and to engage constructively with stakeholders. \u2022 Proven ability to prepare clear written communications, including work plans, reports, and correspondence. 3. Supervision and teamwork \u2022 Demonstrated ability to supervise and support staff, allocate workloads, and manage budgets and other resources to deliver agreed outcomes. \u2022 Demonstrated ability to foster a collaborative and respectful team culture that promotes safety, inclusion, and high performance. \u2022 Demonstrated commitment to high standards of integrity, accountability and professionalism in the workplace. 4. Problem solving and continuous improvement \u2022 Proven ability to use professional judgement, experience and initiative to resolve operational and service delivery issues and to realise opportunities for improvement. \u2022 Capacity to implement operational improvements that enhance safety, efficiency and effectiveness in service and project delivery. 5. Community engagement \u2022 Demonstrated capacity to work effectively with Traditional Owners, volunteers, contractors, community groups and park users in the delivery of park management services. \u2022 Proven ability to represent GORCAPA positively and build constructive relationships with stakeholders. 6. Accountability and reliability \u2022 Proven ability to work with autonomy and take responsibility for the quality, timeliness, and accuracy of your own work and that of your team.",
+              "2025-10-10 06:49:46+00:00",
+              "2026-03-11 01:17:54+00:00",
+              "gora",
+              "SYD"
+            ],
+            [
+              95,
+              "Human Resources Support Officer",
+              "Purpose of the position The Human Resources Support Officer is responsible in administering the human resources process including end to end recruitment; providing efficient human resourcing for the Authority; and to support process improvement and development activities that drive an efficient and effective human resources function in alignment with operational and strategic objectives.",
+              "Human Resources Support Officer",
+              "Qualifications and experience: A certificate, diploma or tertiary qualification in Human Resources. Demonstrated experience in Human Resources administration, with a sound knowledge of human resource practices (3+ years). Experience HRIS system e.g. ELMO (desirable). Experience working in a politically sensitive environment within a government authority, maintaining discretion and confidentiality (desirable). Knowledge and skills: Proven track record in engaging, building and maintaining effective working relationships with a range of stakeholders, to achieve desired outcomes. Professional and ethical approach with a high level of self-motivation and initiative. Highly developed organisational, verbal and written communication skills, with an attention to detail and creativity in an environment with competing priorities. Ability to reference and interpret relevant legislation, awards and enterprise agreements within varied industries Demonstrated ability to work independently and collaboratively, as part of multi-skilled team.",
+              "2025-10-10 06:49:45+00:00",
+              "2025-12-22 00:17:55+00:00",
+              "gora",
+              "SYD"
+            ],
+            [
+              4,
+              "Group Chief Financial Officer",
+              "Responsible for the group's financial management performance",
+              "Group Chief Financial Officer",
+              "Bachelor's Degree, CA/CPA",
+              "2026-07-01 23:46:49+00:00",
+              "2026-07-01 23:46:49+00:00",
+              "balco",
+              "SYD"
+            ],
+            [
+              90,
+              "Waste Truct Offsider",
+              "The Waste Truck Offsider plays a vital role in supporting the efficient operation of waste collection services within the Mornington Shire Council. This position involves direct assistance to the waste truck driver and is essential for ensuring that waste is collected safely and effectively throughout the community. Key Responsibilities include: Assisting the driver with navigating collection routes and ensuring timely service delivery. Loading and unloading waste materials from residential and commercial properties onto the waste collection vehicle. Ensuring compliance with all health and safety regulations while performing duties, including wearing appropriate personal protective equipment (PPE). Performing routine checks on equipment and tools to ensure they are in good working condition. Maintaining clear communication with the driver regarding any issues encountered during collections. Engaging positively with members of the public, addressing any inquiries or concerns regarding waste management services. Participating in training sessions to improve skills related to waste management practices and safety protocols. This role requires a proactive approach to teamwork, a commitment to public service, and an understanding of environmental sustainability principles. The Waste Truck Offsider will contribute significantly to maintaining clean and safe environments for all residents of Mornington Shire Council.",
+              "Waste Truck Offsider-Stream B-Level 4",
+              "Required skills Strong understanding of waste management practices and procedures. Ability to operate and maintain waste collection vehicles safely. Excellent communication skills for effective interaction with team members and the public. Physical fitness and stamina to perform manual tasks associated with waste collection. Basic problem-solving skills to address issues that may arise during operations. Knowledge of health and safety regulations related to waste handling. Required experiences A minimum of 1 year experience in a similar role within the waste management or environmental services sector. Demonstrated experience in working collaboratively within a team environment. Experience operating heavy vehicles or machinery, with relevant certifications preferred. Proven track record of adhering to safety protocols in operational activities. Experience dealing with the public, particularly in service-oriented roles.",
+              "2025-04-10 01:57:47+00:00",
+              "2026-07-02 00:15:07+00:00",
+              "mornington",
+              "SYD"
+            ],
+            [
+              23,
+              "Individual and Community Training Coordinator",
+              "This role oversees the day-to-day operation of the Individual Training and Educational Workshop stream. It includes the processing of leads generated from the community via phone, email, and website. Developing and monitoring the bi-yearly public facing training calendar. The successful applicant has human services sector experience and an understanding of the impacts of complex trauma and vicarious trauma. This position requires the successful applicant to respond to the community and to guide and support them to engage in the training that offers the best experience possible for their needs. Each day is unique and provides the opportunity to build collaborative relationships with the professional community. This role also requires a level of leadership experience and program management to provide day-to-day support for any supervisees and other members of the team and provide reporting and feedback to the Executive Manager.",
+              "Individual and Community Training Coordinator",
+              "Tertiary Qualifications in a related human services field and/or education A minimum of three years' experience in a program coordination role with leadership experience An understanding of trauma-informed practice, complex trauma and vicarious trauma Excellent time management skills and the ability to prioritise tasks and meet deadlines Ability to maintain confidentiality and boundaries Excellent telephone manner and interpersonal skills and an ability to manage difficult conversations Excellent written communication skills High level proficiency in the use of the Microsoft Office suite Ability to work autonomously and as part of a team Takes initiative and can demonstrate strong communication skills Experience, or sound understanding, of the non-for-profit sector (desirable) Experience in training administration (desirable) An understanding of trauma informed practice (desirable)",
+              "2026-06-01 00:33:50+00:00",
+              "2026-06-08 22:57:07+00:00",
+              "blueknot",
+              "SYD"
+            ],
+            [
+              75,
+              "Reception",
+              "To be the first point of contact for Livingstone, Greet and assist visitors, answer incoming calls, and provide general administrative support, To create a positive and welcoming environment for our guests and ensuring smooth daily operations.",
+              "Reception",
+              "NCEA Level 2, Certificate in Administration Level 4 or higher is advantageous, A Full Drivers\u00d5 License, Office administration, reception or customer service experience, Excellent verbal and written communication skills ,Strong interpersonal skills with the ability to build rapport with visitors and colleagues. Proficient in using office equipment, such as phone systems, printers, and computers.,Familiarity with basic administrative tasks and office management procedures.Exceptional organizational and multitasking abilities. Attention to detail and accuracy in handling information.Professional appearance and demeanour. Ability to remain calm and composed in fast-paced and demanding situations. High level of integrity and respect for confidentiality.",
+              "2025-10-24 04:15:17+00:00",
+              "2025-11-24 01:35:44+00:00",
+              "livingstone",
+              "SYD"
+            ],
+            [
+              109,
+              "Senior Verification & Validation Engineer",
+              "EN.TVTE.P4 Work collaboratively within a multi-disciplinary team to define Verification and Validation (V&V) requirements, determine test scope and deliverables, plan V&V activities and deliver desired V&V outcomes. Apply domain knowledge in performing risk or regression analysis to create test requirements associated with new design or design changes. Apply technical competency in development of test plans, test cases and methods. Conduct V&V activities to verify GME product\u2019s features and functionalities. Creation and maintenance of V&V plan, protocol, test reports, requirement traceability matrix and test scripts. Development, deployment and maintenance of automated test systems. Development and maintenance of V&V software tools. Supporting general V&V activities within the team. Participate in optimising the V&V engineering process and continuously improving V&V procedures. Maintenance of test setup and equipment. Undertakes training in accordance with development and compliance programs. Any other duties as directed.",
+              "Senior Verification & Validation Engineer",
+              "Skills Required: Strong verbal and written communication skills Demonstrated ability to work independently or in a team environment and get along with work colleagues. Organised and detail-oriented, able to meet deadlines. Able to manage multiple projects at one time and prioritise competing demands. Strong analytical skills Self-starter Experience: 8+ years\u2019 experience in similar role. Experience in product design verification and validation or similar domain. Experience and proficiency in using test equipment and instruments to conduct electrical measurements (Radio Frequency, audit, battery & power supply, embedded software, mobile phone App, etc). Experience and knowledge of safety and compliance standards. Experience in developing test system development with Python scripting language is highly desirable. Knowledge and experience in RF, Radio Communications and/or embedded software is highly desirable. Experience in debugging of electronic/RF hardware or embedded software is highly desirable. Qualifications, Certifications and Memberships Required Bachelor's degree in (Mechatronic, Electrical, Electronic or Communication Engineering) or equivalent Able to obtain and maintain a NV1 Australian Government Security Clearance.",
+              "2024-12-02 23:38:50+00:00",
+              "2025-11-13 04:04:30+00:00",
+              "gmeau",
+              "SYD"
+            ],
+            [
+              63,
+              "Supports Coordination Assistant",
+              "This position has been developed as part of the HSA Support Worker Pathway into a Supports Coordinator Role. While reporting to the First Base Manager, it is expected you will work under the general direction of the Supports Coordinator team.",
+              "Supports Coordination Assistant",
+              "\u2022 Entry level for graduates with a relevant three year degree that undertake work related to the responsibilities under this level- pay point 3; \u2022 Entry level for graduates with a relevant four year degree that undertake work related to the responsibilities under this level- pay point 4; \u2022 Associate diploma with relevant experience; or \u2022 Relevant certificate with relevant experience, or experience attained through previous appointments, services and/or study of an equivalent level of expertise and/or experience to undertake the range of activities required \u2022 Working knowledge of statutory requirements relevant to the role of Supports Coordination, or the ability to rapidly acquire. \u2022 Prior customer service with administration skills. \u2022 Highly developed interpersonal verbal and written communication skills. \u2022 Excellent communication and interpersonal skills, including negotiating and report writing with ability to interact with participants with varying disabilities. \u2022 Sound knowledge of procedural and operational methods or the ability to rapidly acquire. \u2022 NDIS Orientation Module \u2022 Current \u2018C\u2019 class driver\u2019s license. \u2022 Hold a current Disability Worker Screening (yellow card) and a working with children check (blue card) or eligible to apply. \u2022 High level of computer skills including sound knowledge of the MS Office Suite and enterprise application software.",
+              "2026-06-22 00:31:49+00:00",
+              "2026-06-22 00:31:49+00:00",
+              "homesupport",
+              "SYD"
+            ],
+            [
+              143,
+              "Director of Technical Solutions & Tenders",
+              "The Director of Technical Solutions & Tenders leads the technical presales and tender response functions, ensuring the organisation provides accurate, compelling, and technically robust solution information throughout the sales cycle. This role oversees Technical Solutions Consulting and the Tenders team, providing strategic direction, operational leadership, and cross-functional alignment with Sales, Product, and Delivery teams. The position ensures technical accuracy, supports complex solution design, drives best practices across tenders and technical engagements, and enhances the organisation\u2019s ability to win high-value opportunities. The Director plays a key role in scaling technical capability, strengthening the quality of tender submissions, and ensuring integration, security, and architectural standards are clearly articulated to prospects.",
+              "DTST-001",
+              "Extensive leadership experience in technical presales, solution architecture, or enterprise IT roles Strong understanding of SaaS architecture, integrations, APIs, security frameworks, and technical design principles Proven experience managing tender or bid response functions, ideally in SaaS or enterprise software Ability to translate complex technical concepts into clear, customer-friendly explanations Strong capability in leading technical discovery, scoping sessions, and complex solution design Experience collaborating with Product, Engineering, Sales, and Delivery teams Ability to drive standardisation across technical content, tender libraries, and solution configurations Demonstrated success in developing high-quality tender responses and improving win rates Excellent stakeholder management, communication, and leadership capability Strong prioritisation, operational planning, and resource management skills",
+              "2025-12-02 22:14:37+00:00",
+              "2026-02-25 07:08:03+00:00",
+              "producttrainingsite",
+              "SYD"
+            ],
+            [
+              3,
+              "Accountant - Intermediate",
+              "Lead a team of Careerforce Workplace Advisors and Apprenticeship Vocational Pathway Advisors focusing on; Supporting the delivery of quality learner outcomes Growing the trainee and apprenticeship base in line with Careerforce strategic objectives Providing meaningful pathways for trainees in the sectors Careerforce supports Supporting activity and completion of Careerforce qualifications Developing and managing stakeholder relationships",
+              "ACCINTER",
+              "Minimum two years Australian Public Practice experience; Bachelor Degree in Accounting, Commerce or similar; CA/CPA commenced Dedication to providing quality service to clients and managing relationships; Team player Be client focused and able to achieve optimal results; Impeccable communication skills; Ability to embrace challenges; Attention to detail; Exposure to Div 7A and FBT.",
+              "2024-10-07 04:29:29+00:00",
+              "2026-04-21 04:45:52+00:00",
+              "csmgold2",
+              "SYD"
+            ],
+            [
+              21,
+              "Support Learning Teacher - 06 to 12",
+              "Faith Basis of Appointment We see the appointment of staff to Trinity Christian School as a ministry calling. The ethos, aims and objects of a Christian School are based on: > acceptance of the Lordship of Christ; and > acceptance of the Bible as the revealed Word of God Within Trinity Christian School these are expounded in the Doctrinal Basis. The Doctrinal Basis does not exhaust the extent of the beliefs of the School and its members. The Bible itself, as the inspired and infallible Word of God, that speaks with final authority concerning truth, morality, and the proper conduct of mankind, is the sole and final source of all that the School and its members believe. You must support the School in these areas and set an example of personal conduct and behaviour consistent with the School\u2019s beliefs and ethos as outlined in documents made available to prospective employees prior to interview. Any appointment is conditional upon staff maintaining and demonstrating a continuing firm personal belief and lifestyle consistent with the School\u2019s Doctrinal Basis and the other documents provided to staff, this being an essential condition of the appointment. A Learning Centred Christian School At Trinity Christian School we endeavour to make the link between our faith, what we do and how we teach. We call our students and school community to grow \u201cloving hearts, enquiring minds and generous spirits\u201d. At Trinity, how we teach must help our students in becoming who they were created to be in Christ. How we teach should also bring a Kingdom perspective, set students\u2019 minds on things above, deliver meaning and show purpose. The pedagogy in our classrooms at Trinity should engage enquiring minds, build questioning, allow for grappling, exploring and reasoning. The students we teach should be given opportunities to grow and serve, so they may see who they are becoming and their purpose. As we undertake to grow our learners in both faith and learning, we must build in them the capacity to do so. As stated in our Strategic Priorities for 2024 \u2013 2027, we have several key areas of focus that we are working toward: Christian Faith and Growth The spiritual nurturing of all individuals in the Christian faith, within a caring community of students, staff and families united by vision, mission and values. A passionate focus on realising the transformative power of the Gospel of Jesus, developing Biblical knowledge, and understanding and fulfilling the purpose of a Christian life. Excellence in Education and Learning All students actively engaged, growing and thriving as learners in a learning centred school. Parent partnership and student agency enhanced and supported. A commitment to educational excellence with the creation and support of new ways of learning, varied student pathways and models of education, to meet the needs of each learner. Community and Belonging A movement by all students, staff and families from joining and attending the school to belonging and actively investing in the Trinity community. Connection and relationship developed and strengthened with those in the School\u2019s history as well as future community members. Connecting with the World and Shaping Tomorrow Ongoing design and formation of our 2030 learning environment for the community now and in the future. A growth in our reach and impact on Christian Education nationally and globally, including shaping a reputation as a centre for staffing development and excellence. Benefits of Working at Trinity Christian School Trinity Christian School is an employer that promotes staff excellence and values the benefit that our professional team bring to the school. In addition to the highly competitive remuneration and conditions as set out in the MEA we offer the following additional benefits to our staff across the school including: > Attractive salary packaging arrangements. > School fee concessions. > Generous annual Staff Development Award program. > Access to an Employee Assistance Program. > Access to annual influenza vaccinations. Other Essential Requirements Employment Conditions Employment will be subject to the conditions of the current ACT Christian School General Staff Multi-Enterprise Agreement 2021 or its replacement. The salary and classification for this position will be dependent on the qualifications and experience of the successful applicant. A Committed, Practicing Christian Applicants must be able to demonstrate a personal faith and commitment to the Lord Jesus Christ and a lifestyle consistent with that faith, including an active commitment to a Christian fellowship. Right to Work In Australia Applicants must be Australian Citizens or hold a current and valid working visa. The School will not consider sponsorship nor support a visa application process. Please do not submit an application if you cannot meet this requirement. Working With Vulnerable People Check In keeping with the School\u2019s policy and legislative requirements, any offer of employment is subject to you providing a satisfactory Working With Vulnerable People check prior to commencing employment and maintaining this for the duration of your employment. Acknowledgement The requirements of this job description are intended to describe the general nature and responsibility of the work in this role. These statements are not to be construed as an exhaustive list of all duties, tasks and skills required of the job. Employees will also be required to follow any other job-related instructions and school policies, and to perform other job-related duties requested by their Manager to support the School\u2019s compliance with its legislative obligations. The Manager may, through consultation with the employee, vary the responsibilities of the position temporarily as required, but within the skills and responsibility levels appropriate to the position. Further Information All enquiries will be treated confidentially. Initial questions can be directed to the People & Culture Administrator, Katherine Boyd by phone on +61 2 6210 7500 or email employment@tcs.act.edu.au Applications are ongoing and are to be submitted electronically as a single PDF document as an attachment to the online application form. Trinity Christian School 34 McBryde Crescent Wanniassa ACT Australia 2903",
+              "232000",
+              null,
+              "2026-03-10 00:26:13+00:00",
+              "2026-05-08 04:07:02+00:00",
+              "tcsact",
+              "SYD"
+            ],
+            [
+              54,
+              "Catering Assistant",
+              "The Catering Assistant at Company Name plays a vital role in supporting the catering team to ensure the smooth operation of food service within various settings. This position requires a proactive individual who can work effectively in a fast-paced environment while maintaining high standards of cleanliness and customer service. Key Responsibilities: Assist in the preparation and presentation of food items, ensuring compliance with health and safety regulations. Set up and dismantle catering equipment, including tables, chairs, and serving areas for events. Serve food and beverages to customers with professionalism and attention to detail. Maintain cleanliness of the kitchen and dining areas by washing dishes, cleaning surfaces, and disposing of waste properly. Support inventory management by helping to receive deliveries, stock supplies, and keep track of inventory levels. Engage with customers to ensure satisfaction with their dining experience, addressing any concerns promptly. Work collaboratively with other team members to deliver seamless service during busy periods. This role is essential in contributing to the overall success of our catering operations, providing an enjoyable experience for all clients and guests. Attention to detail, excellent communication skills, and a friendly disposition are key attributes for this position.",
+              "CA2",
+              "Required skills Excellent communication and interpersonal skills Strong organisational and time management abilities Ability to work effectively in a team environment Basic knowledge of food hygiene and safety standards Customer service orientation with a friendly demeanour Adaptability to changing tasks and environments Attention to detail in food preparation and presentation Required experiences Previous experience in a catering or food service role is desirable Familiarity with kitchen equipment and utensils Experience working in a fast-paced environment, preferably within the hospitality industry Exposure to health and safety regulations related to food handling A history of collaborating with chefs or kitchen staff is an advantage Prior involvement in customer-facing roles is beneficial",
+              "2025-08-15 00:27:41+00:00",
+              "2026-02-17 00:33:59+00:00",
+              "effectivehr",
+              "SYD"
+            ],
+            [
+              21,
+              "Executive Officer - Canonical and Archival Documents",
+              "The Executive Officer \u2013 Canonical and Archival Documents is responsible for the record management of documents relating to professional standards, clergy, the Royal Commission, marriage dispensation, and other documents relevant to the work of the Bishop. Record management includes accurate and up to date record keeping, retrieval, archiving, and retention. Key Responsibilities Professional Standards Records \u2022 Maintain and update claims records \u2022 Maintain and update Claimants\u2019 deeds of release \u2022 Ensure confidentiality and accuracy of records vis-\u0430-vis electronic records maintained by the Professional Standards Manager Clergy Records (including overseas priests) \u2022 Maintain and update personal information for current clergy, resigned clergy, and clergy memorial records \u2022 Maintain and update Professional Standards records \u2022 Maintain, update and follow relevant actions and recommendations of Clergy Review conducted by K Caf\u0439 \u2022 Maintain records from comprehensive reports conducted by K Payne and follow up on actions \u2022 Manage Wills, Enduring Power of Attorney (EPA) and Advanced Health Directive (AHD) Royal Commission \u2022 Maintain and secure ring tail of Royal Commission records \u2022 Maintain correspondence and follow up on the Bishop\u2019s actions \u2022 Maintain official records of findings \u2022 Maintain records in accordance with the Royal Commission guidelines on record keeping Marriage Dispensation Records \u2022 Review and arrange all hardcopies of Chancery records pertaining to all marriage dispensations Archive Manual \u2022 Develop and maintain Bishop\u2019s Archive Manual \u2022 Collate Terms of Reference for Bishop\u2019s Pastoral Ministry, which addresses the Royal Commission, Consultative Panel, Pastoral Councils, and Others \u2022 Keep an up-to-date record of Pastoral Letters regarding COVID-19, Christmas, Easter, Bishop\u2019s Inservice, and Synod. Other \u2022 Act as Notary for Diocesan legal documents \u2022 Act as custodian of official Diocesan and curial stamps",
+              "JOB021",
+              "\u2022 Prior experience in a records management or administrative position \u2022 Strong communication and interpersonal skills \u2022 Ability to effectively manage time and work schedules in an autonomous manner \u2022 Intermediate competency in the use of Microsoft office suite \u2022 Active participant in the Catholic Church community and/or lifestyle compatible with the values and teachings of the Church \u2022 Thorough knowledge of and commitment to the Diocesan Vision Statement and Values \u2022 Knowledge of and commitment to Catholic Social Teachings \u2022 Ability to provide a clear criminal history record check and obtain a Queensland Working with Children (Blue Card) Check, if requested \u2022 Ensure ongoing disclosure of any criminal charges or allegations (current or historic), as soon as possible after such charges come to the employee\u2019s attention and in accordance with the Personnel Screening Policy as amended from time to time. Failure to comply with this ongoing obligation to disclose may lead to disciplinary action, including dismissal \u2022 Current motor vehicle driver\u2019s licence",
+              "2024-11-26 22:51:36+00:00",
+              "2026-03-12 22:51:42+00:00",
+              "rokcatholic",
+              "SYD"
+            ],
+            [
+              315,
+              "Solutions Consulting Manager",
+              "The Solutions Consulting Manager is a regional leader who manages a team of Solutions Consultants, working closely with Sales and other divisions to support key business opportunities, proposals and pitches. They lead and coach the team to deliver high?quality technical solutions and product demonstrations, consult on technical aspects of opportunities, and coordinate resources across regions to support complex sales cycles and tenders while maintaining strong partnerships with sales leaders. The role is also responsible for optimising processes and collaboration across the Customer Experience ecosystem, driving product enablement and innovation in how product knowledge is used in sales, advocating for product feedback with R&D, defining and tracking team KPIs, ensuring accurate Salesforce and Jira administration, fostering a culture of trust and open communication, supporting team wellbeing and professional development, and ensuring compliance with information security and privacy policies.",
+              "Solutions Consulting Manager",
+              "Strong background within a similar role (e.g., consulting experience within a talent management environment); Strong sales experience; Strong understanding of technical concepts; Strong understanding of HR and Talent Management processes; Proven ability to manage multiple projects at a time while paying strict attention to detail; Project management experience with internal stakeholders; Strong problem-solving skills; Exceptional communication skills, both written and verbal; Undergraduate qualification is preferred; Experience leading a team of employees.",
+              "2026-03-26 05:47:46+00:00",
+              "2026-03-27 08:15:21+00:00",
+              "elmohr",
+              "SYD"
+            ],
+            [
+              55,
+              "Head International Student Support, Admission Support",
+              "The Company Head International Student Support, Admission Support & Lawyer at Leo Cussen Centre for Law plays a pivotal role in providing comprehensive support to international students, overseeing admissions processes, and offering legal expertise. The position involves a wide range of responsibilities and tasks including: Leading and managing the international student support team to ensure seamless integration and support services for students from diverse backgrounds. Overseeing the admissions process by developing strategies to attract qualified candidates, reviewing applications, and ensuring compliance with relevant regulations. Providing legal counsel and guidance on matters related to international student support, admission policies, and other legal aspects pertinent to the organization's operations. Collaborating with academic departments to facilitate the smooth transition of international students into the learning environment and addressing any specific needs they may have. Developing and implementing policies and procedures that uphold ethical standards, promote inclusion, and safeguard the rights of international students. Representing the organization in legal matters pertaining to international student support or admissions as required. Participating in professional development activities to stay informed about changes in immigration laws, education regulations, and industry best practices. This position requires a proactive leader with excellent communication skills, a deep understanding of legal principles as they relate to education and immigration, as well as a strong commitment to supporting the needs of international students.",
+              "JR-IEP-HISSAS-001",
+              "Required skills Excellent communication and interpersonal skills to effectively engage with international students, provide support, and collaborate with legal professionals. Strong organizational abilities to manage admission processes, student support services, and legal documentation. Proficiency in legal research, analysis, and drafting to assist lawyers and contribute to the legal aspects of student support and admissions. Knowledge of immigration regulations and procedures related to international students. Ability to multitask, prioritize workload, and work efficiently in a fast-paced environment. Required experiences Prior experience in international student support services or admissions within an educational institution or legal setting. Demonstrated experience working with diverse cultures and understanding the challenges faced by international students. Experience in providing administrative or operational support for legal professionals or law-related activities. Familiarity with managing databases, student records, or legal documents would be advantageous. An understanding of the Australian legal system and its education industry would be beneficial but not mandatory.",
+              "2026-04-21 12:40:10+00:00",
+              "2026-05-19 01:49:29+00:00",
+              "leocussen",
+              "SYD"
+            ],
+            [
+              94,
+              "Safety Supervisor - QLD",
+              "Correcting improper and unsafe work activities and conditions. Identifying new hazards and working to minimise the risk. reinforcing safe and proper work performance. making sure all safety documents are up-to-date and easy to understand.",
+              "Safety Supervisor - QLD",
+              null,
+              "2025-04-08 03:11:23+00:00",
+              "2025-04-08 03:11:23+00:00",
+              "climatech",
+              "SYD"
+            ],
+            [
+              24,
+              "Head of Mergers and Acquisitions",
+              "Position Summary: This is a critical leadership role responsible for driving the end-to-end M&A process, from identifying and sourcing opportunities through to negotiation, due diligence, execution, and assisting with post-acquisition integration and long-term value creation, including eventual exit planning for the existing shareholders. Key Responsibilities: Proactively identify, source, and cultivate a pipeline of potential acquisition targets within the SMSF audit sector across Australia. Develop and maintain relationships with business brokers, advisors, and potential vendors. Screen and evaluate potential acquisition opportunities against strategic criteria. Identify other opportunities through breaking current \u201cadmin-audit pooling arrangements\u201d or identifying auditors with independence risk in the market. Lead negotiations on transaction terms, including valuation, deal structure, key commercial points, and preliminary agreements (e.g., Heads of Agreement, Letters of Intent). Develop and present compelling acquisition proposals. Oversee and coordinate the due diligence process, including financial, operational, legal, and regulatory (audit compliance) aspects. Liaise with internal teams and external advisors where applicable (legal, accounting) to ensure thorough vetting of targets. Analyse findings and assess risks and opportunities associated with potential acquisitions. Manage the transaction execution phase, working closely with legal counsel to draft and finalise definitive agreements (e.g., Asset / Sale and Purchase Agreements). Coordinate all activities required to achieve successful transaction closing. Work collaboratively with the dedicated full-time Integration Manager to ensure a smooth handover of acquired businesses/books post-completion. Provide support and context during the initial integration phase as required. Contribute strategic insights and support activities related to the long-term planning and potential execution of an ultimate exit for the consolidated business. Provide regular, clear, and concise reporting on M&A pipeline activity, deal progress, and performance metrics to the Head of Strategy, CEO and Board. Manage relationships with key internal and external stakeholders throughout the M&A process. Performance Expectations: Identify opportunities that align with the company\u2019s long-term goals. The ROI from completed transactions is in line with the strategic business plan. The ability to execute acquisitions efficiently and within the required timeline. Achieve projected synergies post-acquisition. Ensuring the satisfaction of all stakeholders, managing expectations, and delivering during the Merger & Acquisition process. The ability to travel on a regular basis.",
+              "Head of Mergers and Acquisitions",
+              "Relevant tertiary qualifications (e.g., Finance, Business, Law, Accounting). Proven track record of success in Merger & Acquisition, corporate development, investment banking, or a similar role with demonstrable experience in executing transactions end-to-end. Experience in acquiring professional services firms, or similar. Strong financial modelling, analysis, and valuation skills. Expertise in due diligence methodologies and best practices. Exceptional negotiation and influencing skills. Familiarity with legal documentation common in Merger & Acquisition transactions. Ability to work autonomously, manage multiple priorities, and meet deadlines. Strategic thinker with strong commercial judgment. Results-oriented, proactive, and deal-driven mindset. High degree of professionalism, integrity, and discretion. Analytical and detail oriented. Collaborative and able to work effectively with various teams. Resilient and adaptable.",
+              "2026-04-30 03:56:33+00:00",
+              "2026-04-30 03:56:33+00:00",
+              "asfaudits",
+              "SYD"
+            ],
+            [
+              13,
+              "Manager People and Culture",
+              "The Manager, People and Culture is accountable for managing: recruitment, selection, employment and termination of staff within the Organisation the operations of Work Health, Safety and Risk within the organisation the Quality operations of the Organisation and ensure that Quality process are followed coordination and implementation of Training within the organisation.",
+              "MPC",
+              "An appropriate qualification in Business Management or Human Resource Management. Experience working in the Human Services sector. Experience in employee management, human resources management, and supervision skills. Experience in Quality processes. Experience in planning, design and delivery of training packages. Sound knowledge of administrative systems. An in-depth knowledge and understanding of the application of concepts required to manage human resource functions. This includes knowledge of job analysis, HR Strategic planning and forecasting Sound knowledge of Work Health, Safety and Risk principles. Well developed analytical skills from a strategic perspective. Solid interpersonal communication, consultation, negotiation and influencing skills, networking and teambuilding skills. Demonstrated ability to summarize and communicate progress and results against goals and objectives, identify or project gaps and generate solutions as necessary. Strong leadership, strategic thinking and planning skills. Demonstrated ability to provide input into the decisions and outcomes reached by the various committees. High level communication skills (verbal and written). Demonstrated ability to work in a highly confidential manner. Demonstrated ability to negotiate and manage conflict. Effective organisational and time management skills. High level of ability in the use of Microsoft Office and Information Technology.",
+              "2026-05-25 01:00:49+00:00",
+              "2026-05-25 01:00:49+00:00",
+              "cccsa",
+              "SYD"
+            ],
+            [
+              115,
+              "Site Foreman",
+              "As a Site Foreman, you will be responsible for overseeing construction projects from start to finish. This will involve coordinating with architects and engineers to ensure that plans are properly executed, managing subcontractors and construction workers, and monitoring project timelines and budgets. Additionally, you will be responsible for ensuring that safety protocols are followed and that work is conducted in compliance with relevant regulations.",
+              "SFR",
+              "Experience in the construction industry, with a proven track record of managing construction sites. Excellent knowledge of health and safety regulations, and experience in enforcing them on site. Strong leadership skills, with the ability to motivate and manage a team of workers. Good communication skills, both verbal and written, with the ability to communicate effectively with clients, architects, engineers, and construction workers. Proficient in reading and interpreting construction drawings, blueprints, and specifications. Knowledge of construction materials, methods, and techniques. Ability to manage multiple projects simultaneously, ensuring that they are completed on time and within budget. Good organizational skills, with the ability to plan and prioritize work effectively. Experience in conducting quality control checks to ensure that work meets the required standards. Ability to solve problems on site quickly and efficiently. Good IT skills, with the ability to use project management software and other relevant tools. A valid drivers license and the ability to travel to different construction sites. An understanding of contract documents, including drawings, specifications, and contracts. Knowledge of construction estimating and cost control. Experience in managing subcontractors and suppliers. A relevant degree or qualification in construction management or a related field. Strong interpersonal skills, with the ability to build and maintain relationships with clients, subcontractors, and suppliers. Ability to work under pressure and meet tight deadlines. Flexibility and adaptability to changing circumstances. A commitment to quality and excellence in all work performed.",
+              "2025-01-21 04:35:48+00:00",
+              "2025-01-21 04:35:48+00:00",
+              "csmgold1",
+              "SYD"
+            ],
+            [
+              12,
+              "Manager Receivables",
+              "Position Objective: To manage the Accounts Receivable function for all Outsourcing Oceania Group companies to ensure prompt collection of outstanding debtors and adequate cashflows for the business. The activities of this position will support the overall quality objectives of the Accounts Receivable Team and of the Shared Services function as a whole. Reports To: Chief Financial Officer Manages: Accounts Receivable Officers Responsibilities and Activities: Manage and co-ordinate the activities of the Accounts Receivable Officers Process all deposits banked into the Group Bank accounts on a daily basis Perform credit checks on new clients Follow up with Debtors via telephone and email to ensure invoices are paid according to payment terms Resolve Debtor queries and follow through to completion Follow up on issues raised with the business to completion Escalation of issues relating to the accounts receivable function to the appropriate people within the business Complete monthly permanent invoice reconciliation Prepare permanent invoice credit notes as requested Complete monthly reconciliations for NAB and GE/ANZ Debtor Finance Facilities Raise and input monthly corporate fee invoices and rent invoices for sub-tenancies Produce monthly board reports including calculation of debtor days and supporting graphs Facilitate quarterly field reviews for NAB and Allianz Debtor Finance Facilities Continually improve AR Processes Other ad hoc tasks relating to the Accounts Receivable function as directed by the Chief Financial Officer Maintain a thorough knowledge of the quality framework (including all policies and processes that relate to the workscope of their team) and ensure that all activities are carried out in accordance with that framework",
+              "ROLE012",
+              "3-5 years collections management experience Excellent communication skills both oral and written Ability to communicate with people of all levels Ability to work with and also assist other members of the finance team Good customer service skills both internal and external Proactive approach to problem resolution Excellent time management skills \u2013 ability to identify more and less critical tasks and adjust priorities accordingly Good computer skills (MS Outlook and Excel)",
+              "2024-11-13 21:46:51+00:00",
+              "2025-04-02 04:40:02+00:00",
+              "outsourcingoceania",
+              "SYD"
+            ],
+            [
+              78,
+              "Head of Senior",
+              "The Head of Senior at Faith Christian School is a pivotal leadership role, responsible for overseeing the educational and administrative functions of the senior school. This position requires a committed individual who will foster a nurturing and challenging learning environment while ensuring that the school's values are integrated into every aspect of student life. Key responsibilities include: Leading and managing the senior school staff, providing guidance and support to enhance teaching practices. Developing and implementing curriculum strategies that align with the school's vision and educational standards. Monitoring student progress and performance, implementing interventions where necessary to ensure academic success. Facilitating communication between parents, staff, and students to promote a collaborative educational experience. Organising professional development opportunities for teachers to foster continuous improvement in pedagogical approaches. Overseeing student welfare initiatives, ensuring a safe and supportive environment for all learners. Coordinating extracurricular activities to enrich the student experience beyond the classroom setting. Managing budgets associated with the senior school, ensuring resources are allocated effectively to meet educational goals. The Head of Senior plays an essential role in shaping the future leaders of tomorrow by providing direction, inspiration, and support within Faith Christian School's commitment to excellence in education.",
+              "Head of Senior",
+              "Required skills Strong leadership and management abilities Excellent communication and interpersonal skills Strategic planning and organisational skills Proficient in conflict resolution and problem-solving Ability to inspire and motivate staff and students Knowledge of educational policies and procedures Competence in budget management and financial oversight Required experiences A minimum of 5 years' experience in a senior leadership role within an educational setting Demonstrated success in curriculum development and implementation Experience in staff recruitment, training, and development Proven track record of improving student outcomes Experience with stakeholder engagement, including parents, community members, and governing bodies Familiarity with data analysis for school performance evaluation",
+              "2026-02-02 05:05:33+00:00",
+              "2026-02-02 05:05:33+00:00",
+              "faith",
+              "SYD"
+            ],
+            [
+              135,
+              "Chief Information Officer",
+              "The Chief Information Officer (CIO) is responsible for developing and implementing the organizations technology strategy to meet business goals and objectives. This includes ensuring the security and reliability of information systems, networks, and data. The CIO will manage the IT department, including hiring, training, and performance management of staff members. The CIO will evaluate and recommend new technology solutions to improve efficiency and productivity. The CIO will also collaborate with other department heads to align technology initiatives with overall business goals.",
+              "CIO",
+              "Strategic planning and decision-making skills for aligning technology with business goals Strong leadership and management skills for overseeing technology teams and departments Knowledge of emerging technologies and trends in the tech industry Project management skills for planning and executing technology projects effectively Budgeting and cost control skills for managing technology investments and expenses Excellent communication skills for interacting with stakeholders and explaining technical concepts to non-technical individuals Cybersecurity skills for identifying and mitigating cyber threats and ensuring data privacy and protection Data analysis skills for using data to inform business decisions and improve operational efficiency Vendor management skills for negotiating contracts and managing relationships with technology vendors Change management skills for leading and managing technology-related changes within the organization.",
+              "2025-01-21 04:35:49+00:00",
+              "2025-01-21 04:35:49+00:00",
+              "csmgold9",
+              "SYD"
+            ],
+            [
+              54,
+              "Irrigation Field Service Technician",
+              "Purpose The primary objective of this role is to provide exceptional service and technical support to customers using Valley and other brand centre pivot irrigation systems, as well as related water delivery products. This includes installation, diagnostics, maintenance, and troubleshooting of systems across a wide geographic area. The Service Technician will work collaboratively with the Irrigation Sales/Service Operations team and other internal departments to resolve technical issues for new and existing customers, ensuring high-quality service delivery and promoting customer satisfaction. This role plays a key part in driving the growth of Emmetts' irrigation business through consistent customer support and the generation of revenue from parts and service sales. Responsibilities The following is a summary list of duties required for the position as described above: Technical Service & Support Provide diagnostics, repair, and maintenance services for Valley and non-Valley center pivot and lateral irrigation systems. Install, troubleshoot, and support irrigation systems and water delivery products for both new and existing customers. Upgrade and replace aging components, ensuring system compatibility and functionality. Identify and explain the function of irrigation system components with confidence and clarity. Demonstrate strong operational troubleshooting skills and the ability to identify effective solutions. Customer Service & Business Growth Deliver exceptional customer service and ongoing support to maintain long-term customer relationships. Advise customers on repair and replacement options in alignment with system capabilities and requirements. Assist in promoting and selling aftermarket service and parts solutions to support business growth. Represent Emmetts professionally in all interactions, promoting a positive brand image in the market. Team & Operational Support Collaborate with the Irrigation Leads and team members to ensure timely resolution of technical issues. Support the development of a cohesive team environment focused on customer success and business outcomes. Work with external contractors and service providers to ensure successful project outcomes. Monitor and report customer feedback to support continuous improvement and customer satisfaction. Administration & Reporting Accurately track and report service hours, travel, and parts usage. Complete administrative tasks and reports as required for assigned jobs and service calls. Maintain a clean, safe, and orderly work environment, including company tools, equipment, and vehicles. Other Duties Provide service support across a large geographic area, based out of the Murray Bridge branch. Participate in training and development programs to enhance skills and technical knowledge. Undertake additional duties as directed, within the scope of skills and experience.",
+              "Irrigation Field Service Technician",
+              "Qualifications & Experience Essential Proven problem-solving and decision-making skills. Strong communication skills, with the ability to explain technical information clearly. Proficiency in Microsoft Office Suite. Current Australian driver\u2019s licence. MR or HR Truck Licence Australian citizenship or appropriate working rights. Ability to remain calm and professional in high-pressure or challenging situations. Willingness to travel frequently, including extended stays within South Australia and interstate. Demonstrated ability to work independently with minimal supervision. Commitment to seeing tasks through to completion. Willingness to obtain a B-Class electrical licence if not already held. Trade qualification in mechanical, electrical, plumbing, or related field (e.g., fitter and turner, mechanic, plumber, electrician). Desirable Prior experience in the agricultural irrigation industry. Familiarity with centre pivot irrigation systems. Experience within the broader agricultural sector. Advanced knowledge of irrigation system compatibility and software.",
+              "2025-09-03 00:41:06+00:00",
+              "2026-05-26 00:58:17+00:00",
+              "emmetts",
+              "SYD"
+            ],
+            [
+              11,
+              "Activities Worker",
+              "The Position The Planned Activity Worker (PAG) will support HACC eligible Aboriginal elders, people with a disability and/or their carers, to stay connected to community, country and culture through social interaction and gatherings. Key Responsibilities Receive referrals from Intake, make contact with client to engage in planned activities group, Develop and facilitate approved planned activities for Elders, HACC clients and ABI clients, Complete six-monthly medical care plans and goal setting plans for each PAG client, Ensure that the Summary Medical Care Register is updated after reviews and copies given to clients, Facilitate Care Plan meetings before every activity to ensure safety of each participant",
+              "Activities Worker",
+              null,
+              "2026-02-16 04:43:37+00:00",
+              "2026-02-16 04:43:37+00:00",
+              "bdac",
+              "SYD"
+            ],
+            [
+              94,
+              "New Business Lead",
+              "The purpose of the New Business Lead is to develop a robust sales pipeline of potential opportunities and convert these into live projects for UAP, driving revenue and growth in Australia. The New Business Lead will establish and nurture long-term relationships with artists, architects, developers, cultural consultants and other consultants to promote UAPs vision and capabilities in both consultancy and manufacturing. This role requires a strategic, commercial mindset and understanding of the complex requirements of contract negotiation, project delivery, capabilities, and systems. Key to the roles success will be your drive and passion for sales, and interest in art and design. Staying abreast of industry and market trends will assist you and the business in succeeding.",
+              "New Business Lead",
+              "Duties and Responsibilities Sales and Prospecting Identify and prospect potential new clients to increase business for UAP. Leverage existing networks and build new relationships to grow a strong client base. Conduct market research to identify and engage decision-makers within potential client organisations. Actively promote UAPs capabilities and vision in delivering small and mid to large-scale artwork projects. Pipeline Development and Management Generate, maintain and convert a strong pipeline of projects, focusing on the New South Wales market, and providing support to the business as required. Prepare and deliver high-quality submissions for project opportunities to meet sales and revenue targets.. Client Relationship Management Develop and maintain strong relationships with new and existing clients, ensuring continuous engagement and support. Handle and resolve any barriers during the sales process, ensuring positive outcomes for the client and artist. Present innovative ideas and opportunities to clients to enhance engagement and secure new projects. Proposal and Contract Management Lead the creation and submission of proposals, ensuring timely follow-up and conversion into sales. Negotiate contract terms to align with client expectations and UAPs capabilities. Manage and document all project proposals and agreements to ensure accuracy and completeness. Market and Industry Engagement Attend industry functions, association events, and conferences to gather market insights and trends. Provide feedback to the team on market conditions and creative trends to inform strategic decisions. Strategic Sales Initiatives Identify, pursue and convert strategic opportunities that align with UAPs business objectives. Develop unique selling propositions and differentiators based on market analysis and client needs. Ensure all sales and revenue targets are met in accordance with the annual budget.",
+              "2026-06-24 01:55:52+00:00",
+              "2026-06-24 01:55:52+00:00",
+              "uapcompany",
+              "SYD"
+            ]
+          ]
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "Job Role Title",
+          "Job Role Description",
+          "Job Role Identifier",
+          "Job Role Skills and Experience",
+          "Job Role Created Date",
+          "Job Role Modified Date",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ]
+      },
+      "T4": {
+        "status": "FAIL",
+        "shared_keys": 47901,
+        "mismatched_columns": {
+          "Job Role Description": 4251,
+          "Job Role Skills and Experience": 5026,
+          "Job Role Modified Date": 7
+        },
+        "sql": "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Title\",''), NULLIF(u.\"Job Role Title\",''))) AS \"Job Role Title\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Description\",''), NULLIF(u.\"Job Role Description\",''))) AS \"Job Role Description\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Identifier\",''), NULLIF(u.\"Job Role Identifier\",''))) AS \"Job Role Identifier\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Skills and Experience\",''), NULLIF(u.\"Job Role Skills and Experience\",''))) AS \"Job Role Skills and Experience\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Created Date\", u.\"Job Role Created Date\")) AS \"Job Role Created Date\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Modified Date\", u.\"Job Role Modified Date\")) AS \"Job Role Modified Date\"\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+        "column_samples": {
+          "Job Role Skills and Experience": [
+            [
+              49,
+              "balco",
+              "SYD",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experienceDiploma level qualifications in management and logistics or materials handling will be highly regardedDemonstrated knowledge of contemporary Road Traffic Act compliance matters related to logisticsDemonstrated knowledge of Work Health and Safety compliance matters related to logisticsExcellent organisational skillsAbility to juggle conflicting priorities and demandsStrong analytical and problem solving skillsStrong positive communication skillsGood level of numeracy, able to keep financial recordsProficient computer skills, particularly Excel and inventory management systemsGood understanding of the administrative/work organising systems with ability to design and document procedures effectivelyEfficient skills and appropriate license to operate LoadersReliable, committed to high work standards and accuracyUnderstanding of the hay industry, farming and local region is desirableSignificant experience in supply chain/inventory management, or logistics role",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experience Diploma level qualifications in management and logistics or materials handling will be highly regarded Demonstrated knowledge of contemporary Road Traffic Act compliance matters related to logistics Demonstrated knowledge of Work Health and Safety compliance matters related to logistics Excellent organisational skills Ability to juggle conflicting priorities and demands Strong analytical and problem solving skills Strong positive communication skills Good level of numeracy, able to keep financial records Proficient computer skills, particularly Excel and inventory management systems Good understanding of the administrative/work organising systems with ability to design and document procedures effectively Efficient skills and appropriate license to operate Loaders Reliable, committed to high work standards and accuracy Understanding of the hay industry, farming and local region is desirable Significant experience in supply chain/inventory management, or logistics role"
+            ],
+            [
+              42,
+              "balco",
+              "SYD",
+              "Mature person with significant experience in a manufacturing environment at a senior management levelTrade Certificate in a Mechanical, Engineering or Electrical Vocation highly desirableDiploma of Management (or sufficient skills knowledge and experience to rapidly acquire) highly desirableExcellent understanding of manufacturing principles and practicesProven advanced level of mechanical aptitude (familiar with mechanical interfaces)Critical Thinking and problem solving (good analytical and problem solving skills)Proven record in achievement of production and cost targetsExcellent planning skills (coordination and control)Experience leading and developing a team (delegation, conflict management)Demonstrated knowledge of contemporary Work Health and Safety compliance mattersSound knowledge of contemporary quality improvement tools and techniques (HACCP, HAZOP, PDCA)Demonstrated knowledge of contemporary workplace training and education processesFlexibility and ability to respond pro-actively to changing environments (adaptive, stress tolerance)Sound verbal and written communication skills (negotiation, persuasive)Highly proficient in Excel and other Microsoft Office productsExcellent numeracy skillsExcellent organising skills",
+              "Mature person with significant experience in a manufacturing environment at a senior management level Trade Certificate in a Mechanical, Engineering or Electrical Vocation highly desirable Diploma of Management (or sufficient skills knowledge and experience to rapidly acquire) highly desirable Excellent understanding of manufacturing principles and practices Proven advanced level of mechanical aptitude (familiar with mechanical interfaces) Critical Thinking and problem solving (good analytical and problem solving skills) Proven record in achievement of production and cost targets Excellent planning skills (coordination and control) Experience leading and developing a team (delegation, conflict management) Demonstrated knowledge of contemporary Work Health and Safety compliance matters Sound knowledge of contemporary quality improvement tools and techniques (HACCP, HAZOP, PDCA) Demonstrated knowledge of contemporary workplace training and education processes Flexibility and ability to respond pro-actively to changing environments (adaptive, stress tolerance) Sound verbal and written communication skills (negotiation, persuasive) Highly proficient in Excel and other Microsoft Office products Excellent numeracy skills Excellent organising skills"
+            ],
+            [
+              56,
+              "balco",
+              "SYD",
+              "Demonstrated commitment to safe work practices and behavioursProven ability to operate mobile plant safely (forklift, loader, telehandler)Strong teamwork and communication skillsGood organisational and time management abilitiesSound problem-solving skills and ability to respond to changing prioritiesBasic to intermediate skills in Microsoft Office (including Excel)Good numeracy and attention to detailAbility to work in a fast-paced operational environmentCompetency-based Work Permit \u2013 Loader Operations (LL) (Required)High Risk Work Licence \u2013 Forklift (Desirable)High Risk Work Licence \u2013 Crane (CN) (Desirable)Previous experience in logistics, warehousing or production environmentsExperience operating forklifts, loaders or telehandlersHay bale handling experience (highly regarded)Experience working within safety-focused environmentsFlexibility to work varying hours as requiredCommitment to ongoing training and developmentAbility to work collaboratively across multiple teamsStrong customer service mindset (internal and external)",
+              "Demonstrated commitment to safe work practices and behaviours Proven ability to operate mobile plant safely (forklift, loader, telehandler) Strong teamwork and communication skills Good organisational and time management abilities Sound problem-solving skills and ability to respond to changing priorities Basic to intermediate skills in Microsoft Office (including Excel) Good numeracy and attention to detail Ability to work in a fast-paced operational environment Competency-based Work Permit \u2013 Loader Operations (LL) (Required) High Risk Work Licence \u2013 Forklift (Desirable) High Risk Work Licence \u2013 Crane (CN) (Desirable) Previous experience in logistics, warehousing or production environments Experience operating forklifts, loaders or telehandlers Hay bale handling experience (highly regarded) Experience working within safety-focused environments Flexibility to work varying hours as required Commitment to ongoing training and development Ability to work collaboratively across multiple teams Strong customer service mindset (internal and external)"
+            ],
+            [
+              50,
+              "balco",
+              "SYD",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experienceDiploma level qualifications in management and logistics or materials handling will be highly regardedDemonstrated knowledge of contemporary Road Traffic Act compliance matters related to logisticsDemonstrated knowledge of Work Health and Safety compliance matters related to logisticsExcellent organisational skillsAbility to juggle conflicting priorities and demandsStrong analytical and problem solving skillsStrong positive communication skillsGood level of numeracy, able to keep financial recordsProficient computer skills, particularly Excel and inventory management systemsGood understanding of the administrative/work organising systems with ability to design and document procedures effectivelyEfficient skills and appropriate license to operate LoadersReliable, committed to high work standards and accuracyUnderstanding of the hay industry, farming and local region is desirableSignificant experience in supply chain/inventory management, or logistics role",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experience Diploma level qualifications in management and logistics or materials handling will be highly regarded Demonstrated knowledge of contemporary Road Traffic Act compliance matters related to logistics Demonstrated knowledge of Work Health and Safety compliance matters related to logistics Excellent organisational skills Ability to juggle conflicting priorities and demands Strong analytical and problem solving skills Strong positive communication skills Good level of numeracy, able to keep financial records Proficient computer skills, particularly Excel and inventory management systems Good understanding of the administrative/work organising systems with ability to design and document procedures effectively Efficient skills and appropriate license to operate Loaders Reliable, committed to high work standards and accuracy Understanding of the hay industry, farming and local region is desirable Significant experience in supply chain/inventory management, or logistics role"
+            ],
+            [
+              43,
+              "balco",
+              "SYD",
+              "Highly skilled individual with demonstrated leadership experience in a similar rolePreferred experience working in an agricultural business, or similar related sectorSignificant experience in financial accounting and application of relevant accounting standardsExperience leading or assisting in payroll processingExcellence in building high performance and diverse teams who are able to deliver and/or exceed annual KPI'sExcellent organisational and time management skillsExcellent understanding and experience in software platformsExcellent relationship building skills with internal and external stakeholdersExcellent verbal and written communication skills and leading diverse teams",
+              "Highly skilled individual with demonstrated leadership experience in a similar role Preferred experience working in an agricultural business, or similar related sector Significant experience in financial accounting and application of relevant accounting standards Experience leading or assisting in payroll processing Excellence in building high performance and diverse teams who are able to deliver and/or exceed annual KPI's Excellent organisational and time management skills Excellent understanding and experience in software platforms Excellent relationship building skills with internal and external stakeholders Excellent verbal and written communication skills and leading diverse teams"
+            ]
+          ],
+          "Job Role Description": [
+            [
+              3,
+              "mornington",
+              "SYD",
+              "The Accounts Payable Officer at Mornington Shire Council plays a vital role in ensuring the accurate management of the Council's financial obligations. This position requires a detail-oriented individual with strong organisational skills to facilitate smooth and efficient processing of invoices and payments.Key responsibilities include:Processing and verifying vendor invoices, ensuring accuracy and compliance with council policies.Preparing payment runs and ensuring timely payments to suppliers while maintaining good relationships.Maintaining accurate records of accounts payable transactions, including reconciliations and adjustments.Responding to vendor inquiries regarding account status, payment schedules, and discrepancies.Assisting in month-end closing processes by preparing reports related to accounts payable activities.Collaborating with internal departments to resolve any issues related to invoices or payments.Ensuring adherence to financial controls and procedures to mitigate risks associated with accounts payable operations.This role is essential for maintaining the financial integrity of Mornington Shire Council, requiring a proactive approach towards managing supplier relationships while ensuring compliance with relevant regulations and policies.",
+              "The Accounts Payable Officer at Mornington Shire Council plays a vital role in ensuring the accurate management of the Council's financial obligations. This position requires a detail-oriented individual with strong organisational skills to facilitate smooth and efficient processing of invoices and payments. Key responsibilities include: Processing and verifying vendor invoices, ensuring accuracy and compliance with council policies. Preparing payment runs and ensuring timely payments to suppliers while maintaining good relationships. Maintaining accurate records of accounts payable transactions, including reconciliations and adjustments. Responding to vendor inquiries regarding account status, payment schedules, and discrepancies. Assisting in month-end closing processes by preparing reports related to accounts payable activities. Collaborating with internal departments to resolve any issues related to invoices or payments. Ensuring adherence to financial controls and procedures to mitigate risks associated with accounts payable operations. This role is essential for maintaining the financial integrity of Mornington Shire Council, requiring a proactive approach towards managing supplier relationships while ensuring compliance with relevant regulations and policies."
+            ],
+            [
+              2,
+              "mornington",
+              "SYD",
+              "Assist in providing an accurate and efficient financial accounting service to Council.\u00a0Provide Executive Managers with quality accounting and finance support. Enter data upon receiving of purchase orders, receipts, work orders, job numbers etc.\u00a0Enquire and communicate with suppliers, vendors, staff to resolve all accounts discrepancies.",
+              "Assist in providing an accurate and efficient financial accounting service to Council. Provide Executive Managers with quality accounting and finance support. Enter data upon receiving of purchase orders, receipts, work orders, job numbers etc. Enquire and communicate with suppliers, vendors, staff to resolve all accounts discrepancies."
+            ],
+            [
+              210,
+              "lccare",
+              "SYD",
+              "The Executive Manager Strategy & Risk provides organisation-wide strategic and operational leadership across Lutheran Care\u2019s corporate strategy, risk and organisational performance functions. The role is responsible for shaping organisational direction through the provision of high quality research, analysis and insights, ensuring strategic priorities are clearly defined, measurable and aligned to organisational objectives.The role requires influential executive leadership within a complex operating environment. It works closely with the Chief Executive Officer and Executive Team to strengthen organisational performance, governance and sustainability through evidence-informed advice and the progression of key priorities. The role provides strategic oversight of enterprise risk, advising the Executive and Board on matters that strengthen governance, compliance and organisational resilience.The Executive Manager Strategy & Risk is accountable for the development and delivery of strategic initiatives, ensuring outcomes are achieved through direct contribution or through others where required.As a member of the Executive Team, the role contributes to organisational strategy, risk management and decision making, and supports Lutheran Care\u2019s positioning for future growth and impact.",
+              "The Executive Manager Strategy & Risk provides organisation-wide strategic and operational leadership across Lutheran Care\u2019s corporate strategy, risk and organisational performance functions. The role is responsible for shaping organisational direction through the provision of high quality research, analysis and insights, ensuring strategic priorities are clearly defined, measurable and aligned to organisational objectives. The role requires influential executive leadership within a complex operating environment. It works closely with the Chief Executive Officer and Executive Team to strengthen organisational performance, governance and sustainability through evidence-informed advice and the progression of key priorities. The role provides strategic oversight of enterprise risk, advising the Executive and Board on matters that strengthen governance, compliance and organisational resilience. The Executive Manager Strategy & Risk is accountable for the development and delivery of strategic initiatives, ensuring outcomes are achieved through direct contribution or through others where required. As a member of the Executive Team, the role contributes to organisational strategy, risk management and decision making, and supports Lutheran Care\u2019s positioning for future growth and impact."
+            ],
+            [
+              125,
+              "brams",
+              "SYD",
+              "The Workforce Development Coordinator is responsible for leading the coordination and governance of workforce learning across BRAMS. The role ensures all learning and development activities are structured, planned, recorded and evaluated through the ELMO Learning Management System, creating a consistent, accountable and data-driven approach to workforce capability.Working with the CEO, Executive Managers and Program Leads, this position drives the implementation of BRAMS\u2019Learning and Development Framework and ensures all staff have current Training Needs Analyses and Learning and Development Plans that align with organisational priorities. The role supports a continuous learning cycle of planning, delivery, evaluation and improvement, and promotes a culture where professional growth, learning and reflective practice are part of everyday work.The position also oversees clinical competency and credentialing programs, supporting BRAMS to meet workforce governance, compliance and accreditation requirements. Through strategic leadership and effective coordination, the Workforce Development Coordinator strengthens BRAMS\u2019 capacity to deliver safe, high-quality and culturally responsive care.",
+              "The Workforce Development Coordinator is responsible for leading the coordination and governance of workforce learning across BRAMS. The role ensures all learning and development activities are structured, planned, recorded and evaluated through the ELMO Learning Management System, creating a consistent, accountable and data-driven approach to workforce capability. Working with the CEO, Executive Managers and Program Leads, this position drives the implementation of BRAMS\u2019Learning and Development Framework and ensures all staff have current Training Needs Analyses and Learning and Development Plans that align with organisational priorities. The role supports a continuous learning cycle of planning, delivery, evaluation and improvement, and promotes a culture where professional growth, learning and reflective practice are part of everyday work. The position also oversees clinical competency and credentialing programs, supporting BRAMS to meet workforce governance, compliance and accreditation requirements. Through strategic leadership and effective coordination, the Workforce Development Coordinator strengthens BRAMS\u2019 capacity to deliver safe, high-quality and culturally responsive care."
+            ],
+            [
+              112,
+              "harbgroup",
+              "SYD",
+              "Position Description for TA_Job Role at Harb GroupThe Talent Acquisition Job Role at Harb Group is pivotal in identifying and attracting top-tier talent to support our organisational goals. This position requires a proactive and dynamic individual who is skilled in various recruitment methodologies and has a keen understanding of the job market.Key Responsibilities:Develop and implement effective recruitment strategies to meet the organisation's hiring needs.Collaborate with department heads to understand specific staffing requirements and create targeted job descriptions.Source candidates through various channels including online job boards, social media, networking events, and referrals.Screen resumes and applications to identify suitable candidates for further evaluation.Conduct interviews to assess candidates' skills, experience, and cultural fit within the company.Maintain relationships with potential candidates throughout the hiring process to ensure a positive candidate experience.Manage the scheduling of interviews between candidates and hiring managers while ensuring timely communication at all stages of the recruitment process.Assist in drafting offers of employment and negotiate terms where necessary.Track recruitment metrics to evaluate the effectiveness of recruitment strategies and improve processes where needed.This role demands excellent communication skills, an eye for detail, and a passion for connecting people with opportunities. The successful candidate will play a crucial role in shaping the workforce of Harb Group by building a strong employer brand that attracts high-quality talent.",
+              "Position Description for TA_Job Role at Harb Group The Talent Acquisition Job Role at Harb Group is pivotal in identifying and attracting top-tier talent to support our organisational goals. This position requires a proactive and dynamic individual who is skilled in various recruitment methodologies and has a keen understanding of the job market. Key Responsibilities: Develop and implement effective recruitment strategies to meet the organisation's hiring needs. Collaborate with department heads to understand specific staffing requirements and create targeted job descriptions. Source candidates through various channels including online job boards, social media, networking events, and referrals. Screen resumes and applications to identify suitable candidates for further evaluation. Conduct interviews to assess candidates' skills, experience, and cultural fit within the company. Maintain relationships with potential candidates throughout the hiring process to ensure a positive candidate experience. Manage the scheduling of interviews between candidates and hiring managers while ensuring timely communication at all stages of the recruitment process. Assist in drafting offers of employment and negotiate terms where necessary. Track recruitment metrics to evaluate the effectiveness of recruitment strategies and improve processes where needed. This role demands excellent communication skills, an eye for detail, and a passion for connecting people with opportunities. The successful candidate will play a crucial role in shaping the workforce of Harb Group by building a strong employer brand that attracts high-quality talent."
+            ]
+          ],
+          "Job Role Modified Date": [
+            [
+              9,
+              "elmoassessment",
+              "SYD",
+              "2026-01-21 00:08:26+00:00",
+              "2026-04-29 01:08:49+00:00"
+            ],
+            [
+              1,
+              "caztest",
+              "SYD",
+              "2026-04-24 00:32:29+00:00",
+              "2026-04-29 03:18:32+00:00"
+            ],
+            [
+              117,
+              "gora",
+              "SYD",
+              "2025-10-10 06:49:46+00:00",
+              "2026-04-29 06:58:22+00:00"
+            ],
+            [
+              53,
+              "gora",
+              "SYD",
+              "2025-10-10 06:49:43+00:00",
+              "2026-04-29 05:13:32+00:00"
+            ],
+            [
+              63,
+              "balco",
+              "SYD",
+              "2026-07-01 23:47:08+00:00",
+              "2026-07-06 04:55:59+00:00"
+            ]
+          ]
+        },
+        "column_sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "PROD value",
+          "UAT value"
+        ]
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "DIFFS FOUND",
+    "notes": []
+  }
+]

@@ -1,0 +1,107 @@
+Assignment Rule ID,COURSE_ID,Assignment Rule Name,Assignment Rule Description,Assignment Rule Created Date,Assignment Rule Modified Date,Assignment Rule Is Active,Assignment Rule Is Confirmed,Assignment Rule Is Required Course,Assignment Rule Is Recommended Course,CLIENT_NAME,CLIENT_REGION
+1085,486,BPH - (2018/07) Domestic Services,Mandatory Training Requirements for new staff commencing within Domestic Services,2018-09-13 07:43:06+00:00,2019-02-02 11:22:03+00:00,False,True,True,False,healthscope,SYD
+25,81,"MPC Pre-Induction, 1-3 Months Induction","This will auto enrol all new VIC MPC staff in the MPC Pre-Induction (VIC) and the MPC Induction 1-3 Months (VIC) packages, as well as the Ambulance Victoria's Standard Operating Procedures Package",2022-02-22 22:42:52+00:00,2022-07-06 06:21:08+00:00,False,True,True,False,rfds,SYD
+22,1042,Objective Training For New Starters,,2022-07-26 05:25:22+00:00,2022-12-04 23:37:58+00:00,True,True,False,True,gmw,SYD
+136,112,Maintenance Manager WP,Mandatory Induction Training,2023-12-20 03:35:28+00:00,2025-06-27 01:09:28+00:00,True,True,True,False,becampbell,SYD
+75,502,"Sarah Taylor - etrainu and ELMO 2024, 2025","Sarah Taylor - etrainu and ELMO 2024, 2025",2024-10-15 23:19:42+00:00,2025-06-10 04:57:52+00:00,True,True,True,False,lifecoop,SYD
+506,1397,Transcriptionist Apollo Courses,Courses for Apollo for transcriptionists,2024-05-15 05:39:31+00:00,2024-05-15 05:39:37+00:00,True,True,True,False,sonic,SYD
+9,50,"Plant 1A - Trailers - Frame Cross Member Weld, Drawbar Weld",Dynamically assign necessary SOP & VOC documents to this employee group.,2024-01-19 10:43:38+00:00,2026-02-26 02:26:23+00:00,True,True,True,False,telwater,SYD
+306,799,Safety Business Partner (TNA) 2025,Safety Business Partner (TNA) 2025,2025-04-02 03:22:39+00:00,2026-07-08 01:15:13+00:00,True,True,True,False,sydneymetro,SYD
+710,948,AU Field Staff & Non-Managerial - Harassment & WHS Modules (End Dated- 31/05/2026),WHS Modules (Exclude WA/SA/NT/ACT),2026-04-21 06:00:38+00:00,2026-05-25 00:24:22+00:00,True,True,True,False,wilson,SYD
+27,146,Clinician,,2024-11-21 03:04:25+00:00,2025-11-20 03:52:19+00:00,True,True,True,False,wcfoundation,SYD
+7,47,Facilities Team SOPs,Allocation rule for mandatory SOPs all facilities team members,2026-03-05 03:30:09+00:00,2026-03-05 03:30:34+00:00,True,True,True,False,padua,SYD
+17,7,All New Staff - mandatory training,Auto-enrol,2020-09-10 04:16:29+00:00,2025-04-16 04:36:34+00:00,True,True,True,False,eastgippsland,SYD
+49,391,New Team Member - Compliance Modules (08/07/2026),The new Team Member enrolment rule will apply the required compliance modules upon commencement,2024-04-14 21:59:36+00:00,2026-07-08 22:22:38+00:00,True,True,True,False,nti,SYD
+72,304,"Registered Nurse Manaaki (excludes Manaaki Theatre, manually assigned courses) 2026","RN working in Theatre.
+Excludes Manaaki Theatre which has additional rules manually assigned by Manager / ACN",2025-12-11 20:29:32+00:00,2026-04-14 03:02:12+00:00,True,True,True,False,mercyhospital,SYD
+8,12,Transit Officers,,2025-01-07 03:50:59+00:00,2025-04-03 02:38:22+00:00,False,True,True,False,metrotas,SYD
+158,855,LineWide: Portion 3 Tunnel Ventilation System,,2024-03-25 05:10:39+00:00,2024-08-02 04:14:35+00:00,True,True,True,False,sydneymetro,SYD
+24,133,LND Essential Learning,This rule will automatically enrol all LnD users into the Learning Essentials course.,2023-04-06 01:41:41+00:00,2023-04-10 23:20:56+00:00,False,True,False,True,elmopractical2,SYD
+7,10,Warehouse SOP Bendigo,,2022-07-06 23:00:35+00:00,2026-01-13 00:33:17+00:00,True,True,True,False,viatek,SYD
+261,989,Senior System Engineer OT (TNA) 2025,Senior System Engineer OT (TNA) 2025,2025-03-18 02:19:19+00:00,2026-07-08 01:24:18+00:00,True,True,True,False,sydneymetro,SYD
+28,8,New Team Member Induction - YOKINE (V2),Team member induction updated from V2 to V3.,2019-07-25 02:43:22+00:00,2023-09-14 02:51:17+00:00,False,True,True,False,aea,SYD
+201,509,Travel Aware Course Series 2024,This rule assigns the 10 Travel Aware courses to all WTP staff in line with the full WTP roll out across Sept-Oct-Nov 2024.,2024-09-25 16:06:25+00:00,2026-01-21 17:49:30+00:00,False,True,True,False,covermore,SYD
+91,683,"Georgina Christofis - etrainu and ELMO 2024, 2025","Georgina Christofis - etrainu and ELMO 2024, 2025",2024-10-16 05:24:54+00:00,2026-06-29 00:59:43+00:00,True,True,True,False,lifecoop,SYD
+1978,5299,Sunnybank Private Hospital,Non-clinical Domestic services,2020-09-28 22:10:02+00:00,2020-09-28 22:10:10+00:00,True,True,True,False,healthscope,SYD
+72,134,HW - SUP153,Clinical Lead Physiotherapist,2022-09-20 13:32:26+00:00,2024-09-09 03:15:59+00:00,False,True,False,True,anglicaresa,SYD
+4,4,ISO Compliance Policies - All Employees,"Includes Level 1, 2 and 3 Security",2023-09-01 01:25:01+00:00,2023-10-09 03:58:49+00:00,True,True,True,False,olinqua,SYD
+297,6,Genazzano FCJ College,Cleaners,2022-12-09 05:08:59+00:00,2022-12-09 05:09:05+00:00,True,True,True,False,hunterindustrials,SYD
+322,628,Senior Engineer Electrical (TNA) 2025,Senior Engineer Electrical (TNA) 2025,2025-04-29 00:13:22+00:00,2026-07-08 01:19:25+00:00,True,True,True,False,sydneymetro,SYD
+21,233,Level 1 - Core Competency Training - Cross-Cultural Communication (CALD),All employees of UCSA / UCH must complete this core competency training as part of their employment.  All exemptions must be approved and recorded in the individual employee's external training record. Contact Facilitators (CCS) are not assigned this course. Amended rule 27/03/2024 - Donna Slade.,2020-05-09 06:49:31+00:00,2024-03-27 00:57:53+00:00,True,True,True,False,ucwcsa,SYD
+8,287,School Crossing Supervisors,,2020-10-08 04:20:18+00:00,2025-02-19 03:00:27+00:00,True,True,True,False,cardinia,SYD
+12,49,Underwritig/Client Growth & Commercial Enablement,Mandatory Induction Compliance Training,2026-06-18 02:38:48+00:00,2026-06-18 02:38:53+00:00,True,True,True,False,achmea,SYD
+38,238,All site Inductions,"HR team, Operations Support Coordinator",2024-02-29 02:31:58+00:00,2025-05-21 08:56:28+00:00,True,True,True,False,afsgroup,SYD
+67,13,Plant 1A - Metal Prep - Press One,Dynamically assign necessary SOP & VOC documents to this employee group.,2024-03-14 00:42:07+00:00,2026-02-26 02:16:12+00:00,True,True,True,False,telwater,SYD
+4,68,Corporate Administration / Reception Training Program,This assignment rule includes all mandatory courses and training that are relevant to all positions within the Corporate Administration / Reception Training Program.,2023-10-12 23:45:05+00:00,2024-11-11 23:38:38+00:00,True,True,True,False,safvcentre,SYD
+39,404,WWC- NSW,,2022-08-05 08:03:41+00:00,2022-08-05 23:06:13+00:00,False,True,True,False,mercyconnect,SYD
+353,115,ACS - Community Aged Care (CAC) - OP111,Aged Care Information Integration Officer. Updated November 2025.,2022-09-22 03:31:34+00:00,2026-05-15 00:23:36+00:00,False,True,False,True,anglicaresa,SYD
+61,29,Marketing Officer,This list includes mandatory training as per Training Needs Analysis completed in 2021.,2021-03-16 06:43:55+00:00,2021-03-16 06:43:57+00:00,True,True,True,False,subiaco,SYD
+6,42,Induction Rule- Non-Client Facing,Induction Module to be completed by Non-Client Facing,2025-08-27 05:57:12+00:00,2026-01-05 23:38:35+00:00,False,True,True,False,achmea,SYD
+210,268,Customer Information Delivery Partner (TNA) 2025,Customer Information Delivery Partner (TNA) 2025,2024-12-17 05:08:35+00:00,2026-07-08 00:23:30+00:00,True,True,True,False,sydneymetro,SYD
+46,10,Policy Acknowledgements,,2023-05-26 00:58:55+00:00,2023-10-31 02:34:20+00:00,False,True,True,False,gooddrinks,SYD
+85,119,DS - MAN123,"Manager, Disability Support",2022-09-20 13:46:01+00:00,2022-09-23 01:14:46+00:00,True,True,True,False,anglicaresasandbox,SYD
+78,95,Marketing Team,,2025-02-10 01:37:02+00:00,2025-04-15 01:00:59+00:00,False,True,True,False,swancare,SYD
+297,885,Operational Trainer (TNA) 2025,Operational Trainer (TNA) 2025,2025-03-30 23:01:16+00:00,2026-07-08 01:05:37+00:00,True,True,True,False,sydneymetro,SYD
+235,982,1. Environment Training -  Production - Austral Bricks VIC,,2020-09-30 05:41:09+00:00,2022-11-14 00:22:52+00:00,True,True,True,False,brickworks,SYD
+404,4,CAFS Administrator - Orientation,,2025-02-06 02:59:35+00:00,2025-02-06 02:59:37+00:00,True,True,True,False,familycare,SYD
+245,572,Assistant Accountant (TNA) 2025,Assistant Accountant (TNA) 2025,2025-03-17 04:40:10+00:00,2026-04-16 02:31:05+00:00,True,True,True,False,sydneymetro,SYD
+10,14,Onboarding - Oct 2019,,2019-10-22 02:50:06+00:00,2020-01-16 23:33:36+00:00,True,True,True,False,evolvehousing,SYD
+41,662,Marketing Team,,2024-11-10 10:52:43+00:00,2025-01-15 05:38:46+00:00,False,True,True,False,swancare,SYD
+47,287,Chief Financial Officer (CFO),Course requirements for Chief Financial Officer (CFO),2022-12-05 02:52:39+00:00,2025-07-07 03:51:26+00:00,True,True,True,False,wicet,SYD
+181,982,Engineering Controller (TNA) 2025,EMD - Engineering Controller (TNA) 2025,2024-07-16 07:29:29+00:00,2026-07-08 00:31:35+00:00,True,True,True,False,sydneymetro,SYD
+1919,14235,Mount Hospital - COVID 19 Clinical,Mandatory COVID 19 Healthscope Modules,2020-08-10 05:18:42+00:00,2020-08-11 00:24:12+00:00,True,True,True,False,healthscope,SYD
+1248,9549,BPH - (01/19) Housekepping,Mandatory Training Requirements for new staff commencing within the Housekeeping department,2019-01-30 22:42:34+00:00,2019-05-28 03:18:25+00:00,True,True,True,False,healthscope,SYD
+17,916,WB Group Induction Compliance 2.0,"new starters starting 19 September 2024
+
+*new NOCLAR module",2024-09-18 02:18:31+00:00,2025-11-04 00:49:43+00:00,True,True,True,False,williambucksa,SYD
+581,134,HW - Community - OP533,"Allied Health Assistant, Health & Wellness",2023-10-10 22:24:46+00:00,2025-08-01 06:58:40+00:00,False,True,False,True,anglicaresa,SYD
+367,579,Heritage Advisor 2025,Heritage Advisor 2025,2025-10-26 22:28:45+00:00,2026-07-08 01:35:22+00:00,True,True,True,False,sydneymetro,SYD
+14,10,Manager- CAFS GV - Child Safety,,2023-08-02 05:21:17+00:00,2025-01-29 01:16:17+00:00,True,True,True,False,familycare,SYD
+1,15,Corporate Services,This filter should be used for all Corporate Services positions.,2021-10-06 03:58:49+00:00,2023-05-29 04:27:09+00:00,False,True,True,False,rw,SYD
+21,218,Boilermaker,,2023-08-24 13:05:33+00:00,2025-07-22 06:36:12+00:00,True,True,False,True,kmsands,SYD
+3,15,NSW Health Mandatory Training,NSW Health Mandatory Training,2026-05-15 01:35:59+00:00,2026-07-01 03:26:51+00:00,True,False,True,False,startts,SYD
+39,181,Biosecurity Officer,Built & Natural Environment,2025-10-02 05:23:07+00:00,2026-02-17 03:43:51+00:00,True,True,False,True,snowymonaro,GOV
+1678,14248,BPH - COVID 19 (ward D),,2020-04-19 23:55:53+00:00,2020-04-20 06:01:02+00:00,True,True,True,False,healthscope,SYD
+12,2,Test,,2024-05-21 06:25:43+00:00,2024-05-21 06:25:47+00:00,True,True,True,False,csm7golden,SYD
+263,862,Cyber Security Manager (TNA) 2025,Cyber Security Manager (TNA) 2025,2025-03-18 04:53:58+00:00,2026-04-16 05:52:25+00:00,True,True,True,False,sydneymetro,SYD
+326,458,Maintenance Lead Track and Structures (TNA) 2025,Maintenance Lead Track and Structures (TNA) 2025,2025-04-29 00:41:56+00:00,2026-07-08 00:53:52+00:00,True,True,True,False,sydneymetro,SYD
+80,135,New CJCS & CJCT,CJCS pre-reqs,2024-02-01 04:20:43+00:00,2024-02-01 04:44:30+00:00,True,True,True,False,sydneymetro,SYD
+217,36,HOU - OP664,"Administration Support Officer/
+Project Administration Officer",2022-09-21 13:06:34+00:00,2022-09-23 01:01:19+00:00,True,True,False,True,anglicaresasandbox,SYD
+13,164,CCA - Baseline SWI's - Chef / Manager,This is the baseline SWI's (Standard Work Instructions) for all Chef Manager to complete in the CCA sector,2023-07-17 02:55:20+00:00,2026-03-23 04:40:24+00:00,True,True,True,False,catercare,SYD
+10,107,ALL STAFF,All MTS staff,2019-04-24 05:49:22+00:00,2022-01-13 03:25:45+00:00,True,True,True,False,sydneymetro,SYD
+324,683,Asset Engineering Technician Communications & Control System (TNA) 2025,Asset Engineering Technician Communications & Control System (TNA) 2025,2025-04-29 00:21:19+00:00,2026-07-08 00:19:11+00:00,True,True,True,False,sydneymetro,SYD
+221,938,Customer Operations Manager (TNA) 2025,Customer Operations Manager (TNA) 2025,2024-12-18 04:52:16+00:00,2026-07-08 00:28:14+00:00,True,True,True,False,sydneymetro,SYD
+51,101,"Plant 2C & 2D - Paint-Prep - Large, Plate & 2Tone",Dynamically assign necessary SOP & VOC documents to this employee group.,2024-02-25 08:52:15+00:00,2026-03-26 04:16:23+00:00,True,True,True,False,telwater,SYD
+8,98,New Recruit Induction,Send all this stuff when signed up to course,2019-06-12 01:09:00+00:00,2019-07-07 23:14:34+00:00,False,True,True,False,nzhl,SYD
+17,162,Mechanical Fitter,,2023-08-22 08:09:27+00:00,2025-07-16 04:41:15+00:00,True,True,True,False,kmsands,SYD
+16,90,New Starter Mandatory Training Plan FY26,All new starters commencing at NGS from 1 July 2025,2025-07-09 01:00:46+00:00,2026-07-01 03:14:59+00:00,True,True,True,False,ngssuper,SYD
+248,1031,Procurement & Contracts Manager (TNA) 2025,Procurement & Contracts Manager (TNA) 2025,2025-03-18 00:43:56+00:00,2025-12-10 03:11:32+00:00,True,True,True,False,sydneymetro,SYD
+4,590,LOF project for Laura,Apply Online modules,2023-07-19 02:49:27+00:00,2023-08-18 01:47:56+00:00,True,True,False,True,beyondbank,SYD
+234,437,SWI Modification - CCA - Warrigal - Bundanoon,SWI Modification - CCA - Warrigal - Bundanoon,2024-03-03 23:50:27+00:00,2024-03-03 23:50:29+00:00,True,True,True,False,catercare,SYD
+35,158,Site Wide - Engineer or Surveyor or Consultant,,2023-06-23 01:10:49+00:00,2025-05-01 22:49:12+00:00,True,True,True,False,wicetcontractor,SYD
+62,107,NDIS,,2021-10-26 22:27:15+00:00,2023-05-11 02:20:36+00:00,False,True,True,False,atsichsbrisbane,SYD
+7,10,Manager- CAFS LH- Child Safety,,2023-08-02 03:45:00+00:00,2025-01-29 01:24:07+00:00,True,True,True,False,familycare,SYD
+180,295,SWI Modification - CCR - HER - The Botanist,SWI Modification - CCR - HER - The Botanist,2024-03-03 22:55:04+00:00,2024-03-03 22:55:06+00:00,True,True,True,False,catercare,SYD
+28,12,New Starter - Technical,"For all new starters from Design, QS, Structural, and PM teams.",2021-08-20 00:02:55+00:00,2025-04-08 05:00:27+00:00,True,True,True,False,maynardmarks,SYD
+73,44,"Client Care - High Risk, High Prevalence and Deterioration - RAC","Assignment for all relative roles within RAC for Client Care - High Risk, High Prevalence and Deterioration for the rollout of the 2025 matrix - 21/01/2025",2025-01-21 07:30:56+00:00,2025-08-22 06:54:28+00:00,False,True,True,False,brightwatercare,SYD
+7,69,New Contact Centre Manager Induction Courses,Induction courses of all new Contact Centre Managers.,2025-04-09 04:12:05+00:00,2026-02-15 23:12:49+00:00,True,True,True,False,caresuper,SYD
+342,799,Senior Engineer CSW Interface (TNA) 2025,Senior Engineer CSW Interface (TNA) 2025,2025-05-16 06:27:16+00:00,2026-07-08 01:18:58+00:00,True,True,True,False,sydneymetro,SYD
+20,327,TechSTAR Blocks,This is assigned to all Apprentices who complete TechSTAR,2025-06-16 07:12:43+00:00,2025-11-12 22:52:39+00:00,True,True,True,False,emmetts,SYD
+10,536,Quality Coordinator - Manufacturing - Core Training,,2022-10-05 01:39:24+00:00,2026-05-04 21:23:38+00:00,True,True,True,False,dgc,SYD
+36,114,CAC - MAN265,"Manager, Care Team",2022-09-20 03:19:28+00:00,2022-09-23 01:39:43+00:00,True,True,False,True,anglicaresasandbox,SYD
+4,321,First aid for LH EA staff DSW,These courses are mandatory requirements for all Support workers on the LH EA,2025-09-02 06:54:06+00:00,2026-01-26 23:56:16+00:00,True,True,True,False,novita,SYD
+577,1603,AU SEC - CLIENT - University Of Canberra (112300214 / 112300506),"112300214 - University of Canberra (3012214)
+112300506 - BGIS Pty Limited (University Of Canberra Public Hospital) (3012506)",2024-07-05 06:07:14+00:00,2025-08-14 00:20:05+00:00,True,True,True,False,wilson,SYD
+49,79,Construction worker Parks & Gardens,"Civic Maintenance 
+233.1, 233.11, 233.8, 233.9",2025-10-09 03:28:26+00:00,2026-05-12 04:52:56+00:00,True,True,True,False,snowymonaro,GOV
+129,152,SOP-ANN-036 External Inspection V0,SOP-ANN-036 External Inspection V0,2023-01-10 07:16:27+00:00,2025-07-28 05:40:29+00:00,False,True,True,False,annaliseai,SYD
+6,10,Mandatory Compliance Training - All staff,Mandatory Compliance Training required to be done every 12 months,2018-08-24 08:03:40+00:00,2021-04-06 22:26:38+00:00,False,True,True,False,digitalhealth,GOV
+5,11,zzz All New Staff - mandatory training - SUPERSEDED (PDF),Auto-enrol,2018-12-05 03:50:23+00:00,2020-09-14 01:31:24+00:00,True,True,True,False,eastgippsland,SYD
+1126,497,Holmesglen Orderlies,As per policy. Rule created 1/10/2018. CB,2018-10-01 03:48:40+00:00,2018-10-01 03:48:43+00:00,True,True,True,False,healthscope,SYD
+75,138,"Plant 2A - Metal Prep Press/Stretcher/Robot - press one, stretch - bottomsides, trim - bottomside, guillo press",Dynamically assign necessary SOP & VOC documents to this employee group.,2024-06-28 01:40:36+00:00,2026-03-20 02:33:42+00:00,True,True,True,False,telwater,SYD
+251,926,Manager Network Performance (TNA) 2025,Manager Network Performance (TNA) 2025,2025-03-18 00:58:49+00:00,2025-12-10 03:02:54+00:00,True,True,True,False,sydneymetro,SYD
+361,986,Special Events Planner - Transport Operations 2025,Special Events Planner - Transport Operations 2025,2025-10-22 01:34:27+00:00,2025-10-22 01:34:30+00:00,True,True,False,True,sydneymetro,SYD
+20,80,Shopfitting Project Manager Training Suite,This training suite includes all courses that are relevant to the position of Shopfitting Project Manager.,2022-04-09 23:08:59+00:00,2022-11-24 04:33:12+00:00,True,True,True,False,primebuild,SYD
+368,810,AU SEC - ROLE - Armed / Firearms (VIC),Officers who hold firearm Licence,2020-07-23 05:33:01+00:00,2026-03-19 05:27:12+00:00,True,True,True,False,wilson,SYD
+5,52,Fleet Corporate Procedure - UPDATE,,2020-10-02 02:25:13+00:00,2021-01-14 22:12:34+00:00,False,True,True,False,greatershepparton,SYD

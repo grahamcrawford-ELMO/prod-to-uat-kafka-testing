@@ -1,0 +1,974 @@
+[
+  {
+    "table": "GENERAL_JOB_ROLE",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": [],
+        "queries": [
+          "\n            SELECT COALESCE(p.column_name, u.column_name) AS column_name,\n                   p.ordinal_position, u.ordinal_position, p.data_type, u.data_type\n            FROM (SELECT * FROM PROD_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'GENERAL_JOB_ROLE') p\n            FULL JOIN (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'GENERAL_JOB_ROLE') u\n              ON p.column_name = u.column_name\n            WHERE p.column_name IS NULL OR u.column_name IS NULL\n               OR p.ordinal_position != u.ordinal_position\n               OR p.data_type != u.data_type\n            ORDER BY COALESCE(p.ordinal_position, u.ordinal_position)"
+        ]
+      },
+      "T1": {
+        "status": "FAIL",
+        "prod_rows": 41766,
+        "uat_rows": 41837,
+        "diff": -71,
+        "threshold_pct": 0.1,
+        "queries": [
+          "\n            SELECT p.n, u.n, p.n - u.n\n            FROM (SELECT COUNT(*) AS n FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) p,\n                 (SELECT COUNT(*) AS n FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) u"
+        ]
+      },
+      "T2": {
+        "dups": {
+          "prod": {
+            "dup_key_count": 0
+          },
+          "uat": {
+            "dup_key_count": 0
+          }
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "n"
+        ],
+        "sample_rows": {},
+        "status": "PASS",
+        "threshold_pct": 0.1,
+        "denominator": 41837,
+        "grain_unique": true,
+        "grain_usable": true,
+        "queries": [
+          "\n                SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM PROD_DB.BI.GENERAL_JOB_ROLE\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100",
+          "\n                SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM UAT_DB.BI.GENERAL_JOB_ROLE\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100"
+        ]
+      },
+      "T3": {
+        "counts": {
+          "in_prod_not_uat": 137,
+          "in_uat_not_prod": 208
+        },
+        "cte": "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+        "key_diff": {
+          "in_prod_not_uat": 131,
+          "in_uat_not_prod": 202
+        },
+        "key_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "key_samples": {
+          "in_prod_not_uat": [
+            [
+              258,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              170,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              244,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              173,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              211,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              274,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              172,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              238,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              165,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              159,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              161,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              193,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              154,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              181,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              164,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              175,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              179,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              213,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              246,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              259,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              195,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              174,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              182,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              261,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              223,
+              "hrcsandpitgov",
+              "GOV"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              28,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              37,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              27,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              49,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              77,
+              "mayers",
+              "SYD"
+            ],
+            [
+              21,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              20,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              40,
+              "mayers",
+              "SYD"
+            ],
+            [
+              67,
+              "mayers",
+              "SYD"
+            ],
+            [
+              393,
+              "vetpartners",
+              "SYD"
+            ],
+            [
+              1,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              27,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              93,
+              "taptmedia",
+              "SYD"
+            ],
+            [
+              34,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              90,
+              "mayers",
+              "SYD"
+            ],
+            [
+              46,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              98,
+              "mayers",
+              "SYD"
+            ],
+            [
+              19,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              104,
+              "mayers",
+              "SYD"
+            ],
+            [
+              30,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              60,
+              "mayers",
+              "SYD"
+            ],
+            [
+              26,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              97,
+              "mayers",
+              "SYD"
+            ],
+            [
+              70,
+              "mayers",
+              "SYD"
+            ],
+            [
+              89,
+              "mayers",
+              "SYD"
+            ]
+          ]
+        },
+        "status": "FAIL",
+        "threshold_pct": 0.1,
+        "denominator": 41837,
+        "samples": {
+          "in_prod_not_uat": [
+            [
+              227,
+              "Senior Business Advisor",
+              "JR286",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              160,
+              "Machine Operator",
+              "JR183",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              173,
+              "Mechanical Supervisor - Construction",
+              "JR200",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              235,
+              "Senior Electrician",
+              "JR297",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              253,
+              "Site Superintendent",
+              "JR325",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              279,
+              "Commissioning Technician",
+              "JR359",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              178,
+              "Managing Director",
+              "JR210",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              258,
+              "Senior Document Controller",
+              "JR331",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              283,
+              "mysql8-3",
+              "mysql8-3",
+              "2025-01-10 23:33:52+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              226,
+              "Senior Applications Engineer",
+              "JR285",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              180,
+              "Operations Centre Specialist",
+              "JR215",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              201,
+              "Project Accountant",
+              "JR248",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              237,
+              "Senior Group Accountant",
+              "JR300",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              167,
+              "Mechanical Designer",
+              "JR194",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              161,
+              "Maintenance Planner",
+              "JR184",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              278,
+              "Group Legal Counsel",
+              "JR361",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              197,
+              "Production Manager",
+              "JR241",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              176,
+              "Mechanical Draftsperson",
+              "JR206",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              190,
+              "Principal Applications Engineer - BESS",
+              "JR232",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              263,
+              "Spray Painter",
+              "JR336",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              275,
+              "Vacation Student",
+              "JR357",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              277,
+              "High Voltage Manager",
+              "JR360",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              274,
+              "Truck Driver",
+              "JR355",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              282,
+              "mysql8-2",
+              "mysql8-2",
+              "2025-01-10 23:33:52+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              224,
+              "Senior Trade - Comissioning",
+              "JR282",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              24,
+              "Warehouse Storeperson",
+              "Warehouse Storeperson",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              40,
+              "National Sales & Marketing Manager - Chocolate Patisserie & HORECA",
+              "National Sales & Marketing Manager - Chocolate Patisserie & HORECA",
+              "2026-04-29 00:35:14+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              81,
+              "Brand Manager: Lurpak",
+              "Brand Manager: Lurpak",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              27,
+              "LRN National Sales Manager",
+              "LRN National Sales Manager",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              28,
+              "Sales Development and Leadership Specialist",
+              "Sales Development and Leadership Specialist",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              64,
+              "National Sales Manager - Foodservice",
+              "National Sales Manager - Foodservice",
+              "2026-04-29 00:35:15+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              23,
+              "Inventory Controller",
+              "Inventory Controller",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              15,
+              "National Customer Care Manager",
+              "National Customer Care Manager",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              24,
+              "IT Manager",
+              "IT Manager",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              78,
+              "Consultant - Retail",
+              "Consultant - Retail",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              98,
+              "Head of Finance",
+              "JP_MANAGER_FINANCE",
+              "2026-04-29 01:31:17+00:00",
+              "taptmedia",
+              "SYD"
+            ],
+            [
+              39,
+              "National Account Manager - Woolworths",
+              "National Account Manager - Woolworths",
+              "2026-04-29 00:35:14+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              19,
+              "Sales Consultant",
+              "Sales Consultant",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              67,
+              "Business Development Manager",
+              "Business Development Manager",
+              "2026-04-29 00:35:15+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              50,
+              "Data Analyst",
+              "Data Analyst",
+              "2026-04-29 00:08:22+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              86,
+              "Director of Sales",
+              "Director of Sales",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              34,
+              "Installation Professional",
+              "Installation Professional",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              11,
+              "ELMO CSM [Drew]",
+              "001",
+              "2026-04-29 01:10:11+00:00",
+              "elmoassessment",
+              "SYD"
+            ],
+            [
+              32,
+              "Marketing and Communications Manager",
+              "Marketing and Communications Manager",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              13,
+              "CFO",
+              "CFO",
+              "2026-04-29 00:35:12+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              11,
+              "Assistant Accountant",
+              "Assistant Accountant",
+              "2026-04-29 00:35:12+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              58,
+              "Inventory Co-Ordinator",
+              "Inventory Co-Ordinator",
+              "2026-04-29 00:35:15+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              22,
+              "IT Support",
+              "IT Support",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              90,
+              "Digital Media Specialist",
+              "Digital Media Specialist",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              9,
+              "Accounts Clerk",
+              "Accounts Clerk",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ]
+          ]
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "Job Role Title",
+          "Job Role Identifier",
+          "Job Role Created Date",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "queries": [
+          "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT 'in_prod_not_uat' AS direction, COUNT(*) FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat)\nUNION ALL\nSELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod)",
+          "SELECT COUNT(*) FROM (SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "SELECT COUNT(*) FROM (SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"Job Role ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat) LIMIT 25",
+          "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod) LIMIT 25"
+        ]
+      },
+      "T4": {
+        "status": "ACCEPTED",
+        "shared_keys": 48072,
+        "mismatched_columns": {
+          "Job Role Title": 3,
+          "Job Role Description": 4250,
+          "Job Role Identifier": 5,
+          "Job Role Skills and Experience": 5029,
+          "Job Role Modified Date": 12
+        },
+        "column_status": {
+          "Job Role Title": "ACCEPTED_THRESHOLD",
+          "Job Role Description": "ACCEPTED_MARKED",
+          "Job Role Identifier": "ACCEPTED_THRESHOLD",
+          "Job Role Skills and Experience": "ACCEPTED_MARKED",
+          "Job Role Modified Date": "ACCEPTED_MARKED"
+        },
+        "accepted_reasons": {
+          "Job Role Description": "HTML stripping differs between pipelines",
+          "Job Role Skills and Experience": "HTML stripping differs between pipelines",
+          "Job Role Modified Date": "Affected by MAYDAY-526 - Missing April 29th - UAT is correct"
+        },
+        "threshold_pct": 0.1,
+        "excluded_columns": {},
+        "sql": "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Title\",''), NULLIF(u.\"Job Role Title\",''))) AS \"Job Role Title\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Description\",''), NULLIF(u.\"Job Role Description\",''))) AS \"Job Role Description\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Identifier\",''), NULLIF(u.\"Job Role Identifier\",''))) AS \"Job Role Identifier\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Skills and Experience\",''), NULLIF(u.\"Job Role Skills and Experience\",''))) AS \"Job Role Skills and Experience\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Created Date\", u.\"Job Role Created Date\")) AS \"Job Role Created Date\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Modified Date\", u.\"Job Role Modified Date\")) AS \"Job Role Modified Date\"\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+        "column_samples": {
+          "Job Role Skills and Experience": [
+            [
+              74,
+              "balco",
+              "SYD",
+              "Degree Qualifications in related fieldDemonstrated experience in a HR business partner or higher role in a similar organisationDemonstrated experience providing HSQ advisory support for a business with site-based operationsUnderstanding of HR/HSQ compliance and legal obligationsExposure to agriculture, manufacturing or similar industry requiredExperience in workers compensation/return to work considered an advantageExperience in supporting site-based leaders in an advisory or similar roleAble to work independently and self-guidedPractical and collaborative style with a positive, solutions focused and supportive attitudeExperience understanding and applying safety legislation and standards and/or Awards and other industrial instrumentsPrevious hands-on HR/HSQ service deliveryExcellent relationship building and people engagement skillsExperience in the development of HR/HSQ systemsSound verbal and written communication skillsExposure to annual planning and strategySignificant experience identifying and implementing improvement and change initiativesMust be able to travel interstate as required",
+              "Degree Qualifications in related field Demonstrated experience in a HR business partner or higher role in a similar organisation Demonstrated experience providing HSQ advisory support for a business with site-based operations Understanding of HR/HSQ compliance and legal obligations Exposure to agriculture, manufacturing or similar industry required Experience in workers compensation/return to work considered an advantage Experience in supporting site-based leaders in an advisory or similar role Able to work independently and self-guided Practical and collaborative style with a positive, solutions focused and supportive attitude Experience understanding and applying safety legislation and standards and/or Awards and other industrial instruments Previous hands-on HR/HSQ service delivery Excellent relationship building and people engagement skills Experience in the development of HR/HSQ systems Sound verbal and written communication skills Exposure to annual planning and strategy Significant experience identifying and implementing improvement and change initiatives Must be able to travel interstate as required"
+            ],
+            [
+              48,
+              "balco",
+              "SYD",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experienceDiploma level qualifications in management and logistics or materials handling will be highly regardedDemonstrated knowledge of contemporary Road Traffic Act compliance matters related to logisticsDemonstrated knowledge of Work Health and Safety compliance matters related to logisticsExcellent organisational skillsAbility to juggle conflicting priorities and demandsStrong analytical and problem solving skillsStrong positive communication skillsGood level of numeracy, able to keep financial recordsProficient computer skills, particularly Excel and inventory management systemsGood understanding of the administrative/work organising systems with ability to design and document procedures effectivelyEfficient skills and appropriate license to operate LoadersReliable, committed to high work standards and accuracyUnderstanding of the hay industry, farming and local region is desirableSignificant experience in supply chain/inventory management, or logistics role",
+              "Certificate 3 qualification in a management or logistics vocation or demonstrated knowledge and experience Diploma level qualifications in management and logistics or materials handling will be highly regarded Demonstrated knowledge of contemporary Road Traffic Act compliance matters related to logistics Demonstrated knowledge of Work Health and Safety compliance matters related to logistics Excellent organisational skills Ability to juggle conflicting priorities and demands Strong analytical and problem solving skills Strong positive communication skills Good level of numeracy, able to keep financial records Proficient computer skills, particularly Excel and inventory management systems Good understanding of the administrative/work organising systems with ability to design and document procedures effectively Efficient skills and appropriate license to operate Loaders Reliable, committed to high work standards and accuracy Understanding of the hay industry, farming and local region is desirable Significant experience in supply chain/inventory management, or logistics role"
+            ],
+            [
+              51,
+              "balco",
+              "SYD",
+              "Demonstrated commitment to safe work practices and behavioursProven ability to operate mobile plant safely (forklift, loader, telehandler)Strong teamwork and communication skillsGood organisational and time management abilitiesSound problem-solving skills and ability to respond to changing prioritiesBasic to intermediate skills in Microsoft Office (including Excel)Good numeracy and attention to detailAbility to work in a fast-paced operational environmentCompetency-based Work Permit \u2013 Loader Operations (LL) (Required)High Risk Work Licence \u2013 Forklift (Desirable)High Risk Work Licence \u2013 Crane (CN) (Desirable)Previous experience in logistics, warehousing or production environmentsExperience operating forklifts, loaders or telehandlersHay bale handling experience (highly regarded)Experience working within safety-focused environmentsFlexibility to work varying hours as requiredCommitment to ongoing training and developmentAbility to work collaboratively across multiple teamsStrong customer service mindset (internal and external)",
+              "Demonstrated commitment to safe work practices and behaviours Proven ability to operate mobile plant safely (forklift, loader, telehandler) Strong teamwork and communication skills Good organisational and time management abilities Sound problem-solving skills and ability to respond to changing priorities Basic to intermediate skills in Microsoft Office (including Excel) Good numeracy and attention to detail Ability to work in a fast-paced operational environment Competency-based Work Permit \u2013 Loader Operations (LL) (Required) High Risk Work Licence \u2013 Forklift (Desirable) High Risk Work Licence \u2013 Crane (CN) (Desirable) Previous experience in logistics, warehousing or production environments Experience operating forklifts, loaders or telehandlers Hay bale handling experience (highly regarded) Experience working within safety-focused environments Flexibility to work varying hours as required Commitment to ongoing training and development Ability to work collaboratively across multiple teams Strong customer service mindset (internal and external)"
+            ],
+            [
+              42,
+              "balco",
+              "SYD",
+              "Mature person with significant experience in a manufacturing environment at a senior management levelTrade Certificate in a Mechanical, Engineering or Electrical Vocation highly desirableDiploma of Management (or sufficient skills knowledge and experience to rapidly acquire) highly desirableExcellent understanding of manufacturing principles and practicesProven advanced level of mechanical aptitude (familiar with mechanical interfaces)Critical Thinking and problem solving (good analytical and problem solving skills)Proven record in achievement of production and cost targetsExcellent planning skills (coordination and control)Experience leading and developing a team (delegation, conflict management)Demonstrated knowledge of contemporary Work Health and Safety compliance mattersSound knowledge of contemporary quality improvement tools and techniques (HACCP, HAZOP, PDCA)Demonstrated knowledge of contemporary workplace training and education processesFlexibility and ability to respond pro-actively to changing environments (adaptive, stress tolerance)Sound verbal and written communication skills (negotiation, persuasive)Highly proficient in Excel and other Microsoft Office productsExcellent numeracy skillsExcellent organising skills",
+              "Mature person with significant experience in a manufacturing environment at a senior management level Trade Certificate in a Mechanical, Engineering or Electrical Vocation highly desirable Diploma of Management (or sufficient skills knowledge and experience to rapidly acquire) highly desirable Excellent understanding of manufacturing principles and practices Proven advanced level of mechanical aptitude (familiar with mechanical interfaces) Critical Thinking and problem solving (good analytical and problem solving skills) Proven record in achievement of production and cost targets Excellent planning skills (coordination and control) Experience leading and developing a team (delegation, conflict management) Demonstrated knowledge of contemporary Work Health and Safety compliance matters Sound knowledge of contemporary quality improvement tools and techniques (HACCP, HAZOP, PDCA) Demonstrated knowledge of contemporary workplace training and education processes Flexibility and ability to respond pro-actively to changing environments (adaptive, stress tolerance) Sound verbal and written communication skills (negotiation, persuasive) Highly proficient in Excel and other Microsoft Office products Excellent numeracy skills Excellent organising skills"
+            ],
+            [
+              56,
+              "balco",
+              "SYD",
+              "Demonstrated commitment to safe work practices and behavioursProven ability to operate mobile plant safely (forklift, loader, telehandler)Strong teamwork and communication skillsGood organisational and time management abilitiesSound problem-solving skills and ability to respond to changing prioritiesBasic to intermediate skills in Microsoft Office (including Excel)Good numeracy and attention to detailAbility to work in a fast-paced operational environmentCompetency-based Work Permit \u2013 Loader Operations (LL) (Required)High Risk Work Licence \u2013 Forklift (Desirable)High Risk Work Licence \u2013 Crane (CN) (Desirable)Previous experience in logistics, warehousing or production environmentsExperience operating forklifts, loaders or telehandlersHay bale handling experience (highly regarded)Experience working within safety-focused environmentsFlexibility to work varying hours as requiredCommitment to ongoing training and developmentAbility to work collaboratively across multiple teamsStrong customer service mindset (internal and external)",
+              "Demonstrated commitment to safe work practices and behaviours Proven ability to operate mobile plant safely (forklift, loader, telehandler) Strong teamwork and communication skills Good organisational and time management abilities Sound problem-solving skills and ability to respond to changing priorities Basic to intermediate skills in Microsoft Office (including Excel) Good numeracy and attention to detail Ability to work in a fast-paced operational environment Competency-based Work Permit \u2013 Loader Operations (LL) (Required) High Risk Work Licence \u2013 Forklift (Desirable) High Risk Work Licence \u2013 Crane (CN) (Desirable) Previous experience in logistics, warehousing or production environments Experience operating forklifts, loaders or telehandlers Hay bale handling experience (highly regarded) Experience working within safety-focused environments Flexibility to work varying hours as required Commitment to ongoing training and development Ability to work collaboratively across multiple teams Strong customer service mindset (internal and external)"
+            ]
+          ],
+          "Job Role Description": [
+            [
+              38,
+              "mornington",
+              "SYD",
+              "The Fleet Co-ordinator at Mornington Shire Council plays a pivotal role in managing and optimising the council's fleet of vehicles and equipment. This position requires an individual who is highly organised and possesses excellent communication skills, as they will liaise with various departments to ensure that all operational requirements are met efficiently.Key responsibilities include:Overseeing the maintenance, repair, and servicing of the council\u2019s fleet to ensure reliability and safety.Coordinating vehicle procurement, disposal, and inventory management to maintain an efficient fleet.Developing and implementing fleet policies and procedures in line with council regulations.Monitoring fuel consumption and managing associated records to promote operational efficiency.Conducting regular audits of vehicles and equipment for compliance with safety standards.Maintaining accurate records of vehicle usage, maintenance schedules, and costs involved.Collaborating with external service providers for repairs, inspections, and parts supply as needed.Providing training and support to staff on the appropriate use of vehicles and equipment.This role is essential in ensuring that the Mornington Shire Council operates a safe, effective, and sustainable fleet that meets the needs of its community services while adhering to budgetary constraints.",
+              "The Fleet Co-ordinator at Mornington Shire Council plays a pivotal role in managing and optimising the council's fleet of vehicles and equipment. This position requires an individual who is highly organised and possesses excellent communication skills, as they will liaise with various departments to ensure that all operational requirements are met efficiently. Key responsibilities include: Overseeing the maintenance, repair, and servicing of the council\u2019s fleet to ensure reliability and safety. Coordinating vehicle procurement, disposal, and inventory management to maintain an efficient fleet. Developing and implementing fleet policies and procedures in line with council regulations. Monitoring fuel consumption and managing associated records to promote operational efficiency. Conducting regular audits of vehicles and equipment for compliance with safety standards. Maintaining accurate records of vehicle usage, maintenance schedules, and costs involved. Collaborating with external service providers for repairs, inspections, and parts supply as needed. Providing training and support to staff on the appropriate use of vehicles and equipment. This role is essential in ensuring that the Mornington Shire Council operates a safe, effective, and sustainable fleet that meets the needs of its community services while adhering to budgetary constraints."
+            ],
+            [
+              33,
+              "lccare",
+              "SYD",
+              "Executive Manager Practice, Quality & Services will provide strategic and operational leadership to, and oversee the management of, a suite of programs within LC ensuring the quality of services delivered are of the highest standard. This includes complying with current legislation, accreditation and contractual requirements. With particular emphasis on strategic direction and future planning, this position sits within the Executive Team and will actively participate in and contribute to the broader organisational Management team.\u00a0",
+              "Executive Manager Practice, Quality & Services will provide strategic and operational leadership to, and oversee the management of, a suite of programs within LC ensuring the quality of services delivered are of the highest standard. This includes complying with current legislation, accreditation and contractual requirements. With particular emphasis on strategic direction and future planning, this position sits within the Executive Team and will actively participate in and contribute to the broader organisational Management team."
+            ],
+            [
+              57,
+              "mornington",
+              "SYD",
+              "Position Description:The Manager Infrastructure Delivery at Mornington Shire Council is a pivotal role responsible for overseeing the planning, implementation, and management of infrastructure projects within the council's jurisdiction. This position requires strategic oversight and effective leadership to ensure that all infrastructure initiatives align with the council's objectives and serve the community's needs.Main Responsibilities:Lead and manage a team of professionals in the delivery of infrastructure projects, ensuring high standards of quality, safety, and efficiency.Develop and implement project plans from conception through to completion, including budgeting, scheduling, and resource allocation.Coordinate with various stakeholders including internal departments, contractors, government agencies, and community groups to facilitate smooth project execution.Monitor project progress against timelines and budgets; provide regular updates to senior management on status and any potential issues.Ensure compliance with relevant regulations, policies, and standards throughout all phases of project delivery.Identify risks associated with infrastructure projects and develop mitigation strategies to address them effectively.Foster a culture of continuous improvement within the team by implementing best practices in project management methodologies.This role requires strong leadership skills combined with extensive knowledge of infrastructure development processes. The ideal candidate will demonstrate an ability to motivate teams while maintaining productive relationships with stakeholders across various sectors. The Manager Infrastructure Delivery plays a crucial part in shaping sustainable infrastructures that enhance the quality of life for residents within Mornington Shire Council.",
+              "Position Description: The Manager Infrastructure Delivery at Mornington Shire Council is a pivotal role responsible for overseeing the planning, implementation, and management of infrastructure projects within the council's jurisdiction. This position requires strategic oversight and effective leadership to ensure that all infrastructure initiatives align with the council's objectives and serve the community's needs. Main Responsibilities: Lead and manage a team of professionals in the delivery of infrastructure projects, ensuring high standards of quality, safety, and efficiency. Develop and implement project plans from conception through to completion, including budgeting, scheduling, and resource allocation. Coordinate with various stakeholders including internal departments, contractors, government agencies, and community groups to facilitate smooth project execution. Monitor project progress against timelines and budgets; provide regular updates to senior management on status and any potential issues. Ensure compliance with relevant regulations, policies, and standards throughout all phases of project delivery. Identify risks associated with infrastructure projects and develop mitigation strategies to address them effectively. Foster a culture of continuous improvement within the team by implementing best practices in project management methodologies. This role requires strong leadership skills combined with extensive knowledge of infrastructure development processes. The ideal candidate will demonstrate an ability to motivate teams while maintaining productive relationships with stakeholders across various sectors. The Manager Infrastructure Delivery plays a crucial part in shaping sustainable infrastructures that enhance the quality of life for residents within Mornington Shire Council."
+            ],
+            [
+              29,
+              "lccare",
+              "SYD",
+              "The Executive Manager Community Services provides organisation-wide strategic and operational leadership across Lutheran Care\u2019s community services portfolio in South Australia and the Northern Territory, with responsibility for all Government acquitted services that sit outside of the organisation\u2019s commercial operations. The role is accountable for ensuring services are high quality, safe, sustainable and aligned to Lutheran Care\u2019s strategic priorities.\u00a0The role requires influential executive leadership. It sets direction, engages leaders and drives performance within a complex service environment. This includes leading performance across a multi-layered workforce and ensuring effective structures, leadership capability and workforce practices that support high quality service delivery and sustainable outcomes.\u00a0As a member of the Executive Team, the role contributes to organisational strategy, risk management and decision making. It also represents Lutheran Care at senior levels across government, funding bodies and the sector.",
+              "The Executive Manager Community Services provides organisation-wide strategic and operational leadership across Lutheran Care\u2019s community services portfolio in South Australia and the Northern Territory, with responsibility for all Government acquitted services that sit outside of the organisation\u2019s commercial operations. The role is accountable for ensuring services are high quality, safe, sustainable and aligned to Lutheran Care\u2019s strategic priorities. The role requires influential executive leadership. It sets direction, engages leaders and drives performance within a complex service environment. This includes leading performance across a multi-layered workforce and ensuring effective structures, leadership capability and workforce practices that support high quality service delivery and sustainable outcomes. As a member of the Executive Team, the role contributes to organisational strategy, risk management and decision making. It also represents Lutheran Care at senior levels across government, funding bodies and the sector."
+            ],
+            [
+              220,
+              "gmeau",
+              "SYD",
+              "The Inwards Goods Quality Control Coordinator\u2019s primary goal is to manage, execute, and safeguard the incoming material inspection process, ensuring that both Commercial Product and Contract Manufacturing production lines are continuously supplied with fully verified and compliant components. This role owns the raw material quality lifecycle at the point of receipt, coordinates defect containment and material sorting, maintains engineering \"golden samples,\" and collaborates closely with the Senior Quality Assurance Engineer to process non-conformances and vendor replacements. Additionally, this position serves in a secondary capacity to provide critical operational coverage and support for the Production Quality Control Coordinator, ensuring seamless continuity across data entry, ESD control,\u00a0and manufacturing documentation compliance.Job Responsibilities:1. Primary Focus: Inwards Goods Management & Material InspectionPriority & Flow Management: Reviews the Incoming Material List to identify, schedule, and execute inspection priorities, ensuring a reliable supply of materials to Commercial Product and Contract Manufacturing production lines. Order & Specification Verification: Reviews shipping details, order numbers, and quantities against engineering drawings, technical specifications, and purchase orders. AQL & Dimensional Inspections: Obtains reference drawings and samples to inspect incoming parts, executing critical dimension and finish checks using specialised measurement tools and instrumentation in strict adherence to AQL guidelines. Golden Sample Management: Manages and maintains the Manufacturing & Product Engineering (MPE) sample framework, ensuring \"golden samples\" are properly stored, controlled, and accessible as per company guidelines.Cross-functional Liaison: Liaises proactively with Engineering, Warehouse, and Production staff to facilitate efficient material inspection outcomes and minimise manufacturing downtime.\u00a02. Primary Focus: Defect Containment, Sorting & NCR SupportIssue Containment & Sorting: Executes immediate inspection, isolation, and sorting of materials whenever a quality issue is identified or suspected on the floor or at receipt.Escalation & Communication: Communicates material defects, test failures, and variances directly to the Senior Quality Assurance Engineer for systemic evaluation. NCR & Replacement Coordination: Generates Rejected Material Advice notifications through the material management system and actively coordinates material replacements, supplier returns, and Non-Conformance Report (NCR) documentation.\u00a03. Secondary Focus: Production Quality Coverage & SupportProduction Coordinator Coverage: Cross-trains to actively cover and support the Production Quality Control Coordinator during peak periods or absences. Quality Data Entry: Assists with standard quality data entry, capturing failure metrics and process logs to support graphical performance reporting. ESD Control Support: Assists with Electrostatic Discharge (ESD) compliance verifications and standard control measures across manufacturing zones.Production Documentation Verification: Participates in verifying production documentation compliance, reviewing manufacturing line logs and building records for completeness.\u00a04. General & Regulatory ComplianceLegislative Compliance: Follows all Quality, Work Health & Safety (WHS), and Environment legislation, technical standards, and regulatory requirements. QA Evolution: Undertakes targeted tasks related to quality matters as directed by the department manager to support the continuous evolution of the company.\u00a0Safety, Environment, Quality and Compliance ResponsibilitiesSafety Adherence: Ensures the safety of self, work colleagues, and the environment by following all workplace guidelines and safety criteria. Site Rules: Operates in complete accordance with company site rules, standard operating procedures, and established safety policies. Escalation: Promptly reports and escalates safety, environment, compliance, and quality concerns, incidents, or near misses.\u00a0",
+              "The Inwards Goods Quality Control Coordinator\u2019s primary goal is to manage, execute, and safeguard the incoming material inspection process, ensuring that both Commercial Product and Contract Manufacturing production lines are continuously supplied with fully verified and compliant components. This role owns the raw material quality lifecycle at the point of receipt, coordinates defect containment and material sorting, maintains engineering \"golden samples,\" and collaborates closely with the Senior Quality Assurance Engineer to process non-conformances and vendor replacements. Additionally, this position serves in a secondary capacity to provide critical operational coverage and support for the Production Quality Control Coordinator, ensuring seamless continuity across data entry, ESD control, and manufacturing documentation compliance. Job Responsibilities : 1. Primary Focus: Inwards Goods Management & Material Inspection Priority & Flow Management: Reviews the Incoming Material List to identify, schedule, and execute inspection priorities, ensuring a reliable supply of materials to Commercial Product and Contract Manufacturing production lines. Order & Specification Verification: Reviews shipping details, order numbers, and quantities against engineering drawings, technical specifications, and purchase orders. AQL & Dimensional Inspections: Obtains reference drawings and samples to inspect incoming parts, executing critical dimension and finish checks using specialised measurement tools and instrumentation in strict adherence to AQL guidelines. Golden Sample Management: Manages and maintains the Manufacturing & Product Engineering (MPE) sample framework, ensuring \"golden samples\" are properly stored, controlled, and accessible as per company guidelines. Cross-functional Liaison: Liaises proactively with Engineering, Warehouse, and Production staff to facilitate efficient material inspection outcomes and minimise manufacturing downtime. 2. Primary Focus: Defect Containment, Sorting & NCR Support Issue Containment & Sorting: Executes immediate inspection, isolation, and sorting of materials whenever a quality issue is identified or suspected on the floor or at receipt. Escalation & Communication: Communicates material defects, test failures, and variances directly to the Senior Quality Assurance Engineer for systemic evaluation. NCR & Replacement Coordination: Generates Rejected Material Advice notifications through the material management system and actively coordinates material replacements, supplier returns, and Non-Conformance Report (NCR) documentation. 3. Secondary Focus: Production Quality Coverage & Support Production Coordinator Coverage: Cross-trains to actively cover and support the Production Quality Control Coordinator during peak periods or absences. Quality Data Entry: Assists with standard quality data entry, capturing failure metrics and process logs to support graphical performance reporting. ESD Control Support: Assists with Electrostatic Discharge (ESD) compliance verifications and standard control measures across manufacturing zones. Production Documentation Verification: Participates in verifying production documentation compliance, reviewing manufacturing line logs and building records for completeness. 4. General & Regulatory Compliance Legislative Compliance: Follows all Quality, Work Health & Safety (WHS), and Environment legislation, technical standards, and regulatory requirements. QA Evolution: Undertakes targeted tasks related to quality matters as directed by the department manager to support the continuous evolution of the company. Safety, Environment, Quality and Compliance Responsibilities Safety Adherence: Ensures the safety of self, work colleagues, and the environment by following all workplace guidelines and safety criteria. Site Rules: Operates in complete accordance with company site rules, standard operating procedures, and established safety policies. Escalation: Promptly reports and escalates safety, environment, compliance, and quality concerns, incidents, or near misses."
+            ]
+          ],
+          "Job Role Modified Date": [
+            [
+              14,
+              "ecka",
+              "SYD",
+              "2026-06-05 04:41:01+00:00",
+              "2026-05-26 23:57:47+00:00"
+            ],
+            [
+              102,
+              "asuria",
+              "SYD",
+              "2026-06-04 12:36:33+00:00",
+              "2026-06-03 05:03:18+00:00"
+            ],
+            [
+              213,
+              "qal",
+              "SYD",
+              "2026-05-27 23:08:27+00:00",
+              "2026-07-06 23:40:48+00:00"
+            ],
+            [
+              26,
+              "livingmyway",
+              "SYD",
+              "2026-05-25 04:18:22+00:00",
+              "2026-07-06 22:56:33+00:00"
+            ],
+            [
+              1,
+              "caztest",
+              "SYD",
+              "2026-04-24 00:32:29+00:00",
+              "2026-04-29 03:18:32+00:00"
+            ]
+          ],
+          "Job Role Identifier": [
+            [
+              26,
+              "mornington",
+              "SYD",
+              "Cleaning Supervisor",
+              "Cleaning Supervisor-Stream B-Level 6"
+            ],
+            [
+              80,
+              "mornington",
+              "SYD",
+              "Trades Assistant",
+              "Trades Assistant-Stream C C14"
+            ],
+            [
+              6,
+              "mornington",
+              "SYD",
+              "Administration Officer (Reception) - Stream Level 2-3",
+              "Administration Officer (Reception) - Stream A Level 2-3"
+            ],
+            [
+              170,
+              "srw",
+              "SYD",
+              "Dam Safety Graduate Engineer",
+              "Graduate Dam Safety Engineer"
+            ],
+            [
+              14,
+              "ecka",
+              "SYD",
+              "Lead Early Education Manager",
+              "Early Education Manager Lead"
+            ]
+          ],
+          "Job Role Title": [
+            [
+              170,
+              "srw",
+              "SYD",
+              "Dam Safety Graduate Engineer",
+              "Graduate Dam Safety Engineer"
+            ],
+            [
+              14,
+              "ecka",
+              "SYD",
+              "Lead Early Education Manager",
+              "Early Education Manager Lead"
+            ],
+            [
+              26,
+              "livingmyway",
+              "SYD",
+              "Executive Manager Quality Risk & Intermediary Services",
+              "Executive Manager Quality & Intermediary Services"
+            ]
+          ]
+        },
+        "column_sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "PROD value",
+          "UAT value"
+        ],
+        "queries": [
+          "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Title\",''), NULLIF(u.\"Job Role Title\",''))) AS \"Job Role Title\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Description\",''), NULLIF(u.\"Job Role Description\",''))) AS \"Job Role Description\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Identifier\",''), NULLIF(u.\"Job Role Identifier\",''))) AS \"Job Role Identifier\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Skills and Experience\",''), NULLIF(u.\"Job Role Skills and Experience\",''))) AS \"Job Role Skills and Experience\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Created Date\", u.\"Job Role Created Date\")) AS \"Job Role Created Date\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Modified Date\", u.\"Job Role Modified Date\")) AS \"Job Role Modified Date\"\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+          "SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Job Role Skills and Experience\" AS prod_value, u.\"Job Role Skills and Experience\" AS uat_value\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Job Role Skills and Experience\",''), NULLIF(u.\"Job Role Skills and Experience\",''))\nLIMIT 5",
+          "SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Job Role Description\" AS prod_value, u.\"Job Role Description\" AS uat_value\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Job Role Description\",''), NULLIF(u.\"Job Role Description\",''))\nLIMIT 5",
+          "SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Job Role Modified Date\" AS prod_value, u.\"Job Role Modified Date\" AS uat_value\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(p.\"Job Role Modified Date\", u.\"Job Role Modified Date\")\nLIMIT 5",
+          "SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Job Role Identifier\" AS prod_value, u.\"Job Role Identifier\" AS uat_value\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Job Role Identifier\",''), NULLIF(u.\"Job Role Identifier\",''))\nLIMIT 5",
+          "SELECT \"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Job Role Title\" AS prod_value, u.\"Job Role Title\" AS uat_value\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Job Role Title\",''), NULLIF(u.\"Job Role Title\",''))\nLIMIT 5"
+        ]
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "DIFFS FOUND",
+    "notes": [],
+    "accepted_columns": {
+      "Job Role Modified Date": "Affected by MAYDAY-526 - Missing April 29th - UAT is correct",
+      "Job Role Description": "HTML stripping differs between pipelines",
+      "Job Role Skills and Experience": "HTML stripping differs between pipelines"
+    }
+  }
+]

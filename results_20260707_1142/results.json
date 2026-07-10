@@ -1,0 +1,905 @@
+[
+  {
+    "table": "GENERAL_JOB_ROLE",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": []
+      },
+      "T1": {
+        "status": "FAIL",
+        "prod_rows": 44506,
+        "uat_rows": 44573,
+        "diff": -67,
+        "threshold_pct": 0.1
+      },
+      "T2": {
+        "dups": {
+          "prod": {
+            "dup_key_count": 0
+          },
+          "uat": {
+            "dup_key_count": 0
+          }
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "n"
+        ],
+        "sample_rows": {},
+        "status": "PASS",
+        "grain_unique": true,
+        "grain_usable": true
+      },
+      "T3": {
+        "counts": {
+          "in_prod_not_uat": 132,
+          "in_uat_not_prod": 199
+        },
+        "cte": "WITH prod AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"Job Role ID\" AS \"Job Role ID\",\n       NULLIF(t.\"Job Role Title\", '') AS \"Job Role Title\",\n       NULLIF(t.\"Job Role Identifier\", '') AS \"Job Role Identifier\",\n       t.\"Job Role Created Date\" AS \"Job Role Created Date\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.GENERAL_JOB_ROLE t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+        "key_diff": {
+          "in_prod_not_uat": 131,
+          "in_uat_not_prod": 198
+        },
+        "key_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "key_samples": {
+          "in_prod_not_uat": [
+            [
+              242,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              249,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              197,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              261,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              170,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              222,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              166,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              199,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              215,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              154,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              240,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              236,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              243,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              164,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              255,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              268,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              163,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              229,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              260,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              188,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              191,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              246,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              221,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              256,
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              245,
+              "hrcsandpitgov",
+              "GOV"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              52,
+              "mayers",
+              "SYD"
+            ],
+            [
+              371,
+              "nanosonics",
+              "SYD"
+            ],
+            [
+              10,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              56,
+              "mayers",
+              "SYD"
+            ],
+            [
+              72,
+              "mayers",
+              "SYD"
+            ],
+            [
+              21,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              57,
+              "mayers",
+              "SYD"
+            ],
+            [
+              12,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              38,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              17,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              19,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              9,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              92,
+              "mayers",
+              "SYD"
+            ],
+            [
+              49,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              6,
+              "mayers",
+              "SYD"
+            ],
+            [
+              243,
+              "skininstitute",
+              "SYD"
+            ],
+            [
+              32,
+              "mayers",
+              "SYD"
+            ],
+            [
+              22,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              80,
+              "mayers",
+              "SYD"
+            ],
+            [
+              139,
+              "golddemosite7",
+              "SYD"
+            ],
+            [
+              28,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              13,
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              45,
+              "mayers",
+              "SYD"
+            ],
+            [
+              4,
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              11,
+              "dinauniformgroup",
+              "SYD"
+            ]
+          ]
+        },
+        "status": "FAIL",
+        "threshold_pct": 0.1,
+        "samples": {
+          "in_prod_not_uat": [
+            [
+              173,
+              "Mechanical Supervisor - Construction",
+              "JR200",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              253,
+              "Site Superintendent",
+              "JR325",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              230,
+              "Senior Commercial Manager",
+              "JR290",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              185,
+              "Plant Operator",
+              "JR223",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              281,
+              "mysql8-1",
+              "mysql8-1",
+              "2025-01-10 23:33:52+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              170,
+              "Mechanical Leading Hand",
+              "JR197",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              176,
+              "Mechanical Draftsperson",
+              "JR206",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              275,
+              "Vacation Student",
+              "JR357",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              156,
+              "Lead Power Systems Engineer",
+              "JR177",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              249,
+              "Service Administrator",
+              "JR316",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              175,
+              "Mechanical Supervisor - Workshop (Perth)",
+              "JR202",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              200,
+              "Procurement Officer",
+              "JR246",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              182,
+              "Payroll Manager",
+              "JR219",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              276,
+              "Workshop Manager",
+              "JR358",
+              "2025-01-10 22:21:20+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              271,
+              "Trade Assistant - Workshop (Perth)",
+              "JR351",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              157,
+              "Learning & Development Advisor",
+              "JR179",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              172,
+              "Mechanical Leading Hand - Workshop (Perth)",
+              "JR199",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              227,
+              "Senior Business Advisor",
+              "JR286",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              188,
+              "Principle Engineer - Gas",
+              "JR230",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              158,
+              "Logistics Officer",
+              "JR181",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              168,
+              "Mechanical Design Manager",
+              "JR195",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              210,
+              "Purchasing & Stores Lead",
+              "JR258",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              209,
+              "Power Station Operator - Mechanical",
+              "JR257",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              164,
+              "Manager Victorian Hydro Operations",
+              "JR188",
+              "2025-01-10 22:21:18+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ],
+            [
+              222,
+              "Senior Mechanical Designer",
+              "JR280",
+              "2025-01-10 22:21:19+00:00",
+              "hrcsandpitgov",
+              "GOV"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              98,
+              "Transport Project Coordinator",
+              "Transport Project Coordinator",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              94,
+              "HR Business Partner",
+              "HR Business Partner",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              4,
+              "Account Manager San Pel",
+              "Account Manager San Pel",
+              "2026-04-29 00:35:11+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              29,
+              "APAC Pro Programs Admin Support",
+              "APACS",
+              "2026-04-29 02:38:02+00:00",
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              44,
+              "Inventory Manager",
+              "Inventory Manager",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              33,
+              "General Administration Assistant",
+              "General Administration Assistant",
+              "2026-04-29 00:08:21+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              101,
+              "Payroll Manager",
+              "JP_FINANCE_PAYROLL",
+              "2026-05-13 01:13:58+00:00",
+              "taptmedia",
+              "SYD"
+            ],
+            [
+              2,
+              "Office Manager",
+              "Office Manager",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              99,
+              "Head of Technology & Innovation",
+              "JP_MANAGER_TECHNOLOGY",
+              "2026-04-29 01:31:38+00:00",
+              "taptmedia",
+              "SYD"
+            ],
+            [
+              66,
+              "Executive Assistant",
+              "Executive Assistant",
+              "2026-04-29 00:35:15+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              17,
+              "Head Office Receptionist",
+              "Head Office Receptionist",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              12,
+              "National Teamwear Manager",
+              "NTWM",
+              "2026-04-29 02:38:01+00:00",
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              27,
+              "LRN National Sales Manager",
+              "LRN National Sales Manager",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              79,
+              "Administration",
+              "Administration",
+              "2026-04-29 00:35:16+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              16,
+              "Purchasing Admin & Support - Dina",
+              "PAS",
+              "2026-04-29 02:38:01+00:00",
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              9,
+              "Production & Quality Manager",
+              "PQM",
+              "2026-04-29 02:38:01+00:00",
+              "dinauniformgroup",
+              "SYD"
+            ],
+            [
+              14,
+              "Cost Accountant",
+              "Cost Accountant",
+              "2026-04-29 00:35:12+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              51,
+              "Chief Financial/Operations Manager",
+              "Chief Financial/Operations Manager",
+              "2026-04-29 00:08:22+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              21,
+              "Head Of Supply Chain",
+              "Head Of Supply Chain",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              19,
+              "Graphic Designer",
+              "Graphic Designer",
+              "2026-04-29 00:35:12+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              23,
+              "Inventory Controller",
+              "Inventory Controller",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              140,
+              "Room Leader",
+              "RL",
+              "2026-07-06 13:35:56+00:00",
+              "golddemosite7",
+              "SYD"
+            ],
+            [
+              34,
+              "Marketing Assistant",
+              "Marketing Assistant",
+              "2026-04-29 00:35:13+00:00",
+              "mayers",
+              "SYD"
+            ],
+            [
+              10,
+              "Payroll/Accounts Assistant",
+              "Payroll/Accounts Assistant",
+              "2026-04-29 00:08:20+00:00",
+              "doorsplus",
+              "SYD"
+            ],
+            [
+              8,
+              "Head of Brand & Marketing",
+              "HBM",
+              "2026-04-29 02:38:01+00:00",
+              "dinauniformgroup",
+              "SYD"
+            ]
+          ]
+        },
+        "sample_columns": [
+          "Job Role ID",
+          "Job Role Title",
+          "Job Role Description",
+          "Job Role Identifier",
+          "Job Role Skills and Experience",
+          "Job Role Created Date",
+          "Job Role Modified Date",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ]
+      },
+      "T4": {
+        "status": "ACCEPTED",
+        "shared_keys": 48072,
+        "mismatched_columns": {
+          "Job Role Title": 1,
+          "Job Role Description": 4250,
+          "Job Role Identifier": 1,
+          "Job Role Skills and Experience": 5029,
+          "Job Role Modified Date": 6
+        },
+        "column_status": {
+          "Job Role Title": "ACCEPTED_THRESHOLD",
+          "Job Role Description": "ACCEPTED_MARKED",
+          "Job Role Identifier": "ACCEPTED_THRESHOLD",
+          "Job Role Skills and Experience": "ACCEPTED_MARKED",
+          "Job Role Modified Date": "ACCEPTED_MARKED"
+        },
+        "accepted_reasons": {
+          "Job Role Description": "HTML stripping differs between pipelines",
+          "Job Role Skills and Experience": "HTML stripping differs between pipelines",
+          "Job Role Modified Date": "Affected by MAYDAY-526 - Missing April 29th - UAT is correct"
+        },
+        "threshold_pct": 0.1,
+        "excluded_columns": {},
+        "sql": "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Title\",''), NULLIF(u.\"Job Role Title\",''))) AS \"Job Role Title\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Description\",''), NULLIF(u.\"Job Role Description\",''))) AS \"Job Role Description\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Identifier\",''), NULLIF(u.\"Job Role Identifier\",''))) AS \"Job Role Identifier\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Job Role Skills and Experience\",''), NULLIF(u.\"Job Role Skills and Experience\",''))) AS \"Job Role Skills and Experience\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Created Date\", u.\"Job Role Created Date\")) AS \"Job Role Created Date\",\n       COUNT_IF(NOT EQUAL_NULL(p.\"Job Role Modified Date\", u.\"Job Role Modified Date\")) AS \"Job Role Modified Date\"\nFROM PROD_DB.BI.GENERAL_JOB_ROLE p\nJOIN UAT_DB.BI.GENERAL_JOB_ROLE u USING (\"Job Role ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+        "column_samples": {
+          "Job Role Skills and Experience": [
+            [
+              24,
+              "balco",
+              "SYD",
+              "Senior level business qualified person with 7 to 10 years' experience in a similar role within a large global organisationPost graduate qualifications in Sales, Marketing, Finance, Business, Agriculture, or related field would be highly desirableExtensive experience working in an agricultural business, or similar related sectorExperience leading corporate and strategic planning activitiesExperience in the development of financial sales modelling and systems to support sales forecasting and revenue growthExperience in establishing and monitoring sales processes and systems to drive engagement and growth in a large global businessSound understanding of global best practice of sales methodologies, marketing and branding guidelinesExcellence in building high performance and diverse teams who are able to deliver and/or exceed annual KPI'sExcellent organisational and time management skillsExcellent understanding and experience in software platformsExcellent relationship building skills across global government, corporates, and key executive stakeholdersExcellent verbal and written communication skills and leading diverse teams",
+              "Senior level business qualified person with 7 to 10 years' experience in a similar role within a large global organisation Post graduate qualifications in Sales, Marketing, Finance, Business, Agriculture, or related field would be highly desirable Extensive experience working in an agricultural business, or similar related sector Experience leading corporate and strategic planning activities Experience in the development of financial sales modelling and systems to support sales forecasting and revenue growth Experience in establishing and monitoring sales processes and systems to drive engagement and growth in a large global business Sound understanding of global best practice of sales methodologies, marketing and branding guidelines Excellence in building high performance and diverse teams who are able to deliver and/or exceed annual KPI's Excellent organisational and time management skills Excellent understanding and experience in software platforms Excellent relationship building skills across global government, corporates, and key executive stakeholders Excellent verbal and written communication skills and leading diverse teams"
+            ],
+            [
+              58,
+              "balco",
+              "SYD",
+              "Demonstrated commitment to safe work practices and behavioursProven ability to operate mobile plant safely (forklift, loader, telehandler)Strong teamwork and communication skillsGood organisational and time management abilitiesSound problem-solving skills and ability to respond to changing prioritiesBasic to intermediate skills in Microsoft Office (including Excel)Good numeracy and attention to detailAbility to work in a fast-paced operational environmentCompetency-based Work Permit \u2013 Loader Operations (LL) (Required)High Risk Work Licence \u2013 Forklift (Desirable)High Risk Work Licence \u2013 Crane (CN) (Desirable)Previous experience in logistics, warehousing or production environmentsExperience operating forklifts, loaders or telehandlersHay bale handling experience (highly regarded)Experience working within safety-focused environmentsFlexibility to work varying hours as requiredCommitment to ongoing training and developmentAbility to work collaboratively across multiple teamsStrong customer service mindset (internal and external)",
+              "Demonstrated commitment to safe work practices and behaviours Proven ability to operate mobile plant safely (forklift, loader, telehandler) Strong teamwork and communication skills Good organisational and time management abilities Sound problem-solving skills and ability to respond to changing priorities Basic to intermediate skills in Microsoft Office (including Excel) Good numeracy and attention to detail Ability to work in a fast-paced operational environment Competency-based Work Permit \u2013 Loader Operations (LL) (Required) High Risk Work Licence \u2013 Forklift (Desirable) High Risk Work Licence \u2013 Crane (CN) (Desirable) Previous experience in logistics, warehousing or production environments Experience operating forklifts, loaders or telehandlers Hay bale handling experience (highly regarded) Experience working within safety-focused environments Flexibility to work varying hours as required Commitment to ongoing training and development Ability to work collaboratively across multiple teams Strong customer service mindset (internal and external)"
+            ],
+            [
+              56,
+              "balco",
+              "SYD",
+              "Demonstrated commitment to safe work practices and behavioursProven ability to operate mobile plant safely (forklift, loader, telehandler)Strong teamwork and communication skillsGood organisational and time management abilitiesSound problem-solving skills and ability to respond to changing prioritiesBasic to intermediate skills in Microsoft Office (including Excel)Good numeracy and attention to detailAbility to work in a fast-paced operational environmentCompetency-based Work Permit \u2013 Loader Operations (LL) (Required)High Risk Work Licence \u2013 Forklift (Desirable)High Risk Work Licence \u2013 Crane (CN) (Desirable)Previous experience in logistics, warehousing or production environmentsExperience operating forklifts, loaders or telehandlersHay bale handling experience (highly regarded)Experience working within safety-focused environmentsFlexibility to work varying hours as requiredCommitment to ongoing training and developmentAbility to work collaboratively across multiple teamsStrong customer service mindset (internal and external)",
+              "Demonstrated commitment to safe work practices and behaviours Proven ability to operate mobile plant safely (forklift, loader, telehandler) Strong teamwork and communication skills Good organisational and time management abilities Sound problem-solving skills and ability to respond to changing priorities Basic to intermediate skills in Microsoft Office (including Excel) Good numeracy and attention to detail Ability to work in a fast-paced operational environment Competency-based Work Permit \u2013 Loader Operations (LL) (Required) High Risk Work Licence \u2013 Forklift (Desirable) High Risk Work Licence \u2013 Crane (CN) (Desirable) Previous experience in logistics, warehousing or production environments Experience operating forklifts, loaders or telehandlers Hay bale handling experience (highly regarded) Experience working within safety-focused environments Flexibility to work varying hours as required Commitment to ongoing training and development Ability to work collaboratively across multiple teams Strong customer service mindset (internal and external)"
+            ],
+            [
+              71,
+              "balco",
+              "SYD",
+              "Degree in Agriculture, Trade, Marketing, Sales, Business, or a related fieldExperience in business development and generating sales in Japan in the hay industry is requiredProven experience in import/exportDriven and motivated for sales and achieving or exceeding sales targetsProfessional and ethical communication with customers, agents, and employeesExperience leading and working with remote teams and stakeholdersClear communication skills with colleagues and the leadership team in AustraliaFluency in Japanese and English (verbal and written)",
+              "Degree in Agriculture, Trade, Marketing, Sales, Business, or a related field Experience in business development and generating sales in Japan in the hay industry is required Proven experience in import/export Driven and motivated for sales and achieving or exceeding sales targets Professional and ethical communication with customers, agents, and employees Experience leading and working with remote teams and stakeholders Clear communication skills with colleagues and the leadership team in Australia Fluency in Japanese and English (verbal and written)"
+            ],
+            [
+              34,
+              "balco",
+              "SYD",
+              "Tertiary qualifications in an engineering discipline with a hydraulics or mechanical background is requiredMaintenance strategy and execution experience ideally in manufacturing, processing or related industrial sectorExperience in scoping and delivering engineering projects within an operational environmentA pro-active attitude with the ability to offer guidance and resolve complex technical issuesExperience in the design and build of engineering projectsExcellent people management and communication skillsExcellent problem solving, investigative and reporting skillsAn ability to prioritise tasks, duties, workload to make decisions quicklyResilience and perseverance to handle change and pressure wellUp to date with new research and technologies and being exposed to innovation and automation practicesExperience in preparing Board reports and/or capex project business cases for executive decision making",
+              "Tertiary qualifications in an engineering discipline with a hydraulics or mechanical background is required Maintenance strategy and execution experience ideally in manufacturing, processing or related industrial sector Experience in scoping and delivering engineering projects within an operational environment A pro-active attitude with the ability to offer guidance and resolve complex technical issues Experience in the design and build of engineering projects Excellent people management and communication skills Excellent problem solving, investigative and reporting skills An ability to prioritise tasks, duties, workload to make decisions quickly Resilience and perseverance to handle change and pressure well Up to date with new research and technologies and being exposed to innovation and automation practices Experience in preparing Board reports and/or capex project business cases for executive decision making"
+            ]
+          ],
+          "Job Role Description": [
+            [
+              67,
+              "gora",
+              "SYD",
+              "The Environment and Sustainability Manager provides strategic leadership and organisational oversight of environmental management, monitoring, research, and sustainability. The role ensures environmental and sustainability policies, frameworks, systems, and programs are developed, implemented, maintained, and continuously improved in alignment with organisational objectives, statutory requirements, and best-practice environmental governance.The role also provides high-level advice on environmental risks and opportunities, promotes a culture of environmental responsibility, and builds strong relationships with stakeholders to support organisational outcomes.Key Responsibilities:Provide strategic leadership and oversight of environmental management, sustainability, monitoring, and research across the organisation.Ensure environmental and sustainability programs, policies, frameworks, and procedures are developed, implemented, maintained, audited, and continuously improved in alignment with organisational objectives, legislation, and best-practice environmental governance.Set strategic direction for environmental management and sustainability and lead the development of key strategies, initiatives, and action plans.Oversee the management of the on-ground conservation team, including in partnership with Coastal Operations for National Parks, ensuring works are delivered in accordance with best practice standards and approved procedures.Work in partnership with the coastal planning team to support the development and delivery of land management plans and strategies to protect and enhance environmental values.Lead the identification, assessment, management, and monitoring of environmental risks and opportunities across projects, programs, and operations.Lead the implementation, continuous improvement, and modernisation of the Environmental Risk Management Framework (ERMF), ensuring integration across all organisational activities\u00a0Ensure operational compliance with environmental and heritage legislation, regulatory approvals, and general environmental duty obligations.Oversee environmental governance, including policy compliance, assurance, and embedding of environmental requirements into operational and project delivery.Lead organisational sustainability initiatives, including climate action, energy and water efficiency, waste reduction, and resource management, and embed sustainability into corporate planning, procurement, and asset management.Oversee environmental performance monitoring, evaluation, reporting, and improvement, including State of Environment reporting, counterbalancing, FRD 24D and Natural Capital Accounting.Lead environmental monitoring and research programs and partnerships with universities, research institutions, Traditional Owners, and other key stakeholders to support evidence-based decision-making.Collaborate with OHS and operational teams to deliver integrated environmental health outcomes, including management of pollution, contaminated sites, and wastewater systems.Lead, develop, and build capability within the Environment and Sustainability team, fostering a high-performing and accountable culture, and foster internal and external advocacy and education initiatives.Build and maintain strong stakeholder relationships and represent the organisation in external forums, regulatory engagement, and strategic partnerships.Manage budgets, contracts, and external funding to ensure effective and accountable delivery of environmental and sustainability initiatives.\u00a0",
+              "The Environment and Sustainability Manager provides strategic leadership and organisational oversight of environmental management, monitoring, research, and sustainability. The role ensures environmental and sustainability policies, frameworks, systems, and programs are developed, implemented, maintained, and continuously improved in alignment with organisational objectives, statutory requirements, and best-practice environmental governance. The role also provides high-level advice on environmental risks and opportunities, promotes a culture of environmental responsibility, and builds strong relationships with stakeholders to support organisational outcomes. Key Responsibilities: Provide strategic leadership and oversight of environmental management, sustainability, monitoring, and research across the organisation. Ensure environmental and sustainability programs, policies, frameworks, and procedures are developed, implemented, maintained, audited, and continuously improved in alignment with organisational objectives, legislation, and best-practice environmental governance. Set strategic direction for environmental management and sustainability and lead the development of key strategies, initiatives, and action plans. Oversee the management of the on-ground conservation team, including in partnership with Coastal Operations for National Parks, ensuring works are delivered in accordance with best practice standards and approved procedures. Work in partnership with the coastal planning team to support the development and delivery of land management plans and strategies to protect and enhance environmental values. Lead the identification, assessment, management, and monitoring of environmental risks and opportunities across projects, programs, and operations. Lead the implementation, continuous improvement, and modernisation of the Environmental Risk Management Framework (ERMF), ensuring integration across all organisational activities Ensure operational compliance with environmental and heritage legislation, regulatory approvals, and general environmental duty obligations. Oversee environmental governance, including policy compliance, assurance, and embedding of environmental requirements into operational and project delivery. Lead organisational sustainability initiatives, including climate action, energy and water efficiency, waste reduction, and resource management, and embed sustainability into corporate planning, procurement, and asset management. Oversee environmental performance monitoring, evaluation, reporting, and improvement, including State of Environment reporting, counterbalancing, FRD 24D and Natural Capital Accounting. Lead environmental monitoring and research programs and partnerships with universities, research institutions, Traditional Owners, and other key stakeholders to support evidence-based decision-making. Collaborate with OHS and operational teams to deliver integrated environmental health outcomes, including management of pollution, contaminated sites, and wastewater systems. Lead, develop, and build capability within the Environment and Sustainability team, fostering a high-performing and accountable culture, and foster internal and external advocacy and education initiatives. Build and maintain strong stakeholder relationships and represent the organisation in external forums, regulatory engagement, and strategic partnerships. Manage budgets, contracts, and external funding to ensure effective and accountable delivery of environmental and sustainability initiatives."
+            ],
+            [
+              26,
+              "gbca",
+              "SYD",
+              "Role Purpose:\u00a0- Setting of marketing objectives and strategy aligned to GBCAs strategic priorities and business objectives.\u00a0- Shared Accountability for all internal and external marketing and communications activity with the Senior Manager\u00a0- Communications ensuring performance against KPIs and effective delivery\u00a0- Working with the Senior Manager\u00a0- Communication to provide leadership and guidance to the marketing and communications team\u00a0Key Responsibilities:\u00a01. Strategy\u00a0\u2022 Provide direction and take accountability for the development of the GBCA's marketing plans and campaigns, to meet business objectives and to maximise influence and effectiveness of all campaigns\u00a0\u2022 Work with the executive on new market/product opportunities and develop suitable marketing strategies including defining target market, brand implications and launch plans\u00a0\u2022 Champion the brand within the organisation\u00a0\u2022 Report to the GBCA board and executive team on relevant marketing initiatives as required\u00a02. OperationsSetting of team KPIsPrioritisation of team workloadManage the team\u2019s activities within budget and, where possible, drive budget efficienciesTake the lead on key strategic partnerships with agencies and key partnersEnsure cross\u2011team collaboration with the IT and Digital team to develop and implement brand and marketing activities via the GBCA website, email direct mail (EDMs) and other digital channels where required3. Marketing FunctionQuickly establish and develop strong client relationships with internal and external stakeholdersSupport the Marketing Manager to provide strategic management of the Transform marketing campaign and other eventsOversee the implementation and ongoing development of the GBCA\u2019s social media and eDM strategy, maximising the influence and effectiveness of campaigns4. Team ManagementResearch and maintain oversight of new technologies and strategies to drive efficiencies within the team and maximise resourcesAlong with the Senior Manager, Communications, lead, mentor and manage the Marketing and Communications team, encouraging a culture of feedbackFoster and demonstrate a results\u2011driven and solution\u2011focused approach in the workplaceCommunicate issues of relevance to the team and coordinate meetings and planning days as required",
+              "Role Purpose: - Setting of marketing objectives and strategy aligned to GBCAs strategic priorities and business objectives. - Shared Accountability for all internal and external marketing and communications activity with the Senior Manager - Communications ensuring performance against KPIs and effective delivery - Working with the Senior Manager - Communication to provide leadership and guidance to the marketing and communications team Key Responsibilities: 1. Strategy \u2022 Provide direction and take accountability for the development of the GBCA's marketing plans and campaigns, to meet business objectives and to maximise influence and effectiveness of all campaigns \u2022 Work with the executive on new market/product opportunities and develop suitable marketing strategies including defining target market, brand implications and launch plans \u2022 Champion the brand within the organisation \u2022 Report to the GBCA board and executive team on relevant marketing initiatives as required 2. Operations a { text-decoration: none; color: #464feb; } tr th, tr td { border: 1px solid #e6e6e6; } tr th { background-color: #f5f5f5; } Setting of team KPIs Prioritisation of team workload Manage the team\u2019s activities within budget and, where possible, drive budget efficiencies Take the lead on key strategic partnerships with agencies and key partners Ensure cross\u2011team collaboration with the IT and Digital team to develop and implement brand and marketing activities via the GBCA website, email direct mail (EDMs) and other digital channels where required 3. Marketing Function a { text-decoration: none; color: #464feb; } tr th, tr td { border: 1px solid #e6e6e6; } tr th { background-color: #f5f5f5; } Quickly establish and develop strong client relationships with internal and external stakeholders Support the Marketing Manager to provide strategic management of the Transform marketing campaign and other events Oversee the implementation and ongoing development of the GBCA\u2019s social media and eDM strategy, maximising the influence and effectiveness of campaigns 4. Team Management a { text-decoration: none; color: #464feb; } tr th, tr td { border: 1px solid #e6e6e6; } tr th { background-color: #f5f5f5; } Research and maintain oversight of new technologies and strategies to drive efficiencies within the team and maximise resources Along with the Senior Manager, Communications, lead, mentor and manage the Marketing and Communications team, encouraging a culture of feedback Foster and demonstrate a results\u2011driven and solution\u2011focused approach in the workplace Communicate issues of relevance to the team and coordinate meetings and planning days as required"
+            ],
+            [
+              28,
+              "gbca",
+              "SYD",
+              "Role Purpose:\u00a0The Marketing and Communications Co-ordinator is responsible for supporting the Marketing and Communications team.\u00a0Working across all areas of Marketing and Communications to deliver effective campaigns which drive results, key to the success of this role is the ability to:\u00a0- Think creatively about how to reach audiences\u00a0- Maximise impact from limited budgets\u00a0- Test, learn and optimise campaigns\u00a0- Relentlessly focus on what drives action\u00a0- Build and maintain relationships with internal and external stakeholders\u00a0- A proactive attitude\u00a0- Time management skills, in particular the ability to manage competing priorities\u00a0- The ability to turn results into actionable insights.\u00a0Key Responsibilities:\u00a01. Campaign work\u00a0\u2022 Working with the Marketing Lead and/or Marketing Specialist to help deliver campaigns to market across email; social; website; events; paid advertising; partner channels\u00a0\u2022 Tracking results and optimisation of campaign channels, messaging and offers\u00a0\u2022 Creative development - both copy writing and using Canva templates\u00a0\u2022 Development and production of visual and audio visual content\u00a02. Marketing Co-ordination\u00a0\u2022 Assist in the management of website updates on reactive and proactive basis\u00a0\u2022 Assist the Digital Content Producer with video shoots\u00a0\u2022 Liaising with in internal teams to track and register projects of interest that may suit case studies\u00a0\u2022 Monitoring of Marketing & Communications inboxes, ensuring all enquiries are managed and responded to\u00a0\u2022 Community engagement within our social channels\u00a03. Teamwork\u00a0\u2022 Build and maintain effective working relationships across the GBCA.\u00a0\u2022 Help foster a culture of data centricity and collaboration within the team and with both internal and external teams\u00a04. Brand\u00a0\u2022 Be a brand ambassador internally and externally\u00a0\u2022 Help provide advice and training to the organisation on how to work with our brand\u00a0\u2022 Working with a graphic designer to manage our brand and the development of branded assets",
+              "Role Purpose: The Marketing and Communications Co-ordinator is responsible for supporting the Marketing and Communications team. Working across all areas of Marketing and Communications to deliver effective campaigns which drive results, key to the success of this role is the ability to: - Think creatively about how to reach audiences - Maximise impact from limited budgets - Test, learn and optimise campaigns - Relentlessly focus on what drives action - Build and maintain relationships with internal and external stakeholders - A proactive attitude - Time management skills, in particular the ability to manage competing priorities - The ability to turn results into actionable insights. Key Responsibilities: 1. Campaign work \u2022 Working with the Marketing Lead and/or Marketing Specialist to help deliver campaigns to market across email; social; website; events; paid advertising; partner channels \u2022 Tracking results and optimisation of campaign channels, messaging and offers \u2022 Creative development - both copy writing and using Canva templates \u2022 Development and production of visual and audio visual content 2. Marketing Co-ordination \u2022 Assist in the management of website updates on reactive and proactive basis \u2022 Assist the Digital Content Producer with video shoots \u2022 Liaising with in internal teams to track and register projects of interest that may suit case studies \u2022 Monitoring of Marketing & Communications inboxes, ensuring all enquiries are managed and responded to \u2022 Community engagement within our social channels 3. Teamwork \u2022 Build and maintain effective working relationships across the GBCA. \u2022 Help foster a culture of data centricity and collaboration within the team and with both internal and external teams 4. Brand \u2022 Be a brand ambassador internally and externally \u2022 Help provide advice and training to the organisation on how to work with our brand \u2022 Working with a graphic designer to manage our brand and the development of branded assets"
+            ],
+            [
+              29,
+              "gbca",
+              "SYD",
+              "Role Purpose:\u00a0- The Marketing Specialist will be responsible for the development and execution of campaigns to support the broader marketing & communications strategy and business objectives of the GBCA. Key to the success of this role is the ability to build and maintain relationships with internal and external stakeholders, an inquiring mind, and the ability to turn results into actionable insights.\u00a0Key Responsibilities:\u00a01. Marketing Campaign development\u00a0\u2022 Using insights to develop campaigns that drive action and are aligned to the broader marketing & communications and business objectives of the GBCA\u00a0\u2022 Stakeholder engagement to understand the needs of the organisation and how Marketing & Communications can support to drive outcomes\u00a0\u2022 Execution of campaigns in adherence to budget, timelines and brand guidelines\u00a0\u2022 Analysis and report on results of the campaign activity\u00a0\u2022 Areas of campaign development could include, but are not limited to:\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Green Star\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Courses and Events\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Membership\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Customer communications\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Acquisition campaigns\u00a0\u00a0 \u00a0 \u00a0 \u00a0 \u2022 Cross sell campaigns\u00a02. Brand\u00a0\u2022 Be a brand ambassador internally and externally\u00a0\u2022 Help provide advice and training to the organisation on how to work with our brand\u00a03. Team culture\u00a0\u2022 Help foster a culture of data centricity and collaboration within the team and with both internal and external teams\u00a0\u2022 Ensure that all marketing enquiries are managed and responded to\u00a0\u2022 Build and maintain effective working relationships across the GBCA, with particular focus on bringing stakeholders on a journey",
+              "Role Purpose: - The Marketing Specialist will be responsible for the development and execution of campaigns to support the broader marketing & communications strategy and business objectives of the GBCA. Key to the success of this role is the ability to build and maintain relationships with internal and external stakeholders, an inquiring mind, and the ability to turn results into actionable insights. Key Responsibilities: 1. Marketing Campaign development \u2022 Using insights to develop campaigns that drive action and are aligned to the broader marketing & communications and business objectives of the GBCA \u2022 Stakeholder engagement to understand the needs of the organisation and how Marketing & Communications can support to drive outcomes \u2022 Execution of campaigns in adherence to budget, timelines and brand guidelines \u2022 Analysis and report on results of the campaign activity \u2022 Areas of campaign development could include, but are not limited to: \u2022 Green Star \u2022 Courses and Events \u2022 Membership \u2022 Customer communications \u2022 Acquisition campaigns \u2022 Cross sell campaigns 2. Brand \u2022 Be a brand ambassador internally and externally \u2022 Help provide advice and training to the organisation on how to work with our brand 3. Team culture \u2022 Help foster a culture of data centricity and collaboration within the team and with both internal and external teams \u2022 Ensure that all marketing enquiries are managed and responded to \u2022 Build and maintain effective working relationships across the GBCA, with particular focus on bringing stakeholders on a journey"
+            ],
+            [
+              75,
+              "onemda",
+              "SYD",
+              "The Lifeguard is responsible for ensuring the safety, dignity, and wellbeing of adults with disabilities participating in aquatic programs. The role involves vigilant supervision of pool areas, proactive risk management, and responding effectively to emergencies, while maintaining a calm and supportive presence.The Lifeguard works collaboratively with support staff to facilitate safe, inclusive, and person-centred aquatic experiences that align with the individual's needs and abilities. The role requires strong communication skills, empathy, and the ability to adapt approaches to support diverse physical, cognitive, and sensory needs, while upholding organisational values and duty of care.",
+              "The Lifeguard is responsible for ensuring the safety, dignity, and wellbeing of adults with disabilities participating in aquatic programs. The role involves vigilant supervision of pool areas, proactive risk management, and responding effectively to emergencies, while maintaining a calm and supportive presence. The Lifeguard works collaboratively with support staff to facilitate safe, inclusive, and person-centred aquatic experiences that align with the individual's needs and abilities. The role requires strong communication skills, empathy, and the ability to adapt approaches to support diverse physical, cognitive, and sensory needs, while upholding organisational values and duty of care."
+            ]
+          ],
+          "Job Role Modified Date": [
+            [
+              9,
+              "elmoassessment",
+              "SYD",
+              "2026-01-21 00:08:26+00:00",
+              "2026-04-29 01:08:49+00:00"
+            ],
+            [
+              14,
+              "ecka",
+              "SYD",
+              "2026-06-05 04:41:01+00:00",
+              "2026-05-26 23:57:47+00:00"
+            ],
+            [
+              102,
+              "asuria",
+              "SYD",
+              "2026-06-04 12:36:33+00:00",
+              "2026-06-03 05:03:18+00:00"
+            ],
+            [
+              1,
+              "caztest",
+              "SYD",
+              "2026-04-24 00:32:29+00:00",
+              "2026-04-29 03:18:32+00:00"
+            ],
+            [
+              117,
+              "gora",
+              "SYD",
+              "2025-10-10 06:49:46+00:00",
+              "2026-04-29 06:58:22+00:00"
+            ]
+          ],
+          "Job Role Title": [
+            [
+              14,
+              "ecka",
+              "SYD",
+              "Lead Early Education Manager",
+              "Early Education Manager Lead"
+            ]
+          ],
+          "Job Role Identifier": [
+            [
+              14,
+              "ecka",
+              "SYD",
+              "Lead Early Education Manager",
+              "Early Education Manager Lead"
+            ]
+          ]
+        },
+        "column_sample_columns": [
+          "Job Role ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "PROD value",
+          "UAT value"
+        ]
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "DIFFS FOUND",
+    "notes": [],
+    "accepted_columns": {
+      "Job Role Modified Date": "Affected by MAYDAY-526 - Missing April 29th - UAT is correct",
+      "Job Role Description": "HTML stripping differs between pipelines",
+      "Job Role Skills and Experience": "HTML stripping differs between pipelines"
+    }
+  }
+]

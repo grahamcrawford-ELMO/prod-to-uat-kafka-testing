@@ -1,0 +1,973 @@
+[
+  {
+    "table": "RECRUITMENT_APPLICATION_QUESTION_ANSWER",
+    "expected_blocked": [],
+    "tiers": {
+      "T0": {
+        "status": "PASS",
+        "drift": [],
+        "queries": [
+          "\n            SELECT COALESCE(p.column_name, u.column_name) AS column_name,\n                   p.ordinal_position, u.ordinal_position, p.data_type, u.data_type\n            FROM (SELECT * FROM PROD_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'RECRUITMENT_APPLICATION_QUESTION_ANSWER') p\n            FULL JOIN (SELECT * FROM UAT_DB.INFORMATION_SCHEMA.COLUMNS\n                  WHERE table_schema = 'BI' AND table_name = 'RECRUITMENT_APPLICATION_QUESTION_ANSWER') u\n              ON p.column_name = u.column_name\n            WHERE p.column_name IS NULL OR u.column_name IS NULL\n               OR p.ordinal_position != u.ordinal_position\n               OR p.data_type != u.data_type\n            ORDER BY COALESCE(p.ordinal_position, u.ordinal_position)"
+        ]
+      },
+      "T1": {
+        "status": "ACCEPTED",
+        "prod_rows": 59940296,
+        "uat_rows": 59984442,
+        "diff": -44146,
+        "threshold_pct": 0.1,
+        "queries": [
+          "\n            SELECT p.n, u.n, p.n - u.n\n            FROM (SELECT COUNT(*) AS n FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) p,\n                 (SELECT COUNT(*) AS n FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) u"
+        ]
+      },
+      "T2": {
+        "dups": {
+          "prod": {
+            "dup_key_count": 0
+          },
+          "uat": {
+            "dup_key_count": 0
+          }
+        },
+        "sample_columns": [
+          "JOB_APPLICATION_ID",
+          "ANSWER_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "n"
+        ],
+        "sample_rows": {},
+        "status": "PASS",
+        "threshold_pct": 0.1,
+        "denominator": 59984442,
+        "grain_unique": true,
+        "grain_usable": true,
+        "queries": [
+          "\n                SELECT \"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100",
+          "\n                SELECT \"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", COUNT(*) AS n FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER\n                GROUP BY ALL HAVING COUNT(*) > 1\n                ORDER BY n DESC LIMIT 100"
+        ]
+      },
+      "T3": {
+        "counts": {
+          "in_prod_not_uat": 22870811,
+          "in_uat_not_prod": 22914957
+        },
+        "cte": "WITH prod AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+        "key_diff": {
+          "in_prod_not_uat": 80529,
+          "in_uat_not_prod": 124675
+        },
+        "key_columns": [
+          "JOB_APPLICATION_ID",
+          "ANSWER_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "key_samples": {
+          "in_prod_not_uat": [
+            [
+              2022,
+              25684,
+              "marypotter",
+              "SYD"
+            ],
+            [
+              2290,
+              41575,
+              "metrotas",
+              "SYD"
+            ],
+            [
+              87014,
+              273213,
+              "supagas",
+              "SYD"
+            ],
+            [
+              20874,
+              145282,
+              "sydneymetro",
+              "SYD"
+            ],
+            [
+              35915,
+              318072,
+              "gladgroup",
+              "SYD"
+            ],
+            [
+              241410,
+              1663350,
+              "catercare",
+              "SYD"
+            ],
+            [
+              19,
+              45,
+              "uat3",
+              "SYD"
+            ],
+            [
+              4361,
+              18235,
+              "marlboroughlines",
+              "SYD"
+            ],
+            [
+              27,
+              51,
+              "uat3",
+              "SYD"
+            ],
+            [
+              1990,
+              39734,
+              "grv",
+              "SYD"
+            ],
+            [
+              38,
+              62,
+              "uat3",
+              "SYD"
+            ],
+            [
+              32556,
+              394875,
+              "cos",
+              "SYD"
+            ],
+            [
+              9516,
+              134833,
+              "pattersoncheney",
+              "SYD"
+            ],
+            [
+              31971,
+              628562,
+              "redcross",
+              "SYD"
+            ],
+            [
+              13,
+              39,
+              "uat3",
+              "SYD"
+            ],
+            [
+              2133,
+              30130,
+              "sfiaust",
+              "SYD"
+            ],
+            [
+              25870,
+              701225,
+              "evolutioncare",
+              "SYD"
+            ],
+            [
+              7484,
+              49868,
+              "mccgc",
+              "SYD"
+            ],
+            [
+              173835,
+              756359,
+              "covermore",
+              "SYD"
+            ],
+            [
+              28438,
+              525004,
+              "swancare",
+              "SYD"
+            ],
+            [
+              4518,
+              56947,
+              "akd",
+              "SYD"
+            ],
+            [
+              38961,
+              160461,
+              "unitigrouplimited",
+              "SYD"
+            ],
+            [
+              127509,
+              335837,
+              "cashconverters",
+              "SYD"
+            ],
+            [
+              13,
+              40,
+              "uat3",
+              "SYD"
+            ],
+            [
+              47,
+              72,
+              "uat3",
+              "SYD"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              105,
+              591,
+              "resimac",
+              "SYD"
+            ],
+            [
+              11981,
+              330150,
+              "evolutioncare",
+              "SYD"
+            ],
+            [
+              16338,
+              205047,
+              "novita",
+              "SYD"
+            ],
+            [
+              4055,
+              41576,
+              "petsure",
+              "SYD"
+            ],
+            [
+              3333,
+              84002,
+              "nunku",
+              "SYD"
+            ],
+            [
+              10483,
+              137751,
+              "redcross",
+              "SYD"
+            ],
+            [
+              16276,
+              203617,
+              "novita",
+              "SYD"
+            ],
+            [
+              9555,
+              262059,
+              "evolutioncare",
+              "SYD"
+            ],
+            [
+              27732,
+              273664,
+              "pharmacare",
+              "SYD"
+            ],
+            [
+              4570,
+              40429,
+              "gsl",
+              "SYD"
+            ],
+            [
+              945,
+              20698,
+              "rothbury",
+              "SYD"
+            ],
+            [
+              24073,
+              146891,
+              "cdmn",
+              "SYD"
+            ],
+            [
+              3341,
+              84145,
+              "nunku",
+              "SYD"
+            ],
+            [
+              379,
+              3657,
+              "oneharvest",
+              "SYD"
+            ],
+            [
+              3482,
+              86947,
+              "nunku",
+              "SYD"
+            ],
+            [
+              620,
+              13572,
+              "rothbury",
+              "SYD"
+            ],
+            [
+              15873,
+              198778,
+              "novita",
+              "SYD"
+            ],
+            [
+              14898,
+              411667,
+              "evolutioncare",
+              "SYD"
+            ],
+            [
+              11184,
+              138492,
+              "novita",
+              "SYD"
+            ],
+            [
+              3296,
+              83271,
+              "nunku",
+              "SYD"
+            ],
+            [
+              3376,
+              84845,
+              "nunku",
+              "SYD"
+            ],
+            [
+              14427,
+              398973,
+              "evolutioncare",
+              "SYD"
+            ],
+            [
+              10080,
+              63476,
+              "mstglobal",
+              "SYD"
+            ],
+            [
+              25580,
+              54546,
+              "cea",
+              "SYD"
+            ],
+            [
+              5635,
+              14395,
+              "nrah",
+              "SYD"
+            ]
+          ]
+        },
+        "status": "FAIL",
+        "threshold_pct": 0.1,
+        "denominator": 59984442,
+        "samples": {
+          "in_prod_not_uat": [
+            [
+              363004,
+              17590,
+              "Application",
+              "Previous Employer 1\n* Please list Company name, Position title, Start Date, End date and reason for leaving below:",
+              "IT Fox Solutions, NZ\nPosition: Service Technician\nStart Date: August 2023 to August 2024\nReason for Leaving: Found Full time employment\u00a0\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              309255,
+              14197,
+              "Application",
+              "If you are a member of NZNO please enter your membership number here:\n(if you are not a member then please leave blank)",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              298899,
+              13550,
+              "Application",
+              "Has your professional body taken any disciplinary action against you in the past or is there any action pending by your professional body, which may affect your ability to carry out the duties required for the position you are applying?\nIf yes, please specify details:",
+              "No\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              182595,
+              6834,
+              "Application",
+              "Are you related to or know anyone who works at St George's Hospital?\nIf yes, please specify details:",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              305177,
+              13942,
+              "Application",
+              "Are you related to or know anyone who works at St George's Hospital?\nIf yes, please specify details:",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              194183,
+              7451,
+              "Application",
+              "If you are a member of MERAS then please enter your membership number here:\n(if you are not a member then please leave this field blank)",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              151397,
+              5158,
+              "Application",
+              "Are you related to or know anyone who works at St George's Hospital?\nIf yes, please specify details:",
+              "Yes, Leigh Alexander\u00a0\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              12496,
+              380,
+              "Application",
+              "Do you have the right to work in New Zealand?\nIf you are a NZ citizen, permanent resident or NZ Work Visa holder, please select \"Yes\".",
+              "Yes",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              379799,
+              18646,
+              "Application",
+              "If you are a member of NZNO please enter your membership number here:\n(if you are not a member then please leave blank)",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              1298593,
+              49484,
+              "CURRENT Application Form - updated 16/07/2025",
+              "\u00a0If yes please provide the detail below\n\u00a0If no please write N/A",
+              "N/A\n",
+              "ecan",
+              "SYD"
+            ],
+            [
+              1293088,
+              49280,
+              "CURRENT Application Form - updated 16/07/2025",
+              "7. Do you agree to undergo any background checks required by Environment Canterbury in respect to the role you have applied for, and for the information to be released to Environment Canterbury? This may include one or more the following: Police vetting, Ministry of Justice checking, Qualification checking, Credit checking, Visa status, Driver Licence status, ACC history, Medical status, Drug and Alcohol testing.\nPlease note that some roles have specific identified health risks (e.g. hearing or vision), and you may be required to participate in pre-employment baseline health monitoring, annual testing, and in some cases vaccinations to ensure such risks are appropriately managed.\n\u00a0",
+              "Yes",
+              "ecan",
+              "SYD"
+            ],
+            [
+              379690,
+              18640,
+              "Application",
+              "Do you have the right to work in New Zealand at this time?\nIf you are a NZ citizen, permanent resident or NZ Work Visa holder, please select \"Yes\" and ensure you upload a copy of the relevant document to your application.",
+              "Yes",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              300922,
+              13677,
+              "Application",
+              "Do you have the right to work in New Zealand at this time?\nIf you are a NZ citizen, permanent resident or NZ Work Visa holder, please select \"Yes\" and ensure you upload a copy of the relevant document to your application.",
+              "Yes",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              312237,
+              14385,
+              "Application",
+              "Previous Employer 2\n* Please list Company name, Position title, Start Date, End date and reason for leaving below:",
+              "Nil\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              189478,
+              7201,
+              "Application",
+              "Previous Employer 1\n* Please list Company name, Position title, Start Date, End date and reason for leaving below:",
+              "Own Private Practice - still current\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              1286429,
+              49030,
+              "CURRENT Application Form - updated 16/07/2025",
+              "17. Do you agree to undergo ongoing health monitoring (if required) and consent to the information being released to Environment Canterbury?",
+              "Yes",
+              "ecan",
+              "SYD"
+            ],
+            [
+              1291674,
+              49225,
+              "CURRENT Application Form - updated 16/07/2025",
+              "I consent to Environment Canterbury or their agent, seeking verbal or written information about me from my nominated referees and for the findings to be used when ascertaining my suitability for employment. I understand that an offer of employment may require police, Ministry of Justice, credit checks and security clearance and other such checks, and I consent to these. \nI declare that the information given is true and correct to the best of my knowledge.\u00a0 I acknowledge the purpose of this application form and the material associated with it is to assist in assessing my suitability for the positon I am applying. I declare that to the best of my knowledge the answers in this application and material associated with it are correct and I understand that any false information given, or any facts suppressed or omitted, may result in being unsuccessful.",
+              "I agree to the above statement",
+              "ecan",
+              "SYD"
+            ],
+            [
+              184495,
+              6933,
+              "Application",
+              "Are you related to or know anyone who works at St George's Hospital?\nIf yes, please specify details:",
+              "no\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              24968,
+              740,
+              "Application",
+              "Have you ever had or do you currently have any other medical conditions, injury, impairment (including, for example, hearing impairment or eyesight difficulties, mental health issues or psychological illness) or any other factor which could affect your ability to undertake, or be aggravated by, your potential role, or your employment in general, or that might affect you from attending work regularly?\u00a0\nIf\u00a0 yes, please specify details:",
+              "No",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              188808,
+              7164,
+              "Application",
+              "Are you related to or know anyone who works at St George's Hospital?\nIf yes, please specify details:",
+              "Not applicable\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              386298,
+              19054,
+              "Application",
+              "Do you have the right to work in New Zealand at this time?\nIf you are a NZ citizen, permanent resident or NZ Work Visa holder, please select \"Yes\" and ensure you upload a copy of the relevant document to your application.",
+              "Yes",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              197982,
+              7658,
+              "Application",
+              "If you are a member of NZNO please enter your membership number here:\n(if you are not a member then please leave blank)",
+              "N/A",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              218169,
+              8774,
+              "Application",
+              "Has your professional body taken any disciplinary action against you in the past or is there any action pending by your professional body, which may affect your ability to carry out the duties required for the position you are applying?\nIf yes, please specify details:",
+              "no\n",
+              "stgeorges",
+              "SYD"
+            ],
+            [
+              1298510,
+              49481,
+              "CURRENT Application Form - updated 16/07/2025",
+              "2. Have you previously been, or are you currently employed or engaged as a contractor\u00a0by Environment Canterbury?",
+              "No, I have never been an employee or contractor with you",
+              "ecan",
+              "SYD"
+            ],
+            [
+              325947,
+              15253,
+              "Application",
+              "Current Employer\n* Please list Company name, Position title, Start Date, End date and reason for leaving below:",
+              "King Abdulaziz naval base Saudi Arabia,Registered Nurse,Jan 2018 still present\u00a0\n",
+              "stgeorges",
+              "SYD"
+            ]
+          ],
+          "in_uat_not_prod": [
+            [
+              54272,
+              5635,
+              "Application",
+              "I have read, understood and consent to the privacy statement .",
+              "I Agree",
+              "cooperenergy",
+              "SYD"
+            ],
+            [
+              63071,
+              10292,
+              "Application AU",
+              "If you are not a citizen or permanent resident please indicate your visa type. If you are a citizen / permanent resident simply indicate \"NA\".",
+              "NA",
+              "brightfoodgroup",
+              "SYD"
+            ],
+            [
+              95117,
+              3876,
+              "Asmuss Application",
+              "Have you had any ACC claim(s) which could affect your ability to do this job? If YES, please provide details. Enter N/A if not applicable",
+              "<p>Yes I had an ACL reconstruction roughly 10 years ago</p>\n",
+              "asmuss",
+              "SYD"
+            ],
+            [
+              133865,
+              4246,
+              "Application",
+              "I ::FIRSTNAME:: ::LASTNAME:: declare that to the best of my knowledge the information provided in this application and supporting documents are true and accurate. I acknowledge that Wellington Free Ambulance will undertake any role relevant background checks if I am the preferred candidate, and that WFA may check the validity of my qualifications relevant to the position applied for. I further acknowledge that WFA requires proof of my immunisation status and/or records prior to employment, if I am the preferred candidate.",
+              "I Agree",
+              "wfa",
+              "SYD"
+            ],
+            [
+              23960,
+              2201,
+              "Application AU",
+              "If you are not a citizen or permanent resident please provide details of your visa type, expiry date, and working hours restrictions if any. If you are a citizen / permanent resident simply indicate NA",
+              "<p>N/A</p>\n",
+              "guidedogs",
+              "SYD"
+            ],
+            [
+              9396,
+              995,
+              "Screening",
+              "BSAPASO KSC4. Proven ability to work efficiently and discretely in a sensitive and confidential environment",
+              "N/A",
+              "moira",
+              "SYD"
+            ],
+            [
+              4333,
+              3564,
+              "Application",
+              "A criminal history check forms part of the recruitment process for shortlisted candidates. Please acknowledge that you are aware of this and are willing to participate if needed.",
+              "\"No, I do not wish to proceed with my application\"",
+              "alkathgroup",
+              "SYD"
+            ],
+            [
+              290165,
+              10051,
+              "The Trusts - Application",
+              "Are your legally entitled to work in New Zealand?",
+              "\"Yes, I have a student visa\"",
+              "thetrusts",
+              "SYD"
+            ],
+            [
+              55026,
+              5326,
+              "Application SA",
+              "Please provide your base (annual) salary expectations:",
+              "<p>R15000</p>\n",
+              "petsure",
+              "SYD"
+            ],
+            [
+              168311,
+              22986,
+              "Application AU",
+              "Do you have the right to work unrestricted hours in Australia? Please note if you are an Australian citizen / permanent resident or NZ citizen you should answer YES to this question.",
+              "Yes",
+              "simoneperele",
+              "SYD"
+            ],
+            [
+              108506,
+              8918,
+              "Application",
+              "What motivated you to apply for this position?",
+              "<p>I&#39;m passionate about providing compassionate care to seniors and believe this role offers a valuable opportunity to make a positive impact on residents&#39; lives.&nbsp;</p>\n",
+              "ballycara",
+              "SYD"
+            ],
+            [
+              7480,
+              639,
+              "Application",
+              "Are you an existing employee of Forbes Shire Council or have you worked at Forbes Shire Council previously?",
+              "Yes",
+              "forbesshirecouncil",
+              "SYD"
+            ],
+            [
+              109078,
+              11623,
+              "Application",
+              "Please briefly describe your experience with automation tools and which ones you have used.",
+              "Na",
+              "automicgroup",
+              "SYD"
+            ],
+            [
+              19095,
+              7499,
+              "Screening",
+              "Which role are you recommending this person for?",
+              "<p>BDM</p>\n",
+              "covermore",
+              "SYD"
+            ],
+            [
+              96245,
+              9532,
+              "Application",
+              "If you have been referred to the ::POSITION:: by an employee of PetSure, please let us know who that was:",
+              "N/A",
+              "petsure",
+              "SYD"
+            ],
+            [
+              154347,
+              11582,
+              "Candidate Screening Questions (All roles)",
+              "What are your salary expectations for this position?",
+              "\"$40,000 - $50,000\"",
+              "mercyhospital",
+              "SYD"
+            ],
+            [
+              7156,
+              2176,
+              "Screening Application",
+              "If you have an appropriate work permit, please confirm: Type of Permit Expiry Date of Permit",
+              null,
+              "gbauto",
+              "SYD"
+            ],
+            [
+              30877,
+              3868,
+              "Application",
+              "Are you willing to undergo a National Police Clearance at your own cost?",
+              "Yes",
+              "accesshardware",
+              "SYD"
+            ],
+            [
+              203606,
+              76057,
+              "Application",
+              "Do you have a current Australian driver&#39;s license?",
+              "Yes",
+              "supagas",
+              "SYD"
+            ],
+            [
+              9782,
+              2132,
+              "Application",
+              "Please provide an overview of why you are applying for this position and what skills and experience you have that align to the role?",
+              "<p>My previous skills and experience aligns very well with this role and I believe I can make a positive contribution.</p>\n",
+              "rasv",
+              "SYD"
+            ],
+            [
+              156234,
+              19269,
+              "Application",
+              "Are you a permanent resident or Australian citizen?",
+              "Yes",
+              "blackdog",
+              "SYD"
+            ],
+            [
+              165805,
+              12296,
+              "Application",
+              "Do you have any of the following current certificates? (check all that are applicable)",
+              "First Aid level 2,WWCC or Blue Card,NDIS Worker Screening Check,Assist with medication,Manual Handling",
+              "mmtcare",
+              "SYD"
+            ],
+            [
+              103046,
+              12023,
+              "MACS Screening & Application",
+              "Data collection. Your details will be retained on our database for a period of 12 months unless you advise us otherwise during which time you may be considered and contacted for any other suitable positions that may arise.",
+              "I agree to MACS holding my details on file for 12 months.",
+              "cem",
+              "SYD"
+            ],
+            [
+              145965,
+              8245,
+              "Application",
+              "Are you available to work Full Time, Part Time or Casual?",
+              "Full Time",
+              "unicefau",
+              "SYD"
+            ],
+            [
+              10317,
+              2331,
+              "Sunpork - Screening",
+              "Have your ever worked for the SunPork Group (or any of it&#39;s entities including Swickers, SunPork Farms or SP Northern Farming)?",
+              "No",
+              "sunporkgroup",
+              "SYD"
+            ]
+          ]
+        },
+        "sample_columns": [
+          "ANSWER_ID",
+          "JOB_APPLICATION_ID",
+          "Questions Category",
+          "Questions Question",
+          "Questions Answer",
+          "CLIENT_NAME",
+          "CLIENT_REGION"
+        ],
+        "queries": [
+          "WITH prod AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT 'in_prod_not_uat' AS direction, COUNT(*) FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat)\nUNION ALL\nSELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod)",
+          "SELECT COUNT(*) FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "SELECT COUNT(*) FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)",
+          "SELECT * FROM (SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region MINUS SELECT t.\"JOB_APPLICATION_ID\", t.\"ANSWER_ID\", t.\"CLIENT_NAME\", t.\"CLIENT_REGION\" FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region) LIMIT 25",
+          "WITH prod AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM prod EXCEPT SELECT * FROM uat) LIMIT 25",
+          "WITH prod AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region),\n     uat AS (SELECT t.\"ANSWER_ID\" AS \"ANSWER_ID\",\n       t.\"JOB_APPLICATION_ID\" AS \"JOB_APPLICATION_ID\",\n       NULLIF(t.\"Questions Category\", '') AS \"Questions Category\",\n       NULLIF(t.\"Questions Question\", '') AS \"Questions Question\",\n       NULLIF(t.\"Questions Answer\", '') AS \"Questions Answer\",\n       NULLIF(t.\"CLIENT_NAME\", '') AS \"CLIENT_NAME\",\n       NULLIF(t.\"CLIENT_REGION\", '') AS \"CLIENT_REGION\"\n       FROM UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER t  INNER JOIN UAT_DB.BI.TEMP_ACTIVE_TENANTS AS act ON t.client_name = act.client_name AND t.client_region = act.client_region)\nSELECT * FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod) LIMIT 25"
+        ]
+      },
+      "T4": {
+        "status": "FAIL",
+        "shared_keys": 61972091,
+        "mismatched_columns": {
+          "Questions Question": 16300579,
+          "Questions Answer": 10413530
+        },
+        "column_status": {
+          "Questions Question": "FAIL",
+          "Questions Answer": "FAIL"
+        },
+        "accepted_reasons": {},
+        "threshold_pct": 0.1,
+        "excluded_columns": {},
+        "sql": "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Category\",''), NULLIF(u.\"Questions Category\",''))) AS \"Questions Category\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Question\",''), NULLIF(u.\"Questions Question\",''))) AS \"Questions Question\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Answer\",''), NULLIF(u.\"Questions Answer\",''))) AS \"Questions Answer\"\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER u USING (\"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+        "column_samples": {
+          "Questions Question": [
+            [
+              19111,
+              50160,
+              "southerndistricts",
+              "SYD",
+              "Do you have a current driver's license and a vehicle?",
+              "Do you have a current driver&#39;s license and a vehicle?"
+            ],
+            [
+              19176,
+              50884,
+              "southerndistricts",
+              "SYD",
+              "If\u00a0 you answered Yes above, please provide details of medication.\n\nIf you answered No, simply indicate Nil or NA",
+              "If you answered Yes above, please provide details of medication. If you answered No, simply indicate Nil or NA"
+            ],
+            [
+              11540,
+              35246,
+              "southerndistricts",
+              "SYD",
+              "Do you have a current driver's licence?",
+              "Do you have a current driver&#39;s licence?"
+            ],
+            [
+              21143,
+              69619,
+              "southerndistricts",
+              "SYD",
+              "Do you have a current driver's licence?",
+              "Do you have a current driver&#39;s licence?"
+            ],
+            [
+              1931,
+              11724,
+              "southerndistricts",
+              "SYD",
+              "Do you have a current driver's licence?",
+              "Do you have a current driver&#39;s licence?"
+            ]
+          ],
+          "Questions Answer": [
+            [
+              212829,
+              1415422,
+              "catercare",
+              "SYD",
+              "$70,000-$80,000",
+              "\"$70,000-$80,000\""
+            ],
+            [
+              206013,
+              1361305,
+              "catercare",
+              "SYD",
+              "$90,000 - $110,000",
+              "\"$90,000 - $110,000\""
+            ],
+            [
+              205993,
+              1361167,
+              "catercare",
+              "SYD",
+              "$130,000 - $150,000",
+              "\"$130,000 - $150,000\""
+            ],
+            [
+              205997,
+              1361199,
+              "catercare",
+              "SYD",
+              "$50,000 - $60,000",
+              "\"$50,000 - $60,000\""
+            ],
+            [
+              205987,
+              1361111,
+              "catercare",
+              "SYD",
+              "$90,000 - $110,000",
+              "\"$90,000 - $110,000\""
+            ]
+          ]
+        },
+        "column_sample_columns": [
+          "JOB_APPLICATION_ID",
+          "ANSWER_ID",
+          "CLIENT_NAME",
+          "CLIENT_REGION",
+          "PROD value",
+          "UAT value"
+        ],
+        "queries": [
+          "SELECT COUNT(*) AS shared_keys,\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Category\",''), NULLIF(u.\"Questions Category\",''))) AS \"Questions Category\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Question\",''), NULLIF(u.\"Questions Question\",''))) AS \"Questions Question\",\n       COUNT_IF(NOT EQUAL_NULL(NULLIF(p.\"Questions Answer\",''), NULLIF(u.\"Questions Answer\",''))) AS \"Questions Answer\"\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER u USING (\"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")",
+          "SELECT \"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Questions Question\" AS prod_value, u.\"Questions Question\" AS uat_value\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER u USING (\"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Questions Question\",''), NULLIF(u.\"Questions Question\",''))\nLIMIT 5",
+          "SELECT \"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\", p.\"Questions Answer\" AS prod_value, u.\"Questions Answer\" AS uat_value\nFROM PROD_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER p\nJOIN UAT_DB.BI.RECRUITMENT_APPLICATION_QUESTION_ANSWER u USING (\"JOB_APPLICATION_ID\", \"ANSWER_ID\", \"CLIENT_NAME\", \"CLIENT_REGION\")\nWHERE NOT EQUAL_NULL(NULLIF(p.\"Questions Answer\",''), NULLIF(u.\"Questions Answer\",''))\nLIMIT 5"
+        ]
+      },
+      "T5": {
+        "status": "SKIPPED",
+        "reason": "T3 non-zero"
+      }
+    },
+    "verdict": "DIFFS FOUND",
+    "notes": []
+  }
+]

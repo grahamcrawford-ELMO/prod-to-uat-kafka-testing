@@ -1,0 +1,26 @@
+Assignment Rule ID,COURSE_ID,Assignment Rule Name,Assignment Rule Description,Assignment Rule Created Date,Assignment Rule Modified Date,Assignment Rule Is Active,Assignment Rule Is Confirmed,Assignment Rule Is Required Course,Assignment Rule Is Recommended Course,CLIENT_NAME,CLIENT_REGION
+21,171,Customer Service AF,This rule will automatically enrol all Customer Service Officers into the Customer Service course.,,,False,True,False,True,elmopractical6,SYD
+1,15,Facilities Management Teams,Mandatory courses for all members of Facilities Management Teams,,,True,True,True,False,investa,SYD
+4,15,Senior Project Manager Training Suite,This training suite includes all courses that are relevant to the position of Senior Project Manager.,,,False,True,True,False,primebuild,SYD
+780,187,D&W - Autism Services - OP1059,Inclusive Education Assistant. Updated May 2026.,,,True,True,False,True,anglicaresa,SYD
+5,3,New Starter Learning Suite - Standard (TEST),,,,True,True,True,False,aemoservices,SYD
+1522,11331,GCPH - Endoscopy Skills Assessments,Skills assessments and learning for endoscopy staff,,,True,True,True,False,healthscope,SYD
+6,11,Workshop,,,,False,True,False,True,stabilisedpavements,SYD
+848,396,ACS - Community Aged Care (CAC) - OP942,Relief Partner. Updated September 2025.,,,False,True,False,True,anglicaresa,SYD
+3,327,edX course recommendations,General course recommendations,,,False,True,False,True,kordamentha,SYD
+351,1016,NSW SUP MASONRY,,,,True,True,True,False,brickworks,SYD
+219,989,Head of Customer Strategy (TNA) 2025,Head of Customer Strategy (TNA) 2025,,,True,True,False,True,sydneymetro,SYD
+8,20,Learning - Sales/BD/SCR/Key Accounts/ Training,,,,True,True,False,True,makita,SYD
+329,975,Maintenance Delivery Manager - Communications & Control Systems (TNA) 2025,Maintenance Delivery Manager - Communications & Control Systems (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+81,193,Matsos Sunshine Coast - FOH,The Good Book - Matsos (2024),,,True,True,True,False,gooddrinks,SYD
+41,65,CAC - MAN313,"Manager, Service Development & Design",,,False,True,False,True,anglicaresa,SYD
+12,105,Operator - Yard Person Training,"Required and recommended certifications, trainings, and licences advised for the Yard Operators",,,True,True,False,True,eastland,SYD
+739,93,D&W - Partnership & Impact/Autism Services - OP1010,Customer Data & Billing Officer (Partnership & Impact / Autism Services - Daphne St). Updated September 2025. The learning is assigned based on the Daphne St role so some unnecessary training will be assigned to the role for Partnership & Impact (P&I). This will be managed at a local level with the manager understanding that the P&I role does not need to complete all training.,,,True,True,False,True,anglicaresa,SYD
+236,352,Customer Journey Coordinator Trains (TNA) 2025,Customer Journey Coordinator Trains (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+57,497,EMD - Asset Engineering Technician (TNA),Asset Engineering Technician (TNA),,,False,True,True,False,sydneymetro,SYD
+36,186,Induction modules for non-managers (14.10.2019) v2,Induction modules for staff commencing 14 October 2019,,,False,True,True,False,cacu,SYD
+232,842,BRISTILE ROOFING VIC SOP TRAINING - DEPARTMENT = OPERATIONS,BRISTILE ROOFING VIC SOP TRAINING - DEPARTMENT = OPERATIONS,,,True,True,True,False,brickworks,SYD
+257,1061,National Training Plan - Manufacturing- Management,,,,True,True,True,False,brickworks,SYD
+230,615,Possession Support Officer (TNA) 2025,Possession Support Officer (TNA) 2025,,,True,True,True,False,sydneymetro,SYD
+118,36,DISA - MAN270,"Manager, NDIS Early Learning Programs",,,False,True,False,True,anglicaresa,SYD
+23,146,SWI Modification Rule - Ravenswood,,,,True,True,False,True,catercare,SYD
