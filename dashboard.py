@@ -429,7 +429,7 @@ function tierSummary(key, tier){
       : `${dupTxt}; key-based tests (T3 key set, T4) are unreliable.${tv}`;
   }
   if (key==="T3"){
-    if (!tier.counts) return "No difference counts recorded.";
+    if (!tier.counts && !tier.key_diff) return "No difference counts recorded.";
     const parts=[];
     const d = tier.denominator;
     let worst = 0;
@@ -439,11 +439,15 @@ function tierSummary(key, tier){
       parts.push((kp===0&&ku===0) ? "Key sets are identical."
         : `Keys: <b>${fmt(kp)}</b>${d?` (${pct(kp,d)})`:""} exist only in PROD, <b>${fmt(ku)}</b>${d?` (${pct(ku,d)})`:""} only in UAT.`);
     }
-    const p=tier.counts.in_prod_not_uat||0, u=tier.counts.in_uat_not_prod||0;
-    worst = Math.max(worst, p, u);
-    const scope = tier.rows_scope==="shared_keys" ? " Content diff measured on shared keys only — one-sided keys are excluded here and counted above." : "";
-    parts.push((p===0&&u===0) ? "Row sets are identical under the normalised projection." + scope
-      : `Rows: <b>${fmt(p)}</b>${d?` (${pct(p,d)})`:""} appear only in PROD, <b>${fmt(u)}</b>${d?` (${pct(u,d)})`:""} only in UAT (after blank/NULL normalisation).${scope}`);
+    if (tier.counts){
+      const p=tier.counts.in_prod_not_uat||0, u=tier.counts.in_uat_not_prod||0;
+      worst = Math.max(worst, p, u);
+      const scope = tier.rows_scope==="shared_keys" ? " Content diff measured on shared keys only — one-sided keys are excluded here and counted above." : "";
+      parts.push((p===0&&u===0) ? "Row sets are identical under the normalised projection." + scope
+        : `Rows: <b>${fmt(p)}</b>${d?` (${pct(p,d)})`:""} appear only in PROD, <b>${fmt(u)}</b>${d?` (${pct(u,d)})`:""} only in UAT (after blank/NULL normalisation).${scope}`);
+    } else if (tier.full_row_check){
+      parts.push(`Full-row EXCEPT ${esc(tier.full_row_check)}.`);
+    }
     return parts.join(" ") + (worst?thresholdVerdict(tier, worst, d):"");
   }
   if (key==="T4"){
@@ -492,13 +496,15 @@ function tierBody(key, tier){
       if (blocks.length) parts.push(`<div class="samples">${blocks.join("")}</div>`);
     }
   }
-  if (key==="T3" && tier.counts){
+  if (key==="T3" && (tier.counts || tier.key_diff)){
     const statBits=[];
     if (tier.key_diff) statBits.push(stat("Grain keys only on one side",
       tier.key_diff.in_prod_not_uat, tier.key_diff.in_uat_not_prod, null));
-    statBits.push(stat("Full rows only on one side",
+    if (tier.counts) statBits.push(stat("Full rows only on one side",
       tier.counts.in_prod_not_uat, tier.counts.in_uat_not_prod, null));
     parts.push(`<div class="statrow">${statBits.join("")}</div>`);
+    if (tier.full_row_check && !tier.counts)
+      parts.push(`<div class="kv"><span>Full-row EXCEPT ${esc(tier.full_row_check)}.</span></div>`);
     if (tier.key_samples){
       const blocks = Object.entries(tier.key_samples).map(([dir,rows]) =>
         sampleTable(dir==="in_prod_not_uat"?"Sample keys only in PROD":"Sample keys only in UAT",
@@ -553,14 +559,25 @@ function tierBody(key, tier){
   return parts.join("");
 }
 
+/* T3's label depends on which mode it ran in — key-presence-only (T4 covers
+   content), keyed fallback (key set + full-row EXCEPT), or keyless. */
+function tierLabel(key, tier){
+  if (key==="T3"){
+    if (tier.full_row_check) return "Key-set diff (content drift covered by T4)";
+    if (tier.key_diff && tier.counts) return "Key set & full-row EXCEPT (shared keys)";
+    if (tier.counts) return "Full-row EXCEPT (keyless — no grain configured)";
+  }
+  return TEST_LABELS[key];
+}
+
 function tierCard(key, tier){
   const st=(tier.status||"none").toLowerCase();
   // skipped tiers: visible but one quiet line — nothing else to show
   if ((st==="skipped"||st==="none") && !tier.error && !tier.sql && !tier.queries)
     return `<div class="tier line ${st}"><span class="tk">${key}</span>
-      <span>${esc(TEST_LABELS[key])} — skipped${tier.reason?` · ${esc(tier.reason)}`:""}</span></div>`;
+      <span>${esc(tierLabel(key,tier))} — skipped${tier.reason?` · ${esc(tier.reason)}`:""}</span></div>`;
   return `<div class="tier ${st}">
-    <div class="tier-hd"><span class="tk">${key}</span><span class="tl">${esc(TEST_LABELS[key])}</span>
+    <div class="tier-hd"><span class="tk">${key}</span><span class="tl">${esc(tierLabel(key,tier))}</span>
       <span class="spacer"></span><span class="tier-badge ${st}">${esc(tier.status||"none")}</span></div>
     <div class="tier-sum">${tierSummary(key,tier)}</div>
     <div class="tier-bd">${tierBody(key,tier)}</div>
