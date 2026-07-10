@@ -25,6 +25,21 @@ Edit `config.yaml`:
 - `connection.role` / `warehouse` if your defaults aren't right
 - fill in `grain:` per table from the CRT-6248 grain page as you go
 
+## Dashboard preview
+
+The generated dashboard provides a tracker-friendly view of the migration test results.
+
+![Kafka migration dashboard preview](assets/dashboard-preview.png)
+
+### What the dashboard includes
+
+- A summary matrix for every table across the test ladder (T0-T5)
+- Per-table detail sections for schema drift, row-count diffs, grain checks, and full-row comparisons
+- Column-level drift drill-downs for mismatches that need investigation
+- Sample rows and SQL snippets to help triage issues quickly
+- Run history so you can compare results across multiple executions
+- A self-contained HTML report that can be opened directly from disk
+
 ## Run
 
 ```powershell
@@ -36,6 +51,9 @@ python runner.py --dry-run
 
 # One table
 python runner.py --tables LEARNING_ENROLMENT
+
+# Mutliple tables
+python runner.py --tables LEARNING_ENROLMENT, LEARNING_ASSIGNMENT_RULE
 ```
 
 ## What it does per table (mirrors the plan)
