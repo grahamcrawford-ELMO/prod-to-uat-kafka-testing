@@ -411,9 +411,11 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Assignment Rule ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
-    # 233 duplicates — COURSE_ID allowed as both Required and Recommended; suspected app bug.
-    # Pending PR.
+    expected_blocked: []
+    accepted_columns:
+    - column: Assignment Rule Description
+      reason: HTML stripping differs between pipelines
+
 
   - name: LEARNING_COST
     workstream: "Learning"
