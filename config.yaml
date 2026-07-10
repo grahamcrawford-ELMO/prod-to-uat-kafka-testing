@@ -23,23 +23,23 @@ defaults:
   nullif_text: true
   trim_text: false
   always_fingerprint: false
-  # Examples captured on failure (keys, duplicates, T1 per-client breakdown).
+  # Examples captured on failure (keys, duplicates, T2 per-client breakdown).
   # Displayed collapsed (first 10) in the dashboard; print/export shows all.
   sample_rows: 1000
-  # Full-row T3 samples are WIDE (every projected column) — kept smaller so
+  # Full-row T2 samples are WIDE (every projected column) — kept smaller so
   # results.json / dashboard.html stay manageable. Raise if you need more.
   full_row_sample_rows: 100
   # Differences at or below this percentage (of the larger side / shared keys)
-  # produce status ACCEPTED instead of FAIL — across T1, T2, T3 and T4.
+  # produce status ACCEPTED instead of FAIL — across T1, T2 and T3.
   # Set 0 to disable.
   diff_threshold_pct: 0.1
-  # T4 per-column examples: sample this many example rows for each of the top
+  # T3 per-column examples: sample this many example rows for each of the top
   # N mismatching columns (grain key + PROD value vs UAT value).
-  t4_sample_columns: 10
-  t4_samples_per_column: 5
+  t3_sample_columns: 10
+  t3_samples_per_column: 5
   # Block types to SKIP at runtime. Skipped tables still appear in the report
   # as BLOCKED. GRAIN is deliberately NOT skipped by default — those tables
-  # still get useful T0/T1/T3/T5 results (T4 is withheld when grain isn't
+  # still get useful T0/T2/T4 results (T3 is withheld when grain isn't
   # unique). Override per run: --skip-blocked ,REMOVAL,GRAIN
   # or run everything with --run-all. --tables always wins over skipping.
   skip_blocked: [REMOVAL]
@@ -49,14 +49,28 @@ defaults:
 #   expected_blocked tracker blocked flags (drive skip_blocked)
 #   status           informational: not_started | in_progress | completed
 #   tenant_join      set false when the table has no client columns
-#   exclude_columns  columns removed from comparison entirely (T3/T5 projection
-#                    and T4 diff list). Accepts names or {column, reason}.
-#   accepted_columns columns still measured in T4 and shown on the dashboard,
+#   exclude_columns  columns removed from comparison entirely (T2/T4 projection
+#                    and T3 diff list). Accepts names or {column, reason}.
+#   accepted_columns columns still measured in T3 and shown on the dashboard,
 #                    but their differences never fail the table (verdict becomes
 #                    'PASS (DIFFS ACCEPTED)'). Always give a reason:
 #                      accepted_columns:
 #                        - column: Job Role Description
 #                          reason: HTML stripping differs between pipelines
+#   accept_diff      manual override, per tier — forces the named tier(s) to
+#                    count as ACCEPTED for verdict purposes even when they
+#                    genuinely FAIL (never touches ERROR, and never applies
+#                    to T0 — schema drift stays a hard stop). Use for an
+#                    agreed, documented discrepancy that isn't worth
+#                    modelling via accepted_columns/diff_threshold_pct.
+#                    Accepting T1 does NOT accept T4 — list only what you
+#                    mean:
+#                      accept_diff: true            # every tier, T1-T4
+#                      accept_diff: T1               # one tier
+#                      accept_diff: [T1, T4]          # several tiers
+#                      accept_diff:                  # with reasons, recorded
+#                        T1: "known grain duplication — approved by X"   # in the table's notes
+#                        T4: true
 #   workstream       tracker domain grouping
 tables:
 
@@ -245,6 +259,8 @@ tables:
     status: in_progress
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: "Tested "
     accepted_columns:
     - column: User Expiry Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
@@ -411,11 +427,9 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Assignment Rule ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
-    accepted_columns:
-    - column: Assignment Rule Description
-      reason: HTML stripping differs between pipelines
-
+    expected_blocked: [GRAIN, ]
+    # 233 duplicates — COURSE_ID allowed as both Required and Recommended; suspected app bug.
+    # Pending PR.
 
   - name: LEARNING_COST
     workstream: "Learning"
@@ -896,4 +910,3 @@ tables:
     grain: ["WORK_PATTERN_ID", "Work Week", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain is right, duplicates are wrong (CRT-6248).
-

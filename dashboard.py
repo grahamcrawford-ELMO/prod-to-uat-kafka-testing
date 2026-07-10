@@ -116,7 +116,7 @@ select{cursor:pointer}
 
 /* summary board */
 .board{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:44px}
-.thead,.trow{display:grid;grid-template-columns:minmax(280px,1fr) repeat(6,52px) 150px;align-items:center}
+.thead,.trow{display:grid;grid-template-columns:minmax(280px,1fr) repeat(5,52px) 150px;align-items:center}
 .thead{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
   border-bottom:1px solid var(--line);padding:10px 16px}
 .thead div{text-align:center}.thead div:first-child{text-align:left}.thead div:last-child{text-align:right}
@@ -191,7 +191,7 @@ h2.sect{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--
 .statrow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
 .statlabel{font:600 11px var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:4px}
 
-/* tables (schema drift, samples, T4) */
+/* tables (schema drift, samples, T3) */
 .table-wrap{overflow:auto;border:1px solid var(--line-soft);border-radius:8px;width:fit-content;max-width:100%}
 table.data{border-collapse:collapse;font-size:12px;font-family:var(--mono)}
 table.data th,table.data td{padding:6px 12px;border-bottom:1px solid var(--line-soft);text-align:left;white-space:nowrap}
@@ -253,7 +253,7 @@ table.data.xopen tr.xrow{display:table-row}
   justify-self:center;max-height:92px;overflow:hidden}
 footer{margin-top:56px;font:12px var(--mono);color:var(--ink-soft)}
 @media(max-width:860px){
-  .thead,.trow{grid-template-columns:minmax(140px,1fr) repeat(6,30px) 100px}
+  .thead,.trow{grid-template-columns:minmax(140px,1fr) repeat(5,30px) 100px}
   .cell{height:16px;margin:0 2px}
 }
 
@@ -307,7 +307,7 @@ footer{margin-top:56px;font:12px var(--mono);color:var(--ink-soft)}
   </div>
   <div class="board">
     <div class="thead">
-      <div>Table</div><div>T0</div><div>T1</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>Verdict</div>
+      <div>Table</div><div>T0</div><div>T1</div><div>T2</div><div>T3</div><div>T4</div><div>Verdict</div>
     </div>
     <div id="rows"></div>
   </div>
@@ -323,9 +323,9 @@ footer{margin-top:56px;font:12px var(--mono);color:var(--ink-soft)}
 
 <script>
 const RUNS = /*__DATA__*/null;
-const TIERS = ["T0","T1","T2","T3","T4","T5"];
-const TEST_LABELS = {T0:"Schema parity",T1:"Row counts",T2:"Grain uniqueness",
-  T3:"Key set & full-row EXCEPT (both directions)",T4:"Column-level diff on shared keys",T5:"Aggregate fingerprint"};
+const TIERS = ["T0","T1","T2","T3","T4"];
+const TEST_LABELS = {T0:"Schema parity",T1:"Grain uniqueness",
+  T2:"Key set & full-row EXCEPT (both directions)",T3:"Column-level diff on shared keys",T4:"Aggregate fingerprint"};
 const state = { run: RUNS.length-1, filter: "all", q: "" };
 
 const vkey = v => !v ? "none" : v==="PASS" ? "PASS" : v==="BLOCKED" ? "BLOCKED"
@@ -340,6 +340,8 @@ const anchor = t => "t-" + String(t).replace(/[^A-Za-z0-9_]/g,"_");
 const tierStatus = (r,t) => { const x=(r.tiers||{})[t]; return x ? x.status : "none"; };
 const pct = (n,d) => (d && n!=null) ? (100*Number(n)/Number(d)).toFixed(3).replace(/\.?0+$/,"")+"%" : null;
 function thresholdVerdict(tier, worst, denom){
+  if (tier.accepted_via_config)
+    return ` <b>Accepted via config override</b>${tier.accept_reason?` — ${esc(tier.accept_reason)}`:""}.`;
   if (!tier.threshold_pct || !denom) return "";
   const p = 100*worst/denom;
   return p<=tier.threshold_pct
@@ -411,24 +413,15 @@ function tierSummary(key, tier){
     return n ? `<b>${n} column${n>1?"s":""} drifted</b> between PROD and UAT — everything below this tier is unreliable until schemas agree.` : "Schemas match exactly (names, order, types).";
   }
   if (key==="T1"){
-    if (!("prod_rows" in tier)) return "No result recorded.";
-    if (tier.diff===0) return `Row counts match — ${fmt(tier.prod_rows)} rows each (active tenants).`;
-    const side = tier.diff>0 ? "PROD has" : "UAT has";
-    const denom = Math.max(tier.prod_rows||0, tier.uat_rows||0);
-    return `<b>${side} ${fmt(Math.abs(tier.diff))} more rows</b> than the other side`
-      + (denom?` (${pct(Math.abs(tier.diff),denom)})`:"") + "."
-      + thresholdVerdict(tier, Math.abs(tier.diff), denom);
-  }
-  if (key==="T2"){
     if (!tier.dups) return "No detail recorded.";
     if (tier.grain_unique) return "Grain is unique on both sides.";
     const pd=(tier.dups?.prod||{}).dup_key_count||0, ud=(tier.dups?.uat||{}).dup_key_count||0;
     const dupTxt = `<b>Grain is NOT unique</b> — PROD ${fmt(pd)} / UAT ${fmt(ud)} duplicate grain keys`;
     const tv = thresholdVerdict(tier, Math.max(pd,ud), tier.denominator);
     return st==="ACCEPTED" ? `${dupTxt} — key-based tests proceed with minor fan-out risk.${tv}`
-      : `${dupTxt}; key-based tests (T3 key set, T4) are unreliable.${tv}`;
+      : `${dupTxt}; key-based tests (T2 key set, T3) are unreliable.${tv}`;
   }
-  if (key==="T3"){
+  if (key==="T2"){
     if (!tier.counts && !tier.key_diff) return "No difference counts recorded.";
     const parts=[];
     const d = tier.denominator;
@@ -450,7 +443,7 @@ function tierSummary(key, tier){
     }
     return parts.join(" ") + (worst?thresholdVerdict(tier, worst, d):"");
   }
-  if (key==="T4"){
+  if (key==="T3"){
     const mc=tier.mismatched_columns||{}; const n=Object.keys(mc).length;
     if (!n) return tier.reason ? esc(tier.reason) : "No column-level mismatches across shared keys.";
     const cs=tier.column_status||{};
@@ -459,9 +452,11 @@ function tierSummary(key, tier){
     const worst=Object.entries(mc).sort((a,b)=>b[1]-a[1])[0];
     let txt=`<b>${n} column${n>1?"s":""} disagree</b> across ${fmt(tier.shared_keys)} shared keys — worst: <b>${esc(worst[0])}</b> (${fmt(worst[1])} keys).`;
     if (accepted) txt += ` ${failing?`<b>${failing}</b> failing, `:""}<b>${accepted}</b> accepted (marked or within threshold).`;
+    if (tier.accepted_via_config) txt += ` <b>Tier accepted via config override</b>${tier.accept_reason?` — ${esc(tier.accept_reason)}`:""}.`;
     return txt;
   }
-  if (key==="T5"){
+  if (key==="T4"){
+    if (tier.accepted_via_config) return `<b>Fingerprints differ</b> — accepted via config override${tier.accept_reason?`: ${esc(tier.accept_reason)}`:""}.`;
     if (st==="PASS") return "HASH_AGG fingerprints match — the two sets are identical under the normalised projection.";
     if (st==="FAIL") return "<b>Fingerprints differ</b> — the sets are not identical.";
     return esc(tier.reason || "No fingerprint result recorded.");
@@ -479,13 +474,7 @@ function tierBody(key, tier){
         `<td>${esc(d.prod_ord??"—")} / ${esc(d.prod_type??"—")}</td>`,
         `<td>${esc(d.uat_ord??"—")} / ${esc(d.uat_type??"—")}</td>`])));
   }
-  if (key==="T1" && "prod_rows" in tier){
-    parts.push(`<div class="statrow">${stat("Rows (active tenants)", tier.prod_rows, tier.uat_rows, tier.diff)}</div>`);
-    if (tier.breakdown && tier.breakdown.length)
-      parts.push(sampleTable(`Per-client contribution to the difference (worst first)`,
-        tier.breakdown_columns, tier.breakdown, Infinity, 5));
-  }
-  if (key==="T2" && tier.dups){
+  if (key==="T1" && tier.dups){
     const d=tier.dups||{};
     parts.push(`<div class="statrow">
       ${stat("Duplicate grain keys", (d.prod||{}).dup_key_count, (d.uat||{}).dup_key_count, null)}</div>`);
@@ -496,13 +485,18 @@ function tierBody(key, tier){
       if (blocks.length) parts.push(`<div class="samples">${blocks.join("")}</div>`);
     }
   }
-  if (key==="T3" && (tier.counts || tier.key_diff)){
+  if (key==="T2" && ("prod_rows" in tier || tier.counts || tier.key_diff)){
+    if ("prod_rows" in tier)
+      parts.push(`<div class="statrow">${stat("Rows (active tenants)", tier.prod_rows, tier.uat_rows, tier.row_diff)}</div>`);
+    if (tier.row_count_breakdown && tier.row_count_breakdown.length)
+      parts.push(sampleTable(`Per-client contribution to the difference (worst first)`,
+        tier.row_count_breakdown_columns, tier.row_count_breakdown, Infinity, 5));
     const statBits=[];
     if (tier.key_diff) statBits.push(stat("Grain keys only on one side",
       tier.key_diff.in_prod_not_uat, tier.key_diff.in_uat_not_prod, null));
     if (tier.counts) statBits.push(stat("Full rows only on one side",
       tier.counts.in_prod_not_uat, tier.counts.in_uat_not_prod, null));
-    parts.push(`<div class="statrow">${statBits.join("")}</div>`);
+    if (statBits.length) parts.push(`<div class="statrow">${statBits.join("")}</div>`);
     if (tier.full_row_check && !tier.counts)
       parts.push(`<div class="kv"><span>Full-row EXCEPT ${esc(tier.full_row_check)}.</span></div>`);
     if (tier.key_samples){
@@ -518,7 +512,7 @@ function tierBody(key, tier){
       if (blocks.length) parts.push(`<div class="samples">${blocks.join("")}</div>`);
     }
   }
-  if (key==="T4" && tier.mismatched_columns && Object.keys(tier.mismatched_columns).length){
+  if (key==="T3" && tier.mismatched_columns && Object.keys(tier.mismatched_columns).length){
     const total=Number(tier.shared_keys||0);
     const order=Object.entries(tier.mismatched_columns).sort((a,b)=>b[1]-a[1]);
     parts.push(`<div class="kv"><span>shared keys:</span> ${fmt(total)}${
@@ -559,11 +553,11 @@ function tierBody(key, tier){
   return parts.join("");
 }
 
-/* T3's label depends on which mode it ran in — key-presence-only (T4 covers
+/* T2's label depends on which mode it ran in — key-presence-only (T3 covers
    content), keyed fallback (key set + full-row EXCEPT), or keyless. */
 function tierLabel(key, tier){
-  if (key==="T3"){
-    if (tier.full_row_check) return "Key-set diff (content drift covered by T4)";
+  if (key==="T2"){
+    if (tier.full_row_check) return "Key-set diff (content drift covered by T3)";
     if (tier.key_diff && tier.counts) return "Key set & full-row EXCEPT (shared keys)";
     if (tier.counts) return "Full-row EXCEPT (keyless — no grain configured)";
   }
@@ -576,9 +570,11 @@ function tierCard(key, tier){
   if ((st==="skipped"||st==="none") && !tier.error && !tier.sql && !tier.queries)
     return `<div class="tier line ${st}"><span class="tk">${key}</span>
       <span>${esc(tierLabel(key,tier))} — skipped${tier.reason?` · ${esc(tier.reason)}`:""}</span></div>`;
+  const overrideBadge = tier.accepted_via_config
+    ? `<span class="tier-badge accepted" title="${tier.accept_reason?esc(tier.accept_reason):'accept_diff config override'}">config override</span>` : "";
   return `<div class="tier ${st}">
     <div class="tier-hd"><span class="tk">${key}</span><span class="tl">${esc(tierLabel(key,tier))}</span>
-      <span class="spacer"></span><span class="tier-badge ${st}">${esc(tier.status||"none")}</span></div>
+      <span class="spacer"></span>${overrideBadge}<span class="tier-badge ${st}">${esc(tier.status||"none")}</span></div>
     <div class="tier-sum">${tierSummary(key,tier)}</div>
     <div class="tier-bd">${tierBody(key,tier)}</div>
   </div>`;
