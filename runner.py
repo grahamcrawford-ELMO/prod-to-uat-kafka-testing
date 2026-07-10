@@ -6,10 +6,13 @@ Implements the tiers from "Kafka Migration Testing" (EDATA):
   T0  schema parity            (INFORMATION_SCHEMA full join)
   T1  row counts               (active tenants only)
   T2a grain uniqueness         (both envs; needs grain)
-  T2b key-set diff, both ways  (needs grain)
-  T3  full-row EXCEPT, both directions (normalised projection)
-  T4  column-level diff on shared keys (needs grain; only when T3 non-zero)
-  T5  aggregate fingerprint    (HASH_AGG; when T3 clean, or always_fingerprint)
+  T3  key-set diff, both ways  (needs grain); full-row EXCEPT instead when
+                                keyless or grain isn't usable, since T4
+                                can't cover content drift in that case
+  T4  column-level diff on shared keys (needs usable grain; runs whenever
+                                grain is usable — no longer gated on T3)
+  T5  aggregate fingerprint    (HASH_AGG; when the content check — T3 or
+                                T4, whichever ran — is clean, or always_fingerprint)
 
 Ladder logic per table:
   - If the table is missing on one side -> BLOCKED (likely Kafka import), stop.
@@ -55,7 +58,7 @@ def col_map(tbl_cfg, key):
 # Connection
 # ----------------------------------------------------------------------------
 
-def load_dotenv(path=".env"):
+def load_dotenv(path=".env", override=False):
     """Minimal .env loader — no extra dependency. Existing env vars win."""
     p = Path(path)
     if not p.exists():
@@ -66,7 +69,10 @@ def load_dotenv(path=".env"):
             continue
         key, _, val = line.partition("=")
         key, val = key.strip(), val.strip().strip("'\"")
-        os.environ.setdefault(key, val)
+        if override:
+            os.environ[key] = val
+        else:
+            os.environ.setdefault(key, val)
 
 
 def connect(cfg):
@@ -325,17 +331,62 @@ class Runner:
         out["grain_usable"] = dups_clean or out["status"] == ACC
         return out
 
-    def t3(self, table, cols, tbl_cfg, totals=None):
+    def t3(self, table, cols, tbl_cfg, totals=None, grain_ok=True):
+        """Key-set membership diff, both directions.
+
+        Full-row content comparison only happens here when there's no
+        better check available for it:
+          - keyless tables (no grain configured) — T4 is impossible, so the
+            full-row EXCEPT stays here as the only content check.
+          - keyed tables whose grain isn't usable (dup keys beyond
+            threshold) — T4 is skipped too (the join would fan out), so the
+            full-row EXCEPT (restricted to shared keys) stays as a fallback.
+          - keyed tables with a usable grain — T4's per-column breakdown
+            over the same shared-key population is strictly more
+            informative, so the full-row EXCEPT is skipped here entirely;
+            T3 is just the key-presence check in that case.
+        """
         prod = self.fq(self.env["prod_db"], table)
         uat = self.fq(self.env["uat_db"], table)
-        proj = self.projection(cols, tbl_cfg, alias="t")
         key_cols = self.grain_cols(tbl_cfg)
+        n = self.defaults.get("sample_rows", 25)
+        result = {"rows_scope": "shared_keys" if key_cols else "all"}
+
+        key_diff = None
         if key_cols:
-            # Full-row EXCEPT restricted to keys present on BOTH sides: rows
-            # whose grain key exists on one side only are excluded here (they
-            # are counted and sampled by the key-set diff below) so the row
-            # counts measure CONTENT drift, not presence drift. EQUAL_NULL
-            # keeps rows with NULL key components in scope.
+            def key_select(db):
+                return (f"SELECT {', '.join('t.' + c for c in key_cols)} "
+                        f"FROM {self.fq(db, table)} t {self.tenants_join(tbl_cfg=tbl_cfg)}")
+            kd, ks = {}, {}
+            pdb, udb = self.env["prod_db"], self.env["uat_db"]
+            for direction, a, b in (("in_prod_not_uat", pdb, udb),
+                                    ("in_uat_not_prod", udb, pdb)):
+                crows = self.q(f"SELECT COUNT(*) FROM ({key_select(a)} MINUS {key_select(b)})")
+                kd[direction] = crows[0][0] if crows else None
+                if kd[direction]:
+                    srows = self.q(f"SELECT * FROM ({key_select(a)} MINUS {key_select(b)}) LIMIT {n}")
+                    ks[direction] = [list(r) for r in srows]
+            result["key_diff"] = kd
+            result["key_columns"] = [k.strip('"') for k in key_cols]
+            if ks:
+                result["key_samples"] = ks
+            key_diff = kd
+
+        if key_cols and grain_ok:
+            # T4 covers content drift for this table — T3 is key-presence only.
+            keys_clean = all((v or 0) == 0 for v in key_diff.values())
+            denom = max(totals or (0,)) if totals else 0
+            worst = max([v or 0 for v in key_diff.values()] + [0])
+            result["status"] = (PASS if keys_clean else
+                                (ACC if self.within(worst, denom) else FAIL))
+            result["threshold_pct"] = self.threshold() or None
+            result["denominator"] = denom or None
+            result["full_row_check"] = "skipped — content drift covered by T4"
+            return result
+
+        # full-row EXCEPT — keyless mode, or keyed-but-ungrain-usable fallback
+        proj = self.projection(cols, tbl_cfg, alias="t")
+        if key_cols:
             tkeys = ", ".join("t." + c for c in key_cols)
             skjoin = " AND ".join(f"EQUAL_NULL(t.{c}, sk.{c})" for c in key_cols)
             cte = f"""WITH shared_keys AS (
@@ -358,46 +409,26 @@ SELECT 'in_prod_not_uat' AS direction, COUNT(*) FROM (SELECT * FROM prod EXCEPT 
 UNION ALL
 SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM prod)""")
         counts = {r[0]: r[1] for r in rows}
-        n = self.defaults.get("sample_rows", 25)
-        result = {"counts": counts, "cte": cte,
-                  "rows_scope": "shared_keys" if key_cols else "all"}
-        # key-set membership, both directions — needs grain
-        if key_cols:
-            def key_select(db):
-                return (f"SELECT {', '.join('t.' + c for c in key_cols)} "
-                        f"FROM {self.fq(db, table)} t {self.tenants_join(tbl_cfg=tbl_cfg)}")
-            kd, ks = {}, {}
-            pdb, udb = self.env["prod_db"], self.env["uat_db"]
-            for direction, a, b in (("in_prod_not_uat", pdb, udb),
-                                    ("in_uat_not_prod", udb, pdb)):
-                crows = self.q(f"SELECT COUNT(*) FROM ({key_select(a)} MINUS {key_select(b)})")
-                kd[direction] = crows[0][0] if crows else None
-                if kd[direction]:
-                    srows = self.q(f"SELECT * FROM ({key_select(a)} MINUS {key_select(b)}) LIMIT {n}")
-                    ks[direction] = [list(r) for r in srows]
-            result["key_diff"] = kd
-            result["key_columns"] = [k.strip('"') for k in key_cols]
-            if ks:
-                result["key_samples"] = ks
+        result["counts"] = counts
+        result["cte"] = cte
         rows_clean = counts and all(v == 0 for v in counts.values())
-        keys_clean = all((v or 0) == 0 for v in result.get("key_diff", {}).values())
+        keys_clean = all((v or 0) == 0 for v in (key_diff or {}).values())
         denom = max(totals or (0,)) if totals else 0
         worst = max(list(counts.values()) +
-                    [v or 0 for v in result.get("key_diff", {}).values()] + [0])
+                    [v or 0 for v in (key_diff or {}).values()] + [0])
         result["status"] = (PASS if rows_clean and keys_clean else
                             (ACC if self.within(worst, denom) else FAIL) if counts else ERR)
         result["threshold_pct"] = self.threshold() or None
         result["denominator"] = denom or None
-        # sample offending full rows, both directions
         if not rows_clean and counts:
-            n = self.defaults.get("full_row_sample_rows",
+            ns = self.defaults.get("full_row_sample_rows",
                                   self.defaults.get("sample_rows", 25))
             samples = {}
             for direction, a, b in (("in_prod_not_uat", "prod", "uat"),
                                     ("in_uat_not_prod", "uat", "prod")):
                 if counts.get(direction, 0) > 0:
                     srows = self.q(f"{cte}\nSELECT * FROM (SELECT * FROM {a} "
-                                   f"EXCEPT SELECT * FROM {b}) LIMIT {n}")
+                                   f"EXCEPT SELECT * FROM {b}) LIMIT {ns}")
                     samples[direction] = [list(r) for r in srows]
             result["samples"] = samples
             result["sample_columns"] = self.kept_col_names(cols, tbl_cfg)
@@ -564,30 +595,37 @@ SELECT HASH_AGG(*) FROM (SELECT {proj} FROM {uat} t {self.tenants_join(tbl_cfg=t
             tiers["T2"] = {"status": SKIP, "reason": "no grain configured"}
             print("  T2: SKIPPED (no grain)")
 
-        t3 = attempt("T3", self.t3, table, prod_cols, tbl_cfg, totals)
-
         grain_ok = tiers.get("T2", {}).get("grain_usable",
                    tiers.get("T2", {}).get("grain_unique", False))
-        run_t4 = (key_cols and grain_ok and
-                  (t3["status"] in (FAIL, ACC) or bool(accepted))) \
-                 or (self.dry_run and key_cols)
-        if run_t4 and not tiers.get("T2", {}).get("grain_unique") and grain_ok:
+
+        t3 = attempt("T3", self.t3, table, prod_cols, tbl_cfg, totals, grain_ok=grain_ok)
+
+        # T4 is the content-drift check whenever the grain is usable — it no
+        # longer waits for T3 to report a problem, since T3 is now just a
+        # key-presence check in that case (see t3()'s docstring).
+        run_t4 = bool(key_cols and grain_ok) or (self.dry_run and key_cols)
+        if run_t4 and not tiers.get("T2", {}).get("grain_unique"):
             res["notes"].append("Grain has duplicate keys within threshold — "
                                 "T4 counts may be slightly inflated by join fan-out.")
         if run_t4:
             attempt("T4", self.t4, table, prod_cols, key_cols, tbl_cfg)
-        elif t3["status"] in (FAIL, ACC):
+        elif key_cols:
             tiers["T4"] = {"status": SKIP,
                            "reason": "no usable grain — cannot join on keys"}
         else:
-            tiers["T4"] = {"status": SKIP, "reason": "T3 clean"}
+            tiers["T4"] = {"status": SKIP, "reason": "no grain configured"}
 
-        if t3["status"] == ACC and "T5" not in tiers and not self.defaults.get("always_fingerprint"):
-            tiers["T5"] = {"status": SKIP, "reason": "T3 diffs within threshold — fingerprints would differ by construction"}
-        if "T5" not in tiers and (t3["status"] == PASS or self.defaults.get("always_fingerprint") or self.dry_run):
+        # Whichever tier actually performed the content comparison (T4 when
+        # grain is usable, T3's full-row fallback otherwise) drives whether
+        # T5's full-table fingerprint is worth running.
+        content_status = tiers["T4"]["status"] if run_t4 else t3["status"]
+
+        if content_status == ACC and "T5" not in tiers and not self.defaults.get("always_fingerprint"):
+            tiers["T5"] = {"status": SKIP, "reason": "content diffs within threshold — fingerprints would differ by construction"}
+        if "T5" not in tiers and (content_status == PASS or self.defaults.get("always_fingerprint") or self.dry_run):
             attempt("T5", self.t5, table, prod_cols, tbl_cfg)
         else:
-            tiers["T5"] = {"status": SKIP, "reason": "T3 non-zero"}
+            tiers["T5"] = {"status": SKIP, "reason": "content diffs found (T3/T4)"}
 
         # verdict
         statuses = {t: v.get("status") for t, v in tiers.items()}
@@ -640,16 +678,16 @@ def write_reports(results, out_dir, dry_run):
         if "prod_rows" in t1:
             lines.append(f"- T1 counts: PROD {t1['prod_rows']:,} / UAT {t1['uat_rows']:,} "
                          f"(diff {t1['diff']:+,})" if t1["prod_rows"] is not None else "- T1: no result")
-        t2 = r["tiers"].get("T2", {})
-        if "key_diff" in t2:
-            kd = t2["key_diff"]
-            lines.append(f"- T2 key diff: {kd.get('in_prod_not_uat')} in PROD-only, "
-                         f"{kd.get('in_uat_not_prod')} in UAT-only; grain unique: {t2.get('grain_unique')}")
         t3 = r["tiers"].get("T3", {})
+        if "key_diff" in t3:
+            kd = t3["key_diff"]
+            lines.append(f"- T3 key diff: {kd.get('in_prod_not_uat')} in PROD-only, "
+                         f"{kd.get('in_uat_not_prod')} in UAT-only "
+                         f"(keys: {', '.join(t3.get('key_columns', []))})")
         if "counts" in t3:
             c = t3["counts"]
-            lines.append(f"- T3 EXCEPT: {c.get('in_prod_not_uat')} PROD-not-UAT, "
-                         f"{c.get('in_uat_not_prod')} UAT-not-PROD")
+            lines.append(f"- T3 full-row EXCEPT (fallback — no T4 coverage for this table): "
+                         f"{c.get('in_prod_not_uat')} PROD-not-UAT, {c.get('in_uat_not_prod')} UAT-not-PROD")
         t4 = r["tiers"].get("T4", {})
         if t4.get("mismatched_columns"):
             top = sorted(t4["mismatched_columns"].items(), key=lambda x: -x[1])[:15]
@@ -691,7 +729,7 @@ def main():
                     help="ignore skip_blocked and run every table")
     args = ap.parse_args()
 
-    load_dotenv(args.env_file)
+    load_dotenv(args.env_file, override=True)
     cfg = yaml.safe_load(Path(args.config).read_text())
     out_dir = args.output_dir or f"results_{dt.datetime.now():%Y%m%d_%H%M}"
 
