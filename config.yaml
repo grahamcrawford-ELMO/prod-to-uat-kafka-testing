@@ -1,16 +1,16 @@
 # Kafka Migration Testing — full BI schema (116 models)
 # Grains: CRT-6248 "Classification of BI and Grain" (verbatim, case-sensitive).
 # Blocked flags: Kafka Migration Testing master tracker (§9).
-#   KAFKA_IMPORT = Kafka import not landed   GRAIN = known grain problem
+#    = Kafka import not landed   GRAIN = known grain problem
 #   REMOVAL      = set for removal, not in ThoughtSpot production
 #
 # Connection: simple username/password auth by default (see .env / .env.example).
 
 connection:
-  role: UAT_ANALYTICS_ROLE
+  #role: UAT_ANALYTICS_ROLE
   warehouse: null
   query_tag: kafka_migration_testing
-  use_secondary_roles: [PROD_ANALYTICS_ENGINEER_ROLE]
+  #use_secondary_roles: [PROD_ANALYTICS_ENGINEER_ROLE]
 
 environments:
   # Each side accepts 'DB' (schema taken from 'schema' below) or 'DB.SCHEMA'.
@@ -40,9 +40,9 @@ defaults:
   # Block types to SKIP at runtime. Skipped tables still appear in the report
   # as BLOCKED. GRAIN is deliberately NOT skipped by default — those tables
   # still get useful T0/T1/T3/T5 results (T4 is withheld when grain isn't
-  # unique). Override per run: --skip-blocked KAFKA_IMPORT,REMOVAL,GRAIN
+  # unique). Override per run: --skip-blocked ,REMOVAL,GRAIN
   # or run everything with --run-all. --tables always wins over skipping.
-  skip_blocked: [KAFKA_IMPORT, REMOVAL]
+  skip_blocked: [REMOVAL]
 
 # Per-table fields:
 #   grain            full composite key, exact case, no surrounding quotes
@@ -74,13 +74,13 @@ tables:
     workstream: "Docs/Contracts"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: CONTRACT_WORKFLOW
     workstream: "Docs/Contracts"
     status: not_started
     grain: ["Contract ID", "CONTRACT_ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Grain incomplete: epms_contract.id missing from view (multiple contracts per assignment).
     # Pending PR.
 
@@ -88,13 +88,13 @@ tables:
     workstream: "Docs/Contracts"
     status: not_started
     grain: ["Document ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: DOCUMENT_DATA_PIVOT
     workstream: "Docs/Contracts"
     status: not_started
     grain: ["DOCUMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Wide pivot (S1..S220 text + D1..D100 date/numeric slots) — T4 generator essential here.
 
   - name: DOCUMENT_FORM_FIELD_MAPPING
@@ -116,14 +116,14 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Effectivity Transaction ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Known problematic — ~44k duplicates on grain.
 
   - name: GENERAL_DEPARTMENT
     workstream: "General"
     status: not_started
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_JOB_ROLE
     workstream: "General"
@@ -136,7 +136,7 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_LOGIN_HISTORY
     workstream: "General"
@@ -149,7 +149,7 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Needs epms_note.id AS ID for uniqueness.
     # Pending PR.
 
@@ -157,13 +157,13 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Position Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_SECURITY_PROFILE
     workstream: "General"
     status: not_started
     grain: ["ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Needs epms_users_client_role_types.id for uniqueness.
     # Pending PR.
 
@@ -179,13 +179,13 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Task Assignment ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_USER
     workstream: "General"
     status: not_started
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_USER_CONTACT
     workstream: "General"
@@ -216,20 +216,20 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Manager ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: GENERAL_USER_MANAGER_DEPARTMENT
     workstream: "General"
     status: not_started
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Bridge table.
 
   - name: GENERAL_USER_MANAGER_LOCATION
     workstream: "General"
     status: not_started
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Bridge table.
     # Known: 'location is disabled' is numeric in PROD BI view but bool in the model — PROD view likely stale.
 
@@ -237,7 +237,7 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Position Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Bridge table.
 
   - name: GENERAL_USER_MODEL
@@ -256,7 +256,7 @@ tables:
     workstream: "General"
     status: not_started
     grain: ["Termination ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
 
   # ── Misc ────────────────────────────────────────────────────────
@@ -290,13 +290,13 @@ tables:
     workstream: "HR Core"
     status: not_started
     grain: ["Leave Request ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: HRCORE_LEAVE_REQUEST_APPROVAL
     workstream: "HR Core"
     status: not_started
     grain: ["Leave Approval ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: HRCORE_LEAVE_TRANSACTION
     workstream: "HR Core"
@@ -316,7 +316,7 @@ tables:
     workstream: "HR Core"
     status: not_started
     grain: ["Calendar Year", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Aggregate table — values are sums; float/rounding triage matters most.
 
   - name: HRCORE_USER_BANK_ACCOUNT
@@ -400,7 +400,7 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Assignment Rule ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # 233 duplicates — COURSE_ID allowed as both Required and Recommended; suspected app bug.
     # Pending PR.
 
@@ -416,14 +416,14 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Course ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Grain FAIL: 6 duplicates.
 
   - name: LEARNING_CPD_PLAN
     workstream: "Learning"
     status: not_started
     grain: null
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # No grain recorded in CRT-6248 (Pending PR).
 
   - name: LEARNING_ENROLMENT
@@ -437,7 +437,7 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Enrolment Activity ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: LEARNING_ENROLMENT_ACTIVITY_ACKNOWLEDGEMENT
     workstream: "Learning"
@@ -450,20 +450,20 @@ tables:
     workstream: "Learning"
     status: not_started
     grain: ["Face to Face Signup Signup ID", "Face to Face Session ID", "COURSE_MODULE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # 'Signup Signup' is not a typo — column name per CRT-6248.
 
   - name: LEARNING_ENROLMENT_ACTIVITY_FILE_SUBMISSION
     workstream: "Learning"
     status: not_started
     grain: ["File Submission ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: LEARNING_ENROLMENT_ACTIVITY_QUIZ_SUBMISSION
     workstream: "Learning"
     status: not_started
     grain: ["Quiz Submission ID", "QUESTION_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # 149 duplicates, PR pending.
     # Doc §2.3: known PROD-only quiz records absent from TMS — expect PROD-only rows.
 
@@ -471,20 +471,20 @@ tables:
     workstream: "Learning"
     status: in_progress
     grain: ["Enrolment Completion History ID", "ENROLMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: LEARNING_ENROLMENT_OMITTED
     workstream: "Learning"
     status: not_started
     grain: ["USER_ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Expensive view (~6 min single scan) — dominates run time; consider a bigger warehouse.
 
   - name: LEARNING_EXTERNAL_TRAINING
     workstream: "Learning"
     status: completed
     grain: ["External Training ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Completed separately.
 
   - name: LEARNING_EXTERNAL_TRAINING_TEMPLATE
@@ -535,13 +535,13 @@ tables:
     workstream: "Onboarding"
     status: not_started
     grain: ["WORKFLOW_ACTIVITY_ID", "EMAIL_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_PROFILE_TASK
     workstream: "Onboarding"
     status: not_started
     grain: ["WORKFLOW_ACTIVITY_ID", "PROFILE_TASK_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Pending PR.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_TASK
@@ -571,7 +571,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["Appraisal ID", "Appraisal Current Phase", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # 122 duplicates from historical duplicate phases.
     # Pending PR; DT not rebuilt.
 
@@ -579,7 +579,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Grain FAIL — needs epms_ap_performance_workflow.id; also 1:many comments per phase.
     # Pending PR.
 
@@ -593,7 +593,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # ID added for 1:many Q:A.
     # Pending PR.
 
@@ -614,7 +614,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY_BEHAVIOUR
     workstream: "Performance"
@@ -627,7 +627,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -641,7 +641,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["SECTION_ITEM_ID", "ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Missing epms_ap_performance_learning_object.id.
     # Pending PR.
 
@@ -649,7 +649,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Needs epms_note.id AS ID; another SELECT * to fix.
     # Pending PR.
 
@@ -657,7 +657,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL_MEASURE
     workstream: "Performance"
@@ -670,7 +670,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -678,7 +678,7 @@ tables:
     workstream: "Performance"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, KAFKA_IMPORT]
+    expected_blocked: [GRAIN, ]
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -719,7 +719,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["Interview ID", "INTERVIEW_ASSIGNMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # BI logic bug: missing is_deleted logic + grain key (same user can join same interview).
     # Pending PR.
 
@@ -727,7 +727,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["Job Offer ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: RECRUITMENT_APPLICATION_QUESTION_ANSWER
     workstream: "Recruitment"
@@ -747,7 +747,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["CANDIDATE_ID", "Candidate Is External", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: RECRUITMENT_CANDIDATE_EDUCATION
     workstream: "Recruitment"
@@ -765,7 +765,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["Requisition ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: RECRUITMENT_REQUISITION_COST
     workstream: "Recruitment"
@@ -777,7 +777,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["Job Ad ID", "Job Ad Category", "Job Ad Location", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # Pending PR.
 
   - name: RECRUITMENT_REQUISITION_QUESTION_ANSWER
@@ -796,7 +796,7 @@ tables:
     workstream: "Recruitment"
     status: not_started
     grain: ["Talent Pool ID", "CANDIDATE_ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
 
   # ── Rewards ─────────────────────────────────────────────────────
@@ -840,7 +840,7 @@ tables:
     workstream: "Rewards"
     status: not_started
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
 
   - name: REWARDS_VOTE
     workstream: "Rewards"
@@ -856,7 +856,7 @@ tables:
     workstream: "Misc"
     status: not_started
     grain: ["MANAGER_ID", "USER_ID", "LEVEL", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA_IMPORT]
+    expected_blocked: []
     # ACL bridge.
 
 
