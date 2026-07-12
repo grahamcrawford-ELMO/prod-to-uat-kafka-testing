@@ -452,15 +452,19 @@ tables:
   # ── Learning ────────────────────────────────────────────────────
   - name: LEARNING_ASSIGNMENT_RULE
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Assignment Rule ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    accepted_columns:
+    - column: Assignment Rule Description
+      reason: HTML stripping differs between pipelines
+    accept_diff:
+      T2: "Tested and verified that production has stale data"
     # 233 duplicates — COURSE_ID allowed as both Required and Recommended; suspected app bug.
     # Pending PR.
 
   - name: LEARNING_COST
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Learning Cost ID", "USER_LEARNING_COST_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain PASS after adding USER_LEARNING_COST_ID (the user's learning-cost id, NOT USER_ID).
