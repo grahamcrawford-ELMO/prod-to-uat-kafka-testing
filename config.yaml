@@ -57,6 +57,20 @@ defaults:
 #                      accepted_columns:
 #                        - column: Job Role Description
 #                          reason: HTML stripping differs between pipelines
+#                    Optionally add `where` to only accept diffs matching a
+#                    specific known pattern, rather than the whole column —
+#                    `where` is a SQL predicate written against `prod_value` /
+#                    `uat_value` (the column's normalised comparison values,
+#                    same ones COUNT_IF diffs on). Any mismatches NOT matching
+#                    `where` still count as genuine diffs (still subject to
+#                    diff_threshold_pct/FAIL) instead of being blanket-accepted:
+#                      accepted_columns:
+#                        - column: User Expiry Date
+#                          reason: Prod sentinel 1970-01-01 correctly nulled in UAT
+#                          where: "prod_value = '1970-01-01 00:00:00+00:00'"
+#                        - column: User Has Onboarding Match
+#                          reason: NULL now correctly flagged as false in UAT
+#                          where: "prod_value IS NULL"
 #   accept_diff      manual override, per tier — forces the named tier(s) to
 #                    count as ACCEPTED for verdict purposes even when they
 #                    genuinely FAIL (never touches ERROR, and never applies
@@ -260,18 +274,31 @@ tables:
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
-      T2: "Tested "
-    accepted_columns:
-    - column: User Expiry Date
-      reason: Prod values of 1970-01-01 have been set to null in UAT
+      T2: >
+        "I tested over 1,000 records that were showing in UAT but not in Prod, and found them all to be in the TMS. This was across 3 tenants.
+        I tested an additional 241 records that were showing in Prod and not UAT, and found none of them in the TMS.
+        I am comfortable that UAT is accurate."
+    exclude_columns:
     - column: User Last Login Date
       reason: This field is no longer available through Kafka
     - column: User Last Logout Date
       reason: This field is no longer available through Kafka
+
+    accepted_columns:
+    - column: User Expiry Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value = '1970-01-01 00:00:00+00:00'"
     - column: User Last Access Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value = '1970-01-01 00:00:00+00:00'"
     - column: User Service Start Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value = '1970-01-01 00:00:00+00:00'"
+    - column: User Has Onboarding Match
+      reason: As a boolean, UAT now flags a NULL as false, which is correct.
+      where: "prod_value IS NULL"
+    - column: User Modified Date
+      reason: Checking these, it seems to be a matter of milliseconds, likely a transaction in progress.
 
   - name: GENERAL_USER_NEXT_OF_KIN
     workstream: "General"

@@ -6,7 +6,7 @@ Snowflake for a configured list of tables, and writes a tracker-ready summary.
 ## Setup
 
 ```powershell
-pip install snowflake-connector-python pyyaml
+pip install snowflake-connector-python[secure-local-storage] pyyaml
 ```
 
 Copy `.env.example` to `.env` (it's prefilled with your account/user/warehouse)
@@ -53,7 +53,7 @@ python runner.py --dry-run
 python runner.py --tables LEARNING_ENROLMENT
 
 # Mutliple tables
-python runner.py --tables LEARNING_ENROLMENT, LEARNING_ASSIGNMENT_RULE
+python runner.py --tables LEARNING_ENROLMENT,LEARNING_ASSIGNMENT_RULE
 ```
 
 ## What it does per table (mirrors the plan)

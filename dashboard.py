@@ -238,6 +238,8 @@ table.data.xopen tr.xrow{display:table-row}
   border-radius:8px;padding:10px 12px;white-space:pre-wrap}
 .kv{font-family:var(--mono);font-size:13px}
 .kv span{color:var(--ink-soft)}
+.wherebox{font:12px var(--mono);color:var(--ink-soft);display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.wherebox code{background:#F8FAFB;border:1px solid var(--line-soft);border-radius:5px;padding:2px 7px;color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
 .empty{color:var(--ink-soft);font-size:13.5px;padding:14px 16px}
 
 /* history */
@@ -514,7 +516,15 @@ function tierBody(key, tier){
   }
   if (key==="T3" && tier.mismatched_columns && Object.keys(tier.mismatched_columns).length){
     const total=Number(tier.shared_keys||0);
-    const order=Object.entries(tier.mismatched_columns).sort((a,b)=>b[1]-a[1]);
+    const residualMap = tier.residual_mismatches||{};
+    // where-filtered (flagged) columns first — same priority the backend
+    // uses to pick which columns get sample rows — then the rest by raw count.
+    const order=Object.entries(tier.mismatched_columns).sort((a,b)=>{
+      const aw = a[0] in residualMap, bw = b[0] in residualMap;
+      if (aw !== bw) return aw ? -1 : 1;
+      if (aw && bw) return residualMap[b[0]] - residualMap[a[0]];
+      return b[1]-a[1];
+    });
     parts.push(`<div class="kv"><span>shared keys:</span> ${fmt(total)}${
       tier.column_samples_note?`&ensp;<span>· ${esc(tier.column_samples_note)}</span>`:""}</div>`);
     if (!tier.column_samples)
@@ -536,15 +546,19 @@ function tierBody(key, tier){
               return `<td class="${isP(cc)?"tdp":"tdu"}"><div class="val" title="${esc(renderValue(v))}">${esc(renderValue(v))}</div></td>`;
             return `<td>${esc(renderValue(v))}</td>`;
           }).join("")}</tr>`).join("")}</tbody></table></div>`;
+      } else if (tier.column_samples && !(c in tier.column_samples)){
+        body = `<div class="kv"><span>Not sampled this run — outside the top columns captured (see note above).</span></div>`;
       }
       const cst=(tier.column_status||{})[c]||"FAIL";
       const badge = cst==="FAIL" ? `<span class="colbadge fail">fail</span>`
         : cst==="ACCEPTED_THRESHOLD" ? `<span class="colbadge acc">accepted · within threshold</span>`
         : `<span class="colbadge acc">accepted · marked</span>`;
       const reason=(tier.accepted_reasons||{})[c];
+      const whereSql=(tier.accepted_where||{})[c];
       return `<div class="t4col"><div class="t4col-hd"><b>${esc(c)}</b>
         <span>${fmt(nMis)} of ${fmt(total)} shared keys differ (${pct}%)</span>${badge}${
-        reason?`<span>— ${esc(reason)}</span>`:""}</div>${body}</div>`;
+        reason?`<span>— ${esc(reason)}</span>`:""}</div>${
+        whereSql?`<div class="wherebox"><span>accepted where:</span><code>${esc(whereSql)}</code></div>`:""}${body}</div>`;
     }).join(""));
   }
   if (tier.error) parts.push(`<div class="errbox">${esc(tier.error)}</div>`);

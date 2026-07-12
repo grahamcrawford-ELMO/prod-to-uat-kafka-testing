@@ -62,6 +62,38 @@ def col_map(tbl_cfg, key):
     return out
 
 
+def accepted_columns_map(tbl_cfg):
+    """Normalise accepted_columns to {name: {"reason": str, "where": str|None}}.
+
+    `where`, if given, is a SQL boolean expression written against the
+    placeholders `prod_value` / `uat_value` — these are substituted with the
+    column's *normalised* comparison expressions (i.e. after any trim_text /
+    nullif_text), the same values COUNT_IF already diffs on. Only rows
+    matching `where` are treated as explained; any remaining mismatches
+    still count as genuine diffs (subject to diff_threshold_pct/FAIL as
+    normal) rather than being blanket-accepted. Examples:
+
+      accepted_columns:
+        - column: User Expiry Date
+          reason: Prod sentinel 1970-01-01 correctly nulled out in UAT
+          where: "prod_value = '1970-01-01 00:00:00+00:00'"
+        - column: User Has Onboarding Match
+          reason: NULL now correctly flagged as false in UAT
+          where: "prod_value IS NULL"
+
+    Omit `where` for the previous behaviour: the whole column's diffs are
+    accepted unconditionally, whatever they are.
+    """
+    out = {}
+    for item in (tbl_cfg.get("accepted_columns") or []):
+        if isinstance(item, dict):
+            out[item["column"]] = {"reason": item.get("reason", ""),
+                                    "where": item.get("where")}
+        else:
+            out[str(item)] = {"reason": "", "where": None}
+    return out
+
+
 TIER_NAMES = ("T1", "T2", "T3", "T4")  # tiers accept_diff can target — T0 (schema
                                        # drift) is deliberately excluded
 
@@ -509,28 +541,38 @@ SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM 
         uat = self.fq(self.env["uat_db"], table)
         key_set = set(key_cols)  # already quoted
         excluded = col_map(tbl_cfg, "exclude_columns")
-        accepted = col_map(tbl_cfg, "accepted_columns")
+        accepted = accepted_columns_map(tbl_cfg)
         nullif_text = tbl_cfg.get("nullif_text", self.defaults.get("nullif_text", True))
         trim_text = tbl_cfg.get("trim_text", self.defaults.get("trim_text", False))
         exprs = []
         diff_cols = []
+        residual_exprs = []  # (name, sql_expr) — accepted columns carrying a `where`
         for name, _ord, dtype in cols:
             qn = f'"{name}"'
             if qn in key_set or name in excluded:
                 continue
             diff_cols.append(name)
+            p, u = f'p.{qn}', f'u.{qn}'
             if dtype in TEXT_TYPES:
-                p, u = f'p.{qn}', f'u.{qn}'
                 if trim_text:
                     p, u = f"TRIM({p})", f"TRIM({u})"
                 if nullif_text:
                     p, u = f"NULLIF({p},'')", f"NULLIF({u},'')"
-                exprs.append(f'COUNT_IF(NOT EQUAL_NULL({p}, {u})) AS {qn}')
-            else:
-                exprs.append(f'COUNT_IF(NOT EQUAL_NULL(p.{qn}, u.{qn})) AS {qn}')
+            mismatch = f"NOT EQUAL_NULL({p}, {u})"
+            exprs.append(f'COUNT_IF({mismatch}) AS {qn}')
+            acc_entry = accepted.get(name)
+            where_tpl = acc_entry.get("where") if acc_entry else None
+            if where_tpl:
+                # prod_value/uat_value map onto the same normalised (trim/
+                # nullif'd) expressions COUNT_IF just compared above, so the
+                # where-clause sees exactly what the diff logic sees.
+                where_sql = where_tpl.replace("prod_value", p).replace("uat_value", u)
+                residual_exprs.append(
+                    (name, f'COUNT_IF({mismatch} AND NOT ({where_sql})) AS "{name}__residual"'))
         act = self.tenants_join(alias="p", tbl_cfg=tbl_cfg)
+        all_exprs = exprs + [e for _, e in residual_exprs]
         sql = (f"SELECT COUNT(*) AS shared_keys,\n       "
-               + ",\n       ".join(exprs)
+               + ",\n       ".join(all_exprs)
                + f"\nFROM {prod} p\nJOIN {uat} u USING ({', '.join(key_cols)})"
                + (f"\n{act}" if act else ""))
         rows = self.q(sql)
@@ -538,14 +580,36 @@ SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM 
             return {"status": ERR, "sql": sql}
         vals = rows[0]
         shared = vals[0]
-        per_col = {c: v for c, v in zip(diff_cols, vals[1:]) if v and v > 0}
-        # classify every mismatching column: accepted (marked) / accepted
-        # (within threshold) / fail
-        col_status, reasons = {}, {}
+        main_vals = vals[1:1 + len(diff_cols)]
+        residual_vals = vals[1 + len(diff_cols):]
+        per_col = {c: v for c, v in zip(diff_cols, main_vals) if v and v > 0}
+        # residual[c] = mismatches NOT explained by that column's accepted `where`
+        residual = {name: v for (name, _), v in zip(residual_exprs, residual_vals)}
+
+        # classify every mismatching column: accepted (marked, optionally
+        # where-filtered down to a residual) / accepted (within threshold) / fail
+        col_status, reasons, accepted_where = {}, {}, {}
         for c, v in per_col.items():
-            if c in accepted:
+            acc_entry = accepted.get(c)
+            if acc_entry and acc_entry.get("where"):
+                accepted_where[c] = acc_entry["where"]
+                r = residual.get(c, v)
+                explained = v - r
+                base_reason = acc_entry.get("reason") or "marked as accepted in config"
+                if r == 0:
+                    col_status[c] = "ACCEPTED_MARKED"
+                    reasons[c] = f"{base_reason} — where-clause explains all {v:,} diffs"
+                elif self.within(r, shared):
+                    col_status[c] = "ACCEPTED_THRESHOLD"
+                    reasons[c] = (f"{base_reason} — explains {explained:,} of {v:,} diffs; "
+                                 f"remaining {r:,} within threshold")
+                else:
+                    col_status[c] = FAIL
+                    reasons[c] = (f"{base_reason} — explains {explained:,} of {v:,} diffs; "
+                                 f"{r:,} unexplained differences remain")
+            elif acc_entry:
                 col_status[c] = "ACCEPTED_MARKED"
-                reasons[c] = accepted[c] or "marked as accepted in config"
+                reasons[c] = acc_entry.get("reason") or "marked as accepted in config"
             elif self.within(v, shared):
                 col_status[c] = "ACCEPTED_THRESHOLD"
             else:
@@ -555,9 +619,18 @@ SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM 
         out = {"status": st, "shared_keys": shared,
                "mismatched_columns": per_col, "column_status": col_status,
                "accepted_reasons": reasons,
+               "accepted_where": accepted_where,
+               "residual_mismatches": residual,
                "threshold_pct": self.threshold() or None,
                "excluded_columns": excluded, "sql": sql}
-        # per-column examples: grain key + PROD vs UAT value, for the worst columns
+        # per-column examples: grain key + PROD vs UAT value, for the worst columns.
+        # Columns with an accepted `where` are ALWAYS sampled — that's the
+        # whole point of the filter: surfacing whatever variance is left
+        # after known/explained cases are excluded, however small the
+        # residual is. Falling back to raw mismatch count for those columns
+        # would let an ordinary large-but-unremarkable column (no where at
+        # all) crowd them out of the cap. Remaining slots go to the largest
+        # raw mismatch counts among the rest.
         if per_col:
             cap_cols = self.defaults.get("t3_sample_columns", 10)
             per_n = self.defaults.get("t3_samples_per_column", 5)
@@ -565,7 +638,13 @@ SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM 
             key_list = ", ".join(key_cols)
             pkey_list = ", ".join("p." + c for c in key_cols)
             col_samples = {}
-            for cname, _cnt in sorted(per_col.items(), key=lambda x: -x[1])[:cap_cols]:
+            where_cols = sorted((c for c in per_col if c in residual),
+                                key=lambda c: -residual[c])
+            other_cols = sorted((c for c in per_col if c not in residual),
+                                key=lambda c: -per_col[c])
+            remaining = max(cap_cols - len(where_cols), 0)
+            ranked_names = where_cols + other_cols[:remaining]
+            for cname in ranked_names:
                 qn = f'"{cname}"'
                 pexpr, uexpr = f"p.{qn}", f"u.{qn}"
                 if dtypes.get(cname) in TEXT_TYPES:
@@ -573,17 +652,24 @@ SELECT 'in_uat_not_prod', COUNT(*) FROM (SELECT * FROM uat EXCEPT SELECT * FROM 
                         pexpr, uexpr = f"TRIM({pexpr})", f"TRIM({uexpr})"
                     if nullif_text:
                         pexpr, uexpr = f"NULLIF({pexpr},'')", f"NULLIF({uexpr},'')"
+                where_clause = f"NOT EQUAL_NULL({pexpr}, {uexpr})"
+                acc_entry = accepted.get(cname)
+                if acc_entry and acc_entry.get("where"):
+                    excl_sql = acc_entry["where"].replace("prod_value", pexpr).replace("uat_value", uexpr)
+                    where_clause += f"\n  AND NOT ({excl_sql})"
                 srows = self.q(
                     f"SELECT {pkey_list}, p.{qn} AS prod_value, u.{qn} AS uat_value\n"
                     f"FROM {prod} p\nJOIN {uat} u USING ({key_list})"
                     + (f"\n{act}" if act else "") +
-                    f"\nWHERE NOT EQUAL_NULL({pexpr}, {uexpr})\nLIMIT {per_n}")
+                    f"\nWHERE {where_clause}\nLIMIT {per_n}")
                 col_samples[cname] = [list(r) for r in srows]
             out["column_samples"] = col_samples
             out["column_sample_columns"] = [k.strip('"') for k in key_cols] + ["PROD value", "UAT value"]
-            if len(per_col) > cap_cols:
+            if len(per_col) > len(ranked_names):
                 out["column_samples_note"] = (
-                    f"Examples shown for the top {cap_cols} of {len(per_col)} mismatching columns.")
+                    f"Examples shown for {len(ranked_names)} of {len(per_col)} mismatching columns "
+                    f"({len(where_cols)} with an accepted where-clause, always included, "
+                    f"plus the {len(ranked_names) - len(where_cols)} worst of the rest).")
         return out
 
     def t4(self, table, cols, tbl_cfg):
@@ -788,9 +874,32 @@ def write_reports(results, out_dir, dry_run):
                          f"{c.get('in_prod_not_uat')} PROD-not-UAT, {c.get('in_uat_not_prod')} UAT-not-PROD")
         t3 = r["tiers"].get("T3", {})
         if t3.get("mismatched_columns"):
-            top = sorted(t3["mismatched_columns"].items(), key=lambda x: -x[1])[:15]
+            residual = t3.get("residual_mismatches", {})
+            statuses = t3.get("column_status", {})
+            wheres = t3.get("accepted_where", {})
+            mc = t3["mismatched_columns"]
+            where_cols = sorted((c for c in mc if c in residual), key=lambda c: -residual[c])
+            other_cols = sorted((c for c in mc if c not in residual), key=lambda c: -mc[c])
+            top = [(c, mc[c]) for c in (where_cols + other_cols)[:15]]
+            def _fmt(c, n):
+                res = residual.get(c)
+                st = statuses.get(c)
+                bits = f"`{c}`={n:,}"
+                if res is not None:
+                    bits += f" (residual {res:,})"
+                if st and st != FAIL:
+                    bits += f" [{st}]"
+                return bits
             lines.append(f"- T3 ({t3['shared_keys']:,} shared keys), mismatching columns: "
-                         + ", ".join(f"`{c}`={n:,}" for c, n in top))
+                         + ", ".join(_fmt(c, n) for c, n in top))
+            if wheres:
+                lines.append("  Accepted `where` predicates in effect:")
+                for c, w in wheres.items():
+                    lines.append(f"  - `{c}`: `{w}`")
+            if t3.get("column_samples"):
+                lines.append(f"- T3 per-column sample mismatches: `samples/{r['table']}_T3_*.csv` "
+                             "— included for ACCEPTED/ACCEPTED_THRESHOLD columns too, so accepted "
+                             "or within-tolerance variances can still be reviewed.")
         for n in r["notes"]:
             lines.append(f"- ⚠ {n}")
         if r["tiers"].get("T2", {}).get("samples"):
@@ -810,6 +919,23 @@ def write_reports(results, out_dir, dry_run):
                 w = csv.writer(f)
                 w.writerow(t2.get("sample_columns", []))
                 w.writerows(rows)
+
+        # T3 per-column samples — written for every mismatching column
+        # regardless of status (FAIL, ACCEPTED_THRESHOLD, or ACCEPTED_MARKED
+        # with a residual), so within-tolerance or accepted variances remain
+        # reviewable rather than only living in results.json.
+        t3 = r["tiers"].get("T3", {})
+        col_samples = t3.get("column_samples") or {}
+        if col_samples:
+            sdir.mkdir(exist_ok=True)
+            header = t3.get("column_sample_columns", [])
+            for cname, rows in col_samples.items():
+                safe_name = "".join(ch if ch.isalnum() else "_" for ch in cname)
+                with open(sdir / f"{r['table']}_T3_{safe_name}.csv", "w", newline="",
+                          encoding="utf-8") as f:
+                    w = csv.writer(f)
+                    w.writerow(header)
+                    w.writerows(rows)
 
 
 def main():
