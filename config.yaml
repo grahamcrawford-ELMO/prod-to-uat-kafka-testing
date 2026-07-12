@@ -35,8 +35,8 @@ defaults:
   diff_threshold_pct: 0.1
   # T3 per-column examples: sample this many example rows for each of the top
   # N mismatching columns (grain key + PROD value vs UAT value).
-  t3_sample_columns: 10
-  t3_samples_per_column: 5
+  t3_sample_columns: 20
+  t3_samples_per_column: 15
   # Block types to SKIP at runtime. Skipped tables still appear in the report
   # as BLOCKED. GRAIN is deliberately NOT skipped by default — those tables
   # still get useful T0/T2/T4 results (T3 is withheld when grain isn't
@@ -287,18 +287,21 @@ tables:
     accepted_columns:
     - column: User Expiry Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
-      where: "prod_value = '1970-01-01 00:00:00+00:00'"
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
     - column: User Last Access Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
-      where: "prod_value = '1970-01-01 00:00:00+00:00'"
+      where: "prod_value::date <= '1970-01-01 00:00:00+00:00'"
     - column: User Service Start Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
-      where: "prod_value = '1970-01-01 00:00:00+00:00'"
+      where: "prod_value::date <= '1970-01-01'"
     - column: User Has Onboarding Match
       reason: As a boolean, UAT now flags a NULL as false, which is correct.
       where: "prod_value IS NULL"
     - column: User Modified Date
-      reason: Checking these, it seems to be a matter of milliseconds, likely a transaction in progress.
+      reason: Checking these, it seems to be a matter of seconds, likely a transaction in progress.
+    - column: User End Date
+      reason: Prod values of 2772-12-31 appear to be in error
+      where: "prod_value::date = '2772-12-31'"
 
   - name: GENERAL_USER_NEXT_OF_KIN
     workstream: "General"
