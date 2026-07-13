@@ -740,7 +740,7 @@ tables:
   # ── Performance ─────────────────────────────────────────────────
   - name: PERFORMANCE_APPRAISAL
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["Appraisal ID", "Appraisal Current Phase", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # 122 duplicates from historical duplicate phases.
@@ -748,21 +748,21 @@ tables:
 
   - name: PERFORMANCE_APPRAISAL_PHASE
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    expected_blocked: []
     # Grain FAIL — needs epms_ap_performance_workflow.id; also 1:many comments per phase.
     # Pending PR.
 
   - name: PERFORMANCE_APPRAISAL_SECTION
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_360_QUESTION_ANSWER
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # ID added for 1:many Q:A.
@@ -770,47 +770,47 @@ tables:
 
   - name: PERFORMANCE_APPRAISAL_SECTION_CHECKPOINT
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_CHECKPOINT_QUESTION_ANSWER
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "CHECKPOINT_ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
     # CHECKPOINT_ANSWER_ID added to grain — PR to be raised.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY_BEHAVIOUR
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["COMPETENCY_ID", "Behaviour Level", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
     # Grain FAIL: 8 duplicates, 1 client — app bug never cleaned up.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY_NOTES
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    expected_blocked: []
     # Needs epms_note.id AS ID.
     # Pending PR.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT_ACTION
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Missing epms_ap_performance_learning_object.id.
@@ -818,46 +818,46 @@ tables:
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT_NOTES
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    expected_blocked: []
     # Needs epms_note.id AS ID; another SELECT * to fix.
     # Pending PR.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL_MEASURE
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["SECTION_ITEM_ID", "MEASUREMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
     # After fix, still 3 duplicates.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL_NOTES
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    expected_blocked: []
     # Needs epms_note.id AS ID.
     # Pending PR.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_NOTES
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
+    expected_blocked: []
     # Needs epms_note.id AS ID.
     # Pending PR.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_QUESTION_ANSWER
     workstream: "Performance"
-    status: not_started
+    status: in_progress
     grain: ["ID", "SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
     # 'Looks like this was missed entirely' per CRT-6248.
 
 
@@ -1005,13 +1005,24 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Pending PR fix, related to is_deleted.
+    accept_diff:
+      T2: >
+        "The issues were in client swsphn, where prod was showing 518 records, not in uat. On checking back to the primary table
+        in TMS, there were no records for this client. Therefore prod is stale."
+    accepted_columns:
+    - column: Recommendation Comment
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Recommendation Badge Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: REWARDS_TROPHIES
     workstream: "Rewards"
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Trophy Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: REWARDS_VOTE
     workstream: "Rewards"
