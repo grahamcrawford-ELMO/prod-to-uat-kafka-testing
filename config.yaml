@@ -632,9 +632,20 @@ tables:
       
   - name: LEARNING_ENROLMENT_ACTIVITY_QUIZ_SUBMISSION
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Quiz Submission ID", "QUESTION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN, ]
+    accepted_columns:
+    - column: Quiz Submission Question
+      reason: HTML stripping differs between pipelines
+    - column: Quiz Submission Introduction
+      reason: HTML stripping differs between pipelines
+    - column: Quiz Submission Feedback
+      reason: HTML stripping differs between pipelines
+    - column: Quiz Submission Answer
+      reason: HTML stripping differs between pipelines
+    accept_diff:
+      t2: "Tested and verified that production has stale data - verified with hiltonfoods"
     # 149 duplicates, PR pending.
     # Doc §2.3: known PROD-only quiz records absent from TMS — expect PROD-only rows.
 
