@@ -267,62 +267,93 @@ tables:
     status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Needs epms_user_skill.id for uniqueness.
-    # Pending PR.
+    # completed through ipynb
 
   - name: GENERAL_TASK
     workstream: "General"
     status: not_started
     grain: ["Task Assignment ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
+    expected_blocked: [KAFKA]
+    accepted_columns:
+    - column: Task Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: GENERAL_USER
     workstream: "General"
     status: not_started
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
+    expected_blocked: [KAFKA]
+    exclude_columns:
+    - column: User Last Login Date
+      reason: This field is no longer available through Kafka
+    - column: User Last Logout Date
+      reason: This field is no longer available through Kafka
+    accepted_columns:
+    - column: User Expiry Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
+    - column: User Has Onboarding Match
+      reason: As a boolean, UAT now flags a NULL as false, which is correct.
+      where: "prod_value IS NULL"
+    - column: User Last Access Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01 00:00:00+00:00'"
+    - column: User Service Start Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01' or prod_value::date between '1899-12-01' and '1900-01-02'"
+    - column: User Modified Date
+      reason: Checking these, it seems to be a matter of seconds, likely a transaction in progress.
+    - column: User End Date
+      reason: Prod values of 2772-12-31 appear to be in error
+      where: "prod_value::date = '2772-12-31'"
 
   - name: GENERAL_USER_CONTACT
     workstream: "General"
     status: completed
     grain: ["User Contact ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    # completed through ipynb
 
   - name: GENERAL_USER_EDUCATION
     workstream: "General"
     status: completed
     grain: ["User Education ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    # completed through ipynb
 
   - name: GENERAL_USER_EMERGENCY_CONTACT
     workstream: "General"
     status: completed
     grain: ["Emergency Contact ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    # completed through ipynb
 
   - name: GENERAL_USER_LEGAL_ENTITY
     workstream: "General"
-    status: not_started
+    status: complete
     grain: ["Legal Entity ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
-    # Grain FAIL: 12 duplicates — needs source cleanup.
+    expected_blocked: []
+    accept_diff:
+      T3: >
+        "Checking the dates, this appears to be the issue with DMS failure on 29/04/2026. These logs were lost from prod
+        and so prod shows the data prior to this data if there have been no future changes since this date."
 
   - name: GENERAL_USER_MANAGER
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Manager ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: GENERAL_USER_MANAGER_DEPARTMENT
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Bridge table.
 
   - name: GENERAL_USER_MANAGER_LOCATION
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Bridge table.
@@ -330,7 +361,7 @@ tables:
 
   - name: GENERAL_USER_MANAGER_POSITION
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Position Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Bridge table.
@@ -339,7 +370,7 @@ tables:
     workstream: "General"
     status: in_progress
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
+    expected_blocked: [KAFKA]
     accept_diff:
       T2: >
         "I tested over 1,000 records that were showing in UAT but not in Prod, and found them all to be in the TMS. This was across 3 tenants.
@@ -350,7 +381,6 @@ tables:
       reason: This field is no longer available through Kafka
     - column: User Last Logout Date
       reason: This field is no longer available through Kafka
-
     accepted_columns:
     - column: User Expiry Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
@@ -372,7 +402,7 @@ tables:
 
   - name: GENERAL_USER_NEXT_OF_KIN
     workstream: "General"
-    status: in_progress
+    status: completed
     grain: ["Next of Kin ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
@@ -381,6 +411,11 @@ tables:
     status: not_started
     grain: ["Termination ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Termination Custom Type
+      reason: It appears in Prod this has been set to lower(). Checking with Graham the preference is to leave this as proper case.
+    - column: Termination Notes
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
 
   # ── Misc ────────────────────────────────────────────────────────
@@ -965,14 +1000,14 @@ tables:
 
   - name: REWARDS_RECOMMENDATIONS
     workstream: "Rewards"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
     # Pending PR fix, related to is_deleted.
 
   - name: REWARDS_TROPHIES
     workstream: "Rewards"
-    status: not_started
+    status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
