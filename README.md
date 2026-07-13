@@ -6,7 +6,7 @@ Snowflake for a configured list of tables, and writes a tracker-ready summary.
 ## Setup
 
 ```powershell
-pip install snowflake-connector-python[secure-local-storage] pyyaml
+pip install snowflake-connector-python pyyaml
 ```
 
 Copy `.env.example` to `.env` (it's prefilled with your account/user/warehouse)
