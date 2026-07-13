@@ -505,6 +505,12 @@ tables:
     status: not_started
     grain: ["Acknowledgement ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
+    accepted_columns:
+    - column: Acknowledgement Introduction
+      reason: HTML stripping differs between pipelines
+    - column: Acknowledgement Modified Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
     # Grain FAIL.
 
   - name: LEARNING_ENROLMENT_ACTIVITY_F2F_SESSION_SIGNUP
