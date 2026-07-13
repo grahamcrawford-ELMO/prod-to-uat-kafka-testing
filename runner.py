@@ -720,14 +720,25 @@ SELECT HASH_AGG(*) FROM (SELECT {proj} FROM {uat} t {self.tenants_join(tbl_cfg=t
             out["queries"] = self.sql_log[sql_start:]
             if self.dry_run:
                 out["status"] = "DRY"
-            elif out.get("status") == FAIL and name in accept_map:
+            elif name in accept_map and out.get("status") in (FAIL, ACC):
+                # Two independent paths can land a tier on ACC: this
+                # accept_diff override flipping a genuine FAIL, or the
+                # tier's own diff_threshold_pct check already passing it.
+                # Either way, a documented reason exists for this tier —
+                # surface it on the dashboard rather than only doing so
+                # when accept_diff was the thing that did the flipping.
+                was_fail = out["status"] == FAIL
                 reason = accept_map[name]
                 out["status"] = ACC
                 out["accepted_via_config"] = True
                 if reason:
                     out["accept_reason"] = reason
-                res["notes"].append(f"{name} diff accepted via config override (accept_diff)"
-                                    + (f": {reason}" if reason else ""))
+                if was_fail:
+                    res["notes"].append(f"{name} diff accepted via config override (accept_diff)"
+                                        + (f": {reason}" if reason else ""))
+                else:
+                    res["notes"].append(f"{name} diff was within threshold; accept_diff reason on file"
+                                        + (f": {reason}" if reason else ""))
             tiers[name] = out
             print(f"  {name}: {out['status']}")
             return out

@@ -143,15 +143,32 @@ tables:
   - name: GENERAL_DATE_EFFECTIVITY
     workstream: "General"
     status: not_started
-    grain: ["Effectivity Transaction ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
+    grain: ["EFFECTIVITY_TRANSACTION_ID", "Date Effectivity Field Name", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN, ]
     # Known problematic — ~44k duplicates on grain.
 
   - name: GENERAL_DEPARTMENT
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        "I tested swsphn department IDs in TMS, and there was only 1 - id 1. As such, 2-15 are in the
+        production warehouse in error.
+        Department 1 in mariansw does exist within TMS."
+    exclude_columns:
+    - column: Department Description
+      reason: This field uses a html cleanup
+    accepted_columns:
+    - column: Department Goals
+      reason: This is a listagg of multiple goals, which may not always be aggregated in the same order.
+    - column: Department Competencies
+      reason: This is a listagg of multiple goals, which may not always be aggregated in the same order.
+    - column: Department Development Objectives
+      reason: >
+        "This is a listagg of multiple goals, which may not always be aggregated in the same order.
+        I also tested pilbaraminerals which was showing values in Prod, however in TMS there were no values"
 
   - name: GENERAL_JOB_ROLE
     workstream: "General"
@@ -162,9 +179,28 @@ tables:
 
   - name: GENERAL_LOCATION
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        "I tested a number of the records only in UAT and found them all to exist in TMS"
+    accepted_columns:
+    - column: Location Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Location Competencies
+      reason: This is a listagg of multiple goals, which may not always be aggregated in the same order.
+    - column: Location Development Objectives
+      reason: This is a listagg of multiple goals, which may not always be aggregated in the same order.
+    - column: Location Goals
+      reason: This is a listagg of multiple goals, which may not always be aggregated in the same order.
+    - column: Location Is Disabled
+      reason: I tested a number of these, and UAT was the correct value in all cases.
+    - column: Location Parent Title
+      reason: I tested a number of these, and UAT was the correct value in all cases.
+    - column: Location Suburb
+      reason: I tested a number of these, and UAT was the correct value in all cases.
+
 
   - name: GENERAL_LOGIN_HISTORY
     workstream: "General"
@@ -175,25 +211,56 @@ tables:
 
   - name: GENERAL_NOTES
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
-    # Needs epms_note.id AS ID for uniqueness.
-    # Pending PR.
+    expected_blocked: []
+    accepted_columns:
+    - column: Note Text
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Note Has Attachment
+      reason: I tested a number of these, and found no notes for the quoted ids.
 
   - name: GENERAL_POSITION
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Position Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        "I tested a number of the records only in Prod and found none of them to exist in TMS.
+        Likewise I tested the mariansw records in UAT and found them to exist in TMS."
+    accepted_columns:
+    - column: Position Qualifications
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Position Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Position Goals
+      reason: This uses listagg, and so records may be rendered in a different order.
+    - column: Position Competencies
+      reason: This uses listagg, and so records may be rendered in a different order.
+    - column: Position Development Objectives
+      reason: This uses listagg, and so records may be rendered in a different order.
+    - column: Position Is Inheritance Enabled
+      reason: A null value is the equivalent of false.
+      where: "prod_value is null"
+    - column: Position Actual FTE
+      reason: A number of these are rounding issues. I also tested some of the aggregations and found that UAT was correct.
+      where: "round(prod_value, 1) = round(uat_value, 1)"
+    - column: Position Actual Headcount
+      reason: As with Position Actual FTE, I found UAT to be correct.
+    - column: Position Job Role Title
+      reason: I tested mayers and found that they all had values matching with UAT.
 
   - name: GENERAL_SECURITY_PROFILE
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Needs epms_users_client_role_types.id for uniqueness.
-    # Pending PR.
+    accepted_columns:
+    - column: Security Profile Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Security Profile Type Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: GENERAL_SKILLS
     workstream: "General"
@@ -293,7 +360,7 @@ tables:
       where: "prod_value::date <= '1970-01-01 00:00:00+00:00'"
     - column: User Service Start Date
       reason: Prod values of 1970-01-01 have been set to null in UAT
-      where: "prod_value::date <= '1970-01-01'"
+      where: "prod_value::date <= '1970-01-01' or prod_value::date between '1899-12-01' and '1900-01-02'"
     - column: User Has Onboarding Match
       reason: As a boolean, UAT now flags a NULL as false, which is correct.
       where: "prod_value IS NULL"
