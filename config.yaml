@@ -751,11 +751,33 @@ tables:
   # ── Performance ─────────────────────────────────────────────────
   - name: PERFORMANCE_APPRAISAL
     workstream: "Performance"
-    status: in_progress
+    status: completed
     grain: ["Appraisal ID", "Appraisal Current Phase", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # 122 duplicates from historical duplicate phases.
-    # Pending PR; DT not rebuilt.
+    accept_diff:
+      T2: >
+        "tested the largest gap - zero records in uat for swsphn. Running `SELECT * FROM pms_swsphn.epms_ap_performance_ap`
+        in TMS resulted in only one record which showed as deleted."
+    accepted_columns:
+    - column: Appraisal Description
+      reason: HTML stripping differs between pipelines
+    - column: Appraisal Review Title
+      reason: HTML stripping differs between pipelines
+    - column: Appraisal Start Date
+      reason: Bad dates in prod have been cleansed in UAT
+      where: year(prod_value) <= 1980
+    - column: Appraisal Current Phase Defined Start Date
+      reason: Bad dates in prod have been cleansed in UAT
+      where: year(prod_value) <= 1980
+    - column: Appraisal Current Phase Actual Start Date
+      reason: Bad dates in prod have been cleansed in UAT
+      where: year(prod_value) <= 1980
+    - column: Appraisal End Date
+      reason: Bad dates in prod have been cleansed in UAT
+      where: year(prod_value) <= 1980
+    - column: Appraisal Current Phase Defined End Date
+      reason: Bad dates in prod have been cleansed in UAT
+      where: year(prod_value) <= 1980
 
   - name: PERFORMANCE_APPRAISAL_PHASE
     workstream: "Performance"
@@ -815,17 +837,33 @@ tables:
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT
     workstream: "Performance"
-    status: in_progress
+    status: completed
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        "tested the largest gap - zero records in uat for swsphn and found that there were no records for 
+        this client. I also tested the second largest - basics - and found that the records did exist
+        within the TMS."
+    accepted_columns:
+    - column: Development Description
+      reason: HTML stripping differs between pipelines
+    - column: SECTION_ITEM_PARENT_ID
+      reason: I tested a number of records that showed null value in uat but a value in prod. TMS showed no values.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT_ACTION
     workstream: "Performance"
-    status: in_progress
+    status: completed
     grain: ["SECTION_ITEM_ID", "ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Missing epms_ap_performance_learning_object.id.
-    # Pending PR.
+    accept_diff:
+      T2: >
+        "tested the largest gap - zero records in uat for swsphn and found that there were no records for 
+        this client. I also tested the second largest - basics - and found that the records did exist
+        within the TMS."
+    accepted_columns:
+    - column: Action Title
+      reason: HTML stripping differs between pipelines
 
   - name: PERFORMANCE_APPRAISAL_SECTION_DEVELOPMENT_NOTES
     workstream: "Performance"
