@@ -875,9 +875,20 @@ tables:
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL
     workstream: "Performance"
-    status: in_progress
+    status: completed
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Goal Description
+      reason: HTML stripping differs between pipelines
+    - column: Goal Title
+      reason: HTML stripping differs between pipelines
+    - column: SECTION_ITEM_PARENT_ID
+      reason: I tested a number of these and found UAT to be consistent with TMS
+    - column: Goal Employee Score
+      reason: I tested a number of these and found UAT to be consistent with TMS
+    - column: Goal Manager Score
+      reason: I tested a number of these and found UAT to be consistent with TMS
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL_MEASURE
     workstream: "Performance"
