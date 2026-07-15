@@ -654,6 +654,9 @@ tables:
     status: in_progress
     grain: ["Enrolment Completion History ID", "ENROLMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Enrolment Completion History Content
+      reason: HTML stripping differs between pipelines
 
   - name: LEARNING_ENROLMENT_OMITTED
     workstream: "Learning"
