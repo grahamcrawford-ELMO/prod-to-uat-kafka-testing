@@ -618,8 +618,22 @@ tables:
   - name: LEARNING_ENROLMENT_ACTIVITY_F2F_SESSION_SIGNUP
     workstream: "Learning"
     status: not_started
-    grain: ["Face to Face Signup Signup ID", "Face to Face Session ID", "COURSE_MODULE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
+    grain: ["Face to Face Signup Signup ID", "Face to Face Signup Session ID", "COURSE_MODULE_ID", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: [MDL_COURSE_MODULE]
+    accepted_columns:
+    - column: Face to Face Session Instructions
+      reason: HTML stripping differs between pipelines
+    - column: Face to Face Session Description
+      reason: HTML stripping differs between pipelines
+    - column: Face to Face Session Private Instructions
+      reason: HTML stripping differs between pipelines
+    - column: Face to Face Signup Modified Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
+    - column: Face to Face Session Modified Date
+      reason: Prod values of 1970-01-01 have been set to null in UAT
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
+
     # 'Signup Signup' is not a typo — column name per CRT-6248.
     
   - name: LEARNING_ENROLMENT_ACTIVITY_FILE_SUBMISSION
@@ -754,17 +768,29 @@ tables:
   # ── Performance ─────────────────────────────────────────────────
   - name: PERFORMANCE_APPRAISAL
     workstream: "Performance"
-    status: in_progress
+    status: completed
     grain: ["Appraisal ID", "Appraisal Current Phase", "CLIENT_NAME", "CLIENT_REGION"]
+    accept_diff:
+      T2: >
+        "The issues were in client swsphn, where prod was showing 451 records, not in uat. On checking back to the primary table
+        in TMS, there were no records for this client. Therefore prod is stale. Rest of differences < -1 are within threshold, expected drift between prod/uat"
     expected_blocked: []
+    accepted_columns:
+    - column: Appraisal Description
+      reason: HTML stripping differs between pipelines
     # 122 duplicates from historical duplicate phases.
     # Pending PR; DT not rebuilt.
 
   - name: PERFORMANCE_APPRAISAL_PHASE
     workstream: "Performance"
     status: in_progress
-    grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
+    grain: ["ID", "APPROVAL_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Phase Final Comment
+      reason: HTML stripping differs between pipelines
+    - column: Phase Description
+      reason: HTML stripping differs between pipelines
     # Grain FAIL — needs epms_ap_performance_workflow.id; also 1:many comments per phase.
     # Pending PR.
 
