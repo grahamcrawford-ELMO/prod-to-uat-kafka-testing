@@ -143,9 +143,20 @@ tables:
   - name: GENERAL_DATE_EFFECTIVITY
     workstream: "General"
     status: not_started
-    grain: ["EFFECTIVITY_TRANSACTION_ID", "Date Effectivity Field Name", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN, ]
-    # Known problematic — ~44k duplicates on grain.
+    grain: ["EFFECTIVITY_TRANSACTION_ID", "RAW_FIELD_NAME", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: [ ]
+    exclude_columns:
+    - column: Date Effectivity Comment
+      reason: This field uses a html cleanup
+    accepted_columns:
+    - column: Date Effectivity Modified Date
+      reason: This appears to be primarily timing (i.e. timestamp is a second out in uat compared to prod)
+      where: "date(prod_value) = date(uat_value) OR date(uat_value) >= '2026-07-14'"
+    - column: Date Effectivity Effective From
+      reason: Prod values of 1970-01-01 are correctly set to NULL in UAT
+      where: "date(prod_value) = '1970-01-01'"
+    - column: CREATED_BY
+      reason: I checked a number of these and found UAT to be consistent with TMS
 
   - name: GENERAL_DEPARTMENT
     workstream: "General"
@@ -204,9 +215,15 @@ tables:
 
   - name: GENERAL_LOGIN_HISTORY
     workstream: "General"
-    status: not_started
-    grain: ["USER_ID", "Login History Login Date", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    status: completed
+    grain: ["Login Activity ID", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: []
+    accept_diff:
+      T2: >
+        "This is a login table so will change rapidly. I checked swsphn and the max login id in TMS was 1,277. Anything
+        greater than this is therefore an error in our production warehouse."
+      T4: >
+        "We know there are timing issues and swsphn shouldn't have records, so it would be expected that T4 would fail."
     # Grain FAIL: ~55k duplicates, identical timestamps.
 
   - name: GENERAL_NOTES
@@ -271,7 +288,7 @@ tables:
 
   - name: GENERAL_TASK
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Task Assignment ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [KAFKA]
     accepted_columns:
@@ -280,7 +297,7 @@ tables:
 
   - name: GENERAL_USER
     workstream: "General"
-    status: not_started
+    status: skipped
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [KAFKA]
     exclude_columns:
@@ -330,7 +347,7 @@ tables:
 
   - name: GENERAL_USER_LEGAL_ENTITY
     workstream: "General"
-    status: complete
+    status: completed
     grain: ["Legal Entity ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -340,20 +357,20 @@ tables:
 
   - name: GENERAL_USER_MANAGER
     workstream: "General"
-    status: completed
+    status: skipped
     grain: ["Manager ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: GENERAL_USER_MANAGER_DEPARTMENT
     workstream: "General"
-    status: completed
+    status: skipped
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Bridge table.
 
   - name: GENERAL_USER_MANAGER_LOCATION
     workstream: "General"
-    status: completed
+    status: skipped
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Bridge table.
@@ -368,13 +385,13 @@ tables:
 
   - name: GENERAL_USER_MODEL
     workstream: "General"
-    status: in_progress
+    status: completed
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [KAFKA]
     accept_diff:
       T2: >
         "I tested over 1,000 records that were showing in UAT but not in Prod, and found them all to be in the TMS. This was across 3 tenants.
-        I tested an additional 241 records that were showing in Prod and not UAT, and found none of them in the TMS.
+        I tested additional records that were showing in Prod and not UAT, and found none of them in the TMS.
         I am comfortable that UAT is accurate."
     exclude_columns:
     - column: User Last Login Date
@@ -684,51 +701,66 @@ tables:
     status: not_started
     grain: ["MANAGER_USER_ID", "USER_ID", "INDEX", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # ACL bridge.
+    accept_diff:
+      T4: >
+        "This test will likely never pass, as the chance of every record being on both 
+        sides and lining up perfectly in a production / in use system is very small."
 
 
   # ── Onboarding ──────────────────────────────────────────────────
   - name: ONBOARDING_WORKFLOW
     workstream: "Onboarding"
-    status: not_started
+    status: completed
     grain: ["Workflow ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Workflow Description
+      reason: HTML stripping differs between pipelines
+    - column: Workflow Title
+      reason: HTML stripping differs between pipelines
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY
     workstream: "Onboarding"
-    status: not_started
-    grain: ["Workflow Activity ID", "WORKFLOW_ASSIGNMENT_ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
-    # Still 2,495 duplicates — needs more investigation.
+    status: completed
+    grain: ["Workflow Activity ID", "ACTIVITY_ASSIGNMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: []
+    accept_diff:
+      T2: >
+        "A good number of these in prod not in uat have no ACTIVITY_ASSIGNMENT_ID, however the equivalent in uat has values assigned. Because this
+        is a grain key, they show as mis-matches on both sides.
+        There are also a number of centurion records, which we know to be an issue currently."
+    accepted_columns:
+    - column: Activity Title
+      reason: HTML stripping differs between pipelines
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_COURSE
     workstream: "Onboarding"
-    status: not_started
-    grain: ["WORKFLOW_ACTIVITY_ID", "ENROLMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
+    status: to_be_deleted
+    grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_DOCUMENT
     workstream: "Onboarding"
-    status: not_started
+    status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_EMAIL
     workstream: "Onboarding"
-    status: not_started
+    status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "EMAIL_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_PROFILE_TASK
     workstream: "Onboarding"
-    status: not_started
+    status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "PROFILE_TASK_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Pending PR.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_TASK
     workstream: "Onboarding"
-    status: not_started
+    status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
@@ -1099,7 +1131,11 @@ tables:
     status: not_started
     grain: ["MANAGER_ID", "USER_ID", "LEVEL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # ACL bridge.
+    accept_diff:
+      T2: >
+        "There is a known issue with swsphn and csmgold9 in our production warehouse."
+      T4: >
+        "A direct comparison expecting every field in both prod and uat is highly unlikely so this test is being skipped."
 
 
   # ── Pivots/Views ────────────────────────────────────────────────
@@ -1122,6 +1158,6 @@ tables:
   - name: WORK_PATTERN_WEEKS
     workstream: "Misc"
     status: not_started
-    grain: ["WORK_PATTERN_ID", "Work Week", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    grain: ["WORK_PATTERN_ID", "Work Pattern Week Name", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: []
     # Grain is right, duplicates are wrong (CRT-6248).
