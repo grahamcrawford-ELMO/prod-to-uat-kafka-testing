@@ -698,7 +698,7 @@ tables:
   # ── Misc ────────────────────────────────────────────────────────
   - name: MANAGER_ACL
     workstream: "Misc"
-    status: not_started
+    status: completed
     grain: ["MANAGER_USER_ID", "USER_ID", "INDEX", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -768,14 +768,14 @@ tables:
   # ── Misc ────────────────────────────────────────────────────────
   - name: PAYROLL_DATA
     workstream: "Misc"
-    status: not_started
+    status: in_progress
     grain: ["ID", "USER_ID", "PAYROLL_PROVIDER", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Value-sensitive.
 
   - name: PAYROLL_MAPPING
     workstream: "Misc"
-    status: not_started
+    status: in_progress
     grain: ["PAYROLL_PROVIDER", "EXTERNAL_FIELD_NAME", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
@@ -1146,7 +1146,7 @@ tables:
     expected_blocked: []
     # View — re-derives on read.
 
-  - name: USER_PROFILE_DATA_PIVOT
+  - name: USER_PROFILE_DATA_PIVOT_VW
     workstream: "Pivots/Views"
     status: not_started
     grain: ["USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
