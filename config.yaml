@@ -768,16 +768,35 @@ tables:
   # ── Misc ────────────────────────────────────────────────────────
   - name: PAYROLL_DATA
     workstream: "Misc"
-    status: in_progress
+    status: completed
     grain: ["ID", "USER_ID", "PAYROLL_PROVIDER", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Value-sensitive.
+    accept_diff:
+      T2: >
+        "Source for elmo_au data comes from epms_hrcore_employment_detail. I tested a number of the ids from this table in TMS and found that
+        all records were marked as 'is_deleted', so should not be appearing in the model. In this case, UAT is aligned with TMS."
+    accepted_columns:
+    - column: PAY_RATE
+      reason: This appears to be rounding - 45.63569 vs. 45.6357 for example.
+    - column: HOURS_PER_WEEK
+      reason: This appears to be rounding - 41.1675 vs. 41.17 for example.
+    - column: ANNUAL_SALARY_SUPER
+      reason: Big outlier was csmgold9. Prod is showing base salary, without a superannuation % applied, however checking epms_config there should be a 10% markup.
 
   - name: PAYROLL_MAPPING
     workstream: "Misc"
-    status: in_progress
+    status: completed
     grain: ["PAYROLL_PROVIDER", "EXTERNAL_FIELD_NAME", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        "Production contains a bad join that does not include the client_name or client_region, causing fan out. This has been
+        addressed in the UAT environment."
+    accepted_columns:
+    - column: IS_CURRENT
+      reason: >
+        We have identified that there is a bug within the incremental logic currently in our production environment, causing the incorrect values
+        to be displayed.
 
 
   # ── Performance ─────────────────────────────────────────────────
