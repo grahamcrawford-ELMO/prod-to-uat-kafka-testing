@@ -525,40 +525,63 @@ tables:
 
   - name: HRCORE_USER_LEAVE_POLICY
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Leave Policy ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
+    accepted_columns:
+    - column: Leave Policy Description
+      reason: HTML stripping differs between pipelines
     # Grain FAIL: duplicates for 5 clients.
 
   - name: HRCORE_USER_PENSION_UK
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Pension ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: HRCORE_USER_SUPERANNUATION
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Superannuation ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: HRCORE_USER_TAXATION
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Taxation ID", "SOURCE_TABLE", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        There are a significant number of records from `epms_hrcore_tfn` that are in UAT but not in production.
+        I tested a number of them and found them all to exist in TMS, not flagged as deleted. Prod appears to be stale.
+    accepted_columns:
+    - column: Taxation Has Dependent Children
+      reason: >
+        This has been set as a boolean, defaulting to false in UAT, but in Prod it is NULL. This is a known difference.
+    - column: Taxation Has Spouse
+      reason: >
+        This has been set as a boolean, defaulting to false in UAT, but in Prod it is NULL. This is a known difference.
+    - column: Taxation Medicare Levy Reduction
+      reason: >
+        This has been set as a boolean, defaulting to false in UAT, but in Prod it is NULL. This is a known difference.
+    - column: Taxation Declaration Date
+      reason: >
+        A cleanup has been applied in UAT for records with year 1970, 1900, 1901 etc which has not been set in prod.
+    - column: Taxation Modified Date
+      reason: >
+        Dates in UAT are end April 2026. This is known missing data in Prod. This is a known difference.
     # SOURCE_TABLE in grain because AU+UK tables are UNIONed.
     # 1 known dup (hrcsandpit).
 
   - name: HRCORE_USER_WORK_PATTERN
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["ASSIGNMENT_ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
   - name: HRCORE_USER_WORK_PATTERN_WEEKS
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["WORK_PATTERN_ID", "Work Week", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain check: DON'T KNOW (FAIL) per CRT-6248.
@@ -567,7 +590,12 @@ tables:
     workstream: "HR Core"
     status: not_started
     grain: ["USER_ID", "WGEA ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
+    accept_diff:
+      T2: >
+        There are a significant number of records from `epms_hrcore_wgea_snapshot` in `pms_communityaccessability` that 
+        are in UAT but not in production.
+        I tested a number of them and found them all to exist in TMS, not flagged as deleted. Prod appears to be stale.
     # Genuine duplication — intended 1 USER_ID per 'WGEA Snapshot Date'.
 
 
@@ -975,9 +1003,32 @@ tables:
   # ── Pivots/Views ────────────────────────────────────────────────
   - name: POSITION_PROFILE_DATA_MAPPING_VW
     workstream: "Pivots/Views"
-    status: not_started
+    status: completed
     grain: ["FIELD_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        There are a number of records that exist in UAT not prod. All of these are marked as deleted in the TMS database
+        however there is no logic in the system to stop deleted records coming through, so this looks to be a glitch
+        in production.
+    accepted_columns:
+    - column: MAPPING_STATUS
+      reason: >
+        As a full-refresh, all records are set 'INITIAL', which means that this column will always be different to
+        production which has been running incrementally.
+    - column: COLUMN_NAME
+      reason: >
+        See T2 exception. Due to these deletes showing through, all column values are incremented by 1 for fields after
+        the deleted one has been inserted.
+    - column: STATUS_CHANGED
+      reason: >
+        See T2 exception. There is an offset on some field ids, and so the match is not like-for-like.
+    - column: IS_DUPLICATED_FIELD_NAME
+      reason: >
+        See T2 exception. There is an offset on some field ids, and so the match is not like-for-like.
+    - column: DESCRIPTION
+      reason: >
+        This is a result of the html stripping logic
     # View — re-derives on read.
     # Doc §2.3: Position Profile Data Mapping ODS is calculated from dbt snapshots and KNOWN significantly different between PROD and UAT.
 
