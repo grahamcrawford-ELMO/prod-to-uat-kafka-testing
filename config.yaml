@@ -100,9 +100,12 @@ tables:
   # ── Docs/Contracts ──────────────────────────────────────────────
   - name: CONTRACT_APPROVAL
     workstream: "Docs/Contracts"
-    status: not_started
+    status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Approval Message
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: CONTRACT_WORKFLOW
     workstream: "Docs/Contracts"
@@ -114,20 +117,28 @@ tables:
 
   - name: DOCUMENTS
     workstream: "Docs/Contracts"
-    status: not_started
+    status: completed
     grain: ["Document ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        There are a number of clients that simply haven't synced to production, however are correctly coming through in UAT.
+    accepted_columns:
+    - column: Document Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Document Code
+      reason: In production, for some reason this value has been forced to lower case, which is not aligned with source.
 
   - name: DOCUMENT_DATA_PIVOT
     workstream: "Docs/Contracts"
-    status: not_started
+    status: pending_changes in prod to allow for T0 pass
     grain: ["DOCUMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Wide pivot (S1..S220 text + D1..D100 date/numeric slots) — T4 generator essential here.
 
   - name: DOCUMENT_FORM_FIELD_MAPPING
     workstream: "Docs/Contracts"
-    status: not_started
+    status: completed
     grain: ["DOCUMENT_TEMPLATE_COLLATE_ID", "FORM_FIELD_COLLATE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain FAIL: 1 client with duplication (assetlink).
@@ -137,6 +148,9 @@ tables:
     status: completed
     grain: ["DOCUMENT_TEMPLATE_COLLATE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: DOCUMENT_TEMPLATE_DESCRIPTION
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
 
   # ── General ─────────────────────────────────────────────────────
@@ -456,21 +470,32 @@ tables:
 
   - name: HRCORE_LEAVE_BALANCE
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # 136 duplicate records (duplicate Long Service Leave).
-    # PR pending.
+    accept_diff:
+      T2: >
+        We are seeing far more records in UAT compared to Prod. I checked a number and was able to find them all in TMS.
+    accepted_columns:
+    - column: Balance Amount
+      reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
+    - column: Balance Modified Date
+      reason: Note the dates in uat are 29/04/2026 which we know to be an issue with DMS. These logs were lost from prod and so prod shows the data prior to this data if there have been no future changes since this date.
 
   - name: HRCORE_LEAVE_REQUEST
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Leave Request ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accepted_columns:
+    - column: Leave Request Initial Total Hours
+      reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
+    - column: Leave Request Total Hours
+      reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
 
   - name: HRCORE_LEAVE_REQUEST_APPROVAL
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Leave Approval ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
 
@@ -479,14 +504,10 @@ tables:
     status: not_started
     grain: ["Leave Transactions ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-
-  - name: HRCORE_PAYROLL_EMPLOYMENT_DETAILS
-    workstream: "HR Core"
-    status: not_started
-    grain: null
-    expected_blocked: []
-    # No grain recorded in CRT-6248.
-    # Value-sensitive — triage carefully.
+    accept_diff:
+      T2: >
+        We are seeing far more records in UAT compared to Prod. I checked a number which are sourced ultimately from 
+        `epms_leave_bucket_transaction` and was able to find them all in TMS.
 
   - name: HRCORE_TURNOVER_YEARLY
     workstream: "HR Core"
@@ -509,7 +530,7 @@ tables:
 
   - name: HRCORE_USER_DIVERSITY
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["USER_ID", "ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Missing is_deleted=0 filter; still duplicating.
@@ -1227,12 +1248,3 @@ tables:
     grain: ["USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # Wide pivot (CRT-6248 row names it USER_PROFILE_DATA_PIVOT_VW; tracker name used here).
-
-
-  # ── Misc ────────────────────────────────────────────────────────
-  - name: WORK_PATTERN_WEEKS
-    workstream: "Misc"
-    status: not_started
-    grain: ["WORK_PATTERN_ID", "Work Pattern Week Name", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
-    # Grain is right, duplicates are wrong (CRT-6248).
