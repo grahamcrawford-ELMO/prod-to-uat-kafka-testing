@@ -490,9 +490,14 @@ tables:
 
   - name: HRCORE_TURNOVER_YEARLY
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Calendar Year", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T3: >
+        There are some big mismatches in the turnover numbers, but I have checked a number of them and found that UAT 
+        is correct. The production warehouse is stale. There are also some single headcount mismatches, which appear 
+        to be related to whether 'bad data' was filtered - i.e. excluding unix epoch 0.
     # Aggregate table — values are sums; float/rounding triage matters most.
 
   - name: HRCORE_USER_BANK_ACCOUNT
