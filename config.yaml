@@ -705,6 +705,10 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Kiwisaver Declaration Date
+      reason: This is a timezone issue on a date-only field. The difference is not relevant.
+      where: "date(prod_value) = date(uat_value)"
 
   - name: HRCORE_USER_LEAVE_POLICY
     workstream: "HR Core"
@@ -1778,6 +1782,9 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: DESCRIPTION
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
     # View — re-derives on read.
 
   - name: USER_PROFILE_DATA_PIVOT_VW
