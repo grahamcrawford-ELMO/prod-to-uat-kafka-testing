@@ -239,6 +239,8 @@ tables:
     grain: ["Job Role ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
+      T2: >
+        "I tested a number of the records only in UAT and found them all to exist in TMS"
       T4: >
         T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
@@ -981,6 +983,12 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Enrolment Completion History Content
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Enrolment Completion History Start Date
+      reason: 1970 has been set to null in UAT
+      where: "prod_value::date = '1970-01-01'"
 
   - name: LEARNING_ENROLMENT_OMITTED
     workstream: "Learning"
