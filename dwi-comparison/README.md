@@ -34,6 +34,7 @@ role, SSO).
 subtractive, so no flag means no filter:
 
 ```bash
+aws sso login --sso-session elmo-sso # login yo your AWS account from ~/.awsconfig file
 python runner.py                    # both modes, all configured views
 python runner.py --mode csv         # all 131 CSV views
 python runner.py --mode dwi         # all configured EDP_DWI views
