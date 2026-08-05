@@ -844,6 +844,19 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Course Duration
+      reason: Prod has this stored as an integer, while UAT has it stored as a float. This is a known difference.
+    - column: Course Units
+      reason: Prod has this stored as an integer, while UAT has it stored as a float. This is a known difference.
+    - column: Course Created Date
+      reason: Prod is showing 1970 as a date while UAT is showing null. This is a known difference.
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
+    - column: Course Modified Date
+      reason: Prod is showing 1970 as a date while UAT is showing null.
+      where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
+    - column: Course Full Name
+      reason: HTML stripping differs between pipelines
     # Grain FAIL: 6 duplicates.
 
   - name: LEARNING_CPD_PLAN
@@ -1013,6 +1026,8 @@ tables:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
+    - column: Enrolment Completion History Course Title
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
     - column: Enrolment Completion History Content
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
     - column: Enrolment Completion History Start Date
@@ -1048,6 +1063,9 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: External Training Template Description
+      reason: HTML stripping differs between pipelines
     # Completed separately (CRT-6232).
     # Whitespace TRIM alignment resolved.
 
@@ -1565,7 +1583,7 @@ tables:
   - name: RECRUITMENT_CANDIDATE_LANGUAGE
     workstream: "Recruitment"
     status: not_started
-    grain: ["User Language ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
+    grain: ["Language ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
       T4: >
