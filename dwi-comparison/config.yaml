@@ -1,0 +1,411 @@
+# DWI Migration Testing - CRT-6323
+#
+# csv: Redshift CSV extract vs Snowflake CSV extract, both in S3
+# dwi: UAT_DB.EDP_DWI vs PROD_DB.EDP_DWI, in Snowflake
+#
+# ONE canonical view list. A CSV object and its EDP_DWI view are the same
+# object - learning_enrolment.csv is an unload of DWI_LEARNING_ENROLMENT - so
+# the grain is the same too. Names are written lowercase without the DWI_
+# prefix and expanded per mode at load: `name` -> DWI_NAME, and grain and
+# column names are upper-cased for Snowflake, lower-cased for the CSV headers.
+#
+# Grain is never defaulted. An empty grain is not an error: C0/C1/C2/C5 and
+# D0/D2/D4 still run; the row-level tiers (C3/C4, D1/D3) skip and say so.
+# Filled grains were mapped from the CRT-6248 BI config and are UNVERIFIED
+# against the DWI column names - D1 is the check.
+
+connection:
+  # role: UAT_ANALYTICS_ROLE
+  warehouse: null
+  query_tag: dwi_migration_testing
+  # Prefer an explicit list over `true` (= ALL); ALL can trip RLS error 090150.
+  use_secondary_roles: true
+
+aws:
+  region: ap-southeast-2
+  # profile: p-elmo
+
+defaults:
+  diff_threshold_pct: 0.1   # at or below this % -> ACCEPTED, not FAIL
+  sample_rows: 1000
+  t3_sample_columns: 20
+  t3_samples_per_column: 15
+  csv_sample_columns: 20
+  csv_samples_per_column: 15
+  nullif_text: true
+  trim_text: false
+  always_fingerprint: false
+
+csv:
+  redshift_base: s3://p-elmo-data-cap/landing/data-warehouse-integration
+  snowflake_base: s3://p-elmo-data-cap/landing/data-warehouse-integration/snowflake_outbound
+
+  # Newest run folder per client on each side is auto-discovered. Pin a pair
+  # with --redshift-run / --snowflake-run.
+  clients:
+    - uat1
+    - skillsconsulting
+
+  normalisation:
+    trim_text: true
+    blank_as_null: true
+    null_tokens: ["", "null", "\\N"]
+    normalise_booleans: true
+    # Numeric 1/0 count as booleans ONLY for these columns - otherwise an id
+    # of 1 normalises to "true" and corrupts the join key.
+    boolean_columns: [is_active, is_deleted, is_mandatory, is_completed]
+    normalise_timestamps: true
+    numeric_scale: null
+    case_insensitive: false
+
+dwi:
+  prod_db: PROD_DB.EDP_DWI
+  uat_db: UAT_DB.EDP_DWI
+  schema: EDP_DWI
+
+  # Off by default: TEMP_ACTIVE_TENANTS exists in UAT_DB only, so joining it
+  # across a UAT/PROD pair would silently filter one side.
+  tenant_join: false
+  # active_tenants: UAT_DB.BI.TEMP_ACTIVE_TENANTS
+
+# ---------------------------------------------------------------------------
+# Views - one list, both modes
+# ---------------------------------------------------------------------------
+# Per-view fields:
+#   grain              [] disables the row-level tiers for that view
+#   clients            csv only; per-tenant views only appear in that unload
+#   exclude_columns    dropped from the comparison entirely
+#   accepted_columns   measured and reported, never fail the view. Add `where`
+#                      (SQL against prod_value / uat_value) to accept only the
+#                      known pattern; the residual still counts as a diff.
+#   accept_diff        force a tier to ACCEPTED (C2-C5 / D1-D4; never C0/C1/D0)
+views:
+  # ── Core / shared ─── 6 views, 2 with grain
+  - name: date_effectivity
+    grain: []
+  - name: user_department
+    grain: []
+    accepted_columns:
+      - column: goals
+        reason: "LISTAGG of multiple goals - order is not guaranteed"
+      - column: competencies
+        reason: "LISTAGG of multiple competencies - order is not guaranteed"
+      - column: development
+        reason: "LISTAGG of multiple development items - order is not guaranteed"
+  - name: user_location
+    grain: []
+  - name: user_position
+    grain: []
+  - name: work_pattern
+    grain: [assigment_id, user_id, client_name, client_region]
+  - name: work_pattern_weeks
+    grain: [work_pattern_id, work_week, client_name, client_region]
+
+  # ── HR Core ─── 15 views, 11 with grain
+  - name: au_leave_balance
+    grain: [id, user_id, client_name, client_region]
+  - name: au_leave_request
+    grain: [id, client_name, client_region]
+  - name: au_leave_transactions
+    grain: [id, client_name, client_region]
+  - name: hrcore_bank_account
+    grain: [id, origin_table, user_id, client_name, client_region]
+  - name: hrcore_diversity_questions
+    grain: [id, user_id, client_name, client_region]
+  - name: hrcore_employment_detail
+    grain: [id, origin_table, user_id, client_name, client_region]
+  - name: hrcore_kiwisaver
+    grain: [id, client_name, client_region]
+  - name: hrcore_legal_entity
+    grain: []
+  - name: hrcore_next_of_kin
+    grain: []
+  - name: hrcore_pension
+    grain: [id, client_name, client_region]
+  - name: hrcore_personal_contact
+    grain: []
+  - name: hrcore_superannuation
+    grain: [id, client_name, client_region]
+  - name: hrcore_taxation
+    grain: [id, origin_table, user_id, client_name, client_region]
+  - name: hrcore_termination
+    grain: []
+    accepted_columns:
+      - column: custom_type
+        reason: "Prod forces lower(); UAT keeps proper case per Graham's preference"
+      - column: notes
+        reason: "HTML stripping differs between pipelines"
+  - name: hrcore_user_history
+    grain: [id, field_name, client_name, client_region]
+
+  # ── Learning ─── 17 views, 17 with grain
+  - name: learning_activity_face_to_face_session_signups
+    grain: [signup_id, session_id, course_module_id, client_name, client_region]
+  - name: learning_activity_quiz_submissions
+    grain: [id, client_name, client_region]
+    accepted_columns:
+      - column: question
+        reason: "HTML stripping differs between pipelines"
+      - column: answer
+        reason: "HTML stripping differs between pipelines"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
+  - name: learning_assignment_rule
+    grain: [id, client_name, client_region]
+  - name: learning_costs
+    grain: [id, client_name, client_region]
+  - name: learning_course
+    grain: [id, client_name, client_region]
+    accepted_columns:
+      - column: summary
+        reason: "HTML stripping differs between pipelines"
+  - name: learning_course_face_to_face_session
+    grain: [id, session_id, section_id, session_status_code, client_name, client_region]
+  - name: learning_course_section
+    grain: [id, client_name, client_region]
+  - name: learning_cpd_plan
+    grain: [id, user_id, client_name, client_region]
+  - name: learning_cpd_plan_course
+    grain: [id, user_id, type, client_name, client_region]
+  - name: learning_department_courses
+    grain: [id, course_id, client_name, client_region]
+  - name: learning_enrolment
+    grain: [id, client_name, client_region]
+  - name: learning_enrolment_activity
+    grain: [id, client_name, client_region]
+  - name: learning_enrolment_completion_history
+    grain: [id, course_enrolment_id, client_name, client_region]
+  - name: learning_external_training
+    grain: [id, client_name, client_region]
+    accepted_columns:
+      - column: expiry_date
+        reason: "Prod sentinel dates on/before 1971-01-01 are correctly nulled in UAT"
+        where: "prod_value::date <= '1971-01-01'"
+  - name: learning_external_training_template
+    grain: [id, client_name, client_region]
+  - name: learning_location_courses
+    grain: [id, location_id, course_id, client_name, client_region]
+  - name: learning_position_courses
+    grain: [id, position_id, course_id, client_name, client_region]
+
+  # ── Recruitment ─── 11 views, 9 with grain
+  - name: recruitment_candidate
+    grain: [candidate_id, is_external, client_name, client_region]
+  - name: recruitment_candidate_skills
+    grain: []
+  - name: recruitment_career_portal
+    grain: []
+  - name: recruitment_job_ad
+    grain: [id, category, location, client_name, client_region]
+  - name: recruitment_job_application
+    grain: [id, client_name, client_region]
+  - name: recruitment_job_application_question_answer
+    grain: [job_application_id, answer_id, client_name, client_region]
+  - name: recruitment_job_interview
+    grain: [id, interview_assignment_id, client_name, client_region]
+  - name: recruitment_job_offer
+    grain: [id, client_name, client_region]
+  - name: recruitment_requisition
+    grain: [id, client_name, client_region]
+  - name: recruitment_requisition_question_answer
+    grain: [requisition_id, question_id, client_name, client_region]
+  - name: recruitment_talent_pool
+    grain: [id, candidate_id, is_external, client_name, client_region]
+
+  # ── Performance ─── 26 views, 15 with grain
+  - name: epms_ap_competency_behaviour
+    grain: [competency_id, behaviour_level, client_name, client_region]
+  - name: performance_360_questions
+    grain: []
+  - name: performance_appraisal
+    grain: [id, current_phase, client_name, client_region]
+  - name: performance_appraisal_phase
+    grain: [id, client_name, client_region]
+  - name: performance_appraisal_section
+    grain: [id, client_name, client_region]
+  - name: performance_appraisal_section_checkpoint
+    grain: [section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_checkpoint_question_answer
+    grain: [section_item_id, checkpoint_answer_id, client_name, client_region]
+  - name: performance_appraisal_section_competency
+    grain: [section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_development
+    grain: [section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_development_action
+    grain: [section_item_id, id, client_name, client_region]
+  - name: performance_appraisal_section_goal
+    grain: [section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_goal_measure
+    grain: [section_item_id, measurement_id, client_name, client_region]
+  - name: performance_appraisal_section_potential
+    grain: [section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_question360_answer
+    grain: [id, section_item_id, client_name, client_region]
+  - name: performance_appraisal_section_question_answer
+    grain: [id, section_item_id, client_name, client_region]
+  - name: performance_appraisal_template
+    grain: []
+  - name: performance_appraisal_template_phase
+    grain: []
+  - name: performance_appraisal_template_section
+    grain: []
+  - name: performance_checkpoint
+    grain: []
+  - name: performance_checkpoint_questions
+    grain: []
+  - name: performance_competency
+    grain: []
+  - name: performance_competency_behaviour
+    grain: [competency_id, behaviour_level, client_name, client_region]
+  - name: performance_goals
+    grain: []
+  - name: performance_notes
+    grain: []
+  - name: performance_questions
+    grain: []
+  - name: performance_rating_system
+    grain: []
+
+  # ── Onboarding ─── 7 views, 7 with grain
+  - name: onboarding_workflow
+    grain: [id, client_name, client_region]
+  - name: onboarding_workflow_activity
+    grain: [id, workflow_assignment_id, user_id, client_name, client_region]
+  - name: onboarding_workflow_activity_course
+    grain: [id, workflow_activity_id, client_name, client_region]
+  - name: onboarding_workflow_activity_document
+    grain: [workflow_activity_id, client_name, client_region]
+  - name: onboarding_workflow_activity_email
+    grain: [workflow_activity_id, email_id, client_name, client_region]
+  - name: onboarding_workflow_activity_profile_task
+    grain: [workflow_activity_id, profile_task_id, client_name, client_region]
+  - name: onboarding_workflow_activity_task
+    grain: [workflow_activity_id, client_name, client_region]
+
+  # ── Succession ─── 6 views, 0 with grain
+  - name: succession_plan
+    grain: []
+  - name: succession_plan_section
+    grain: []
+  - name: succession_plan_section_criticality_flight_risk
+    grain: []
+  - name: succession_plan_section_employee_readiness
+    grain: []
+  - name: succession_plan_section_position_criticality
+    grain: []
+  - name: succession_plan_section_potential_rating
+    grain: []
+
+  # ── Rewards ─── 9 views, 4 with grain
+  - name: rewards_awarding
+    grain: []
+  - name: rewards_award_config
+    grain: []
+  - name: rewards_nominations
+    grain: []
+  - name: rewards_nomination_workflow
+    grain: []
+  - name: rewards_points
+    grain: [id, client_name, client_region]
+  - name: rewards_recommendations
+    grain: [id, client_name, client_region]
+    accepted_columns:
+      - column: recommendation
+        reason: "HTML stripping differs between pipelines"
+  - name: rewards_trophies
+    grain: [id, client_name, client_region]
+  - name: rewards_votes
+    grain: [award_id, voted_user_id, client_name, client_region]
+  - name: rewards_votes_workflow
+    grain: []
+
+  # ── Contract ─── 2 views, 0 with grain
+  - name: contract_approval
+    grain: []
+    accepted_columns:
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
+  - name: contract_workflow
+    grain: []
+
+  # ── Documents ─── 3 views, 0 with grain
+  - name: documents
+    grain: []
+  - name: doc_data_pivot
+    grain: []
+  - name: doc_pivot_col_map
+    grain: []
+
+  # ── System ─── 5 views, 0 with grain
+  - name: system_login_history
+    grain: []
+  - name: system_security_profiles
+    grain: []
+  - name: system_tasks
+    grain: []
+  - name: system_user_skills
+    grain: []
+  - name: tms_system_user
+    grain: []
+
+  # ── Per-tenant profile data ─── 20 views, 20 with grain
+  - name: syd_achieveaus_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [achieveaus]
+  - name: syd_anglicaresa_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [anglicaresa]
+  - name: syd_atsichsbrisbane_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [atsichsbrisbane]
+  - name: syd_brams_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [brams]
+  - name: syd_catercare_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [catercare]
+  - name: syd_cdmn_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [cdmn]
+  - name: syd_csc_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [csc]
+  - name: syd_etcltd_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [etcltd]
+  - name: syd_hutchins_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [hutchins]
+  - name: syd_iba_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [iba]
+  - name: syd_labourhireauthority_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [labourhireauthority]
+  - name: syd_powerwater_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [powerwater]
+  - name: syd_quantium_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [quantium]
+  - name: syd_skillsconsulting_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [skillsconsulting]
+  - name: syd_sonder_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [sonder]
+  - name: syd_sportnz_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [sportnz]
+  - name: syd_staraviation_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [staraviation]
+  - name: syd_sycltd_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [sycltd]
+  - name: syd_timberlands_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [timberlands]
+  - name: syd_uat1_user_profile_data
+    grain: [user_id, client_name, client_region]
+    clients: [uat1]
