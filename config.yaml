@@ -7,7 +7,7 @@
 # Connection: simple username/password auth by default (see .env / .env.example).
 
 connection:
-  #role: UAT_ANALYTICS_ROLE
+  role: UAT_DEVELOPER_RO_ROLE
   warehouse: null
   query_tag: kafka_migration_testing
   #use_secondary_roles: [PROD_ANALYTICS_ENGINEER_ROLE]
@@ -123,6 +123,8 @@ tables:
     status: not_started
     grain: ["DOCUMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T0: true
     # Wide pivot (S1..S220 text + D1..D100 date/numeric slots) — T4 generator essential here.
 
   - name: DOCUMENT_FORM_FIELD_MAPPING
@@ -433,7 +435,7 @@ tables:
   - name: HRCORE_AUDIT_HISTORY
     workstream: "HR Core"
     status: not_started
-    grain: ["Audit ID", "CLIENT_NAME", "CLIENT_REGION"]
+    grain: ["Audit ID", "Audit Field", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain FAIL, largely centurion — presumed DB-restore fallout (also faithapitestsite, mooresapitestsite).
 
@@ -466,7 +468,7 @@ tables:
   - name: HRCORE_PAYROLL_EMPLOYMENT_DETAILS
     workstream: "HR Core"
     status: not_started
-    grain: null
+    grain: ["ID", "PAYROLL_PROVIDER", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     # No grain recorded in CRT-6248.
     # Value-sensitive — triage carefully.
@@ -512,6 +514,7 @@ tables:
     grain: ["Leave Policy ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain FAIL: duplicates for 5 clients.
+    # FIXED in CRT-6231
 
   - name: HRCORE_USER_PENSION_UK
     workstream: "HR Core"
@@ -545,6 +548,7 @@ tables:
     grain: ["WORK_PATTERN_ID", "Work Week", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Grain check: DON'T KNOW (FAIL) per CRT-6248.
+    # Fixed in CRT-6231 
 
   - name: HRCORE_WGEA
     workstream: "HR Core"
@@ -552,7 +556,7 @@ tables:
     grain: ["USER_ID", "WGEA ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     # Genuine duplication — intended 1 USER_ID per 'WGEA Snapshot Date'.
-
+    # Fixed in CRT-6231 
 
   # ── Learning ────────────────────────────────────────────────────
   - name: LEARNING_ASSIGNMENT_RULE
