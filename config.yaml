@@ -7,7 +7,7 @@
 # Connection: simple username/password auth by default (see .env / .env.example).
 
 connection:
-  #role: UAT_ANALYTICS_ROLE
+  role: UAT_DEVELOPER_RO_ROLE
   warehouse: null
   query_tag: kafka_migration_testing
   #use_secondary_roles: [PROD_ANALYTICS_ENGINEER_ROLE]
@@ -718,6 +718,7 @@ tables:
     - column: Leave Policy Description
       reason: HTML stripping differs between pipelines
     # Grain FAIL: duplicates for 5 clients.
+    # FIXED in CRT-6231
 
   - name: HRCORE_USER_PENSION_UK
     workstream: "HR Core"
