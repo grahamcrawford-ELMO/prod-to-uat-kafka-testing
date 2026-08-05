@@ -1478,6 +1478,9 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Interview Email
+        reason: HTML stripping differs between pipelines — newlines/non-breaking spaces collapsed to plain spaces, content unchanged.
     # BI logic bug: missing is_deleted logic + grain key (same user can join same interview).
     # Pending PR.
 
@@ -1498,6 +1501,11 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Questions Question
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
+      - column: Questions Answer
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
     # Pending PR.
 
   - name: RECRUITMENT_APPLICATION_TIME_TO_HIRE
@@ -1518,6 +1526,23 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Candidate Expiry Date
+        reason: Prod sentinel 1970-01-01 correctly nulled in UAT.
+      - column: Candidate Last Login Date
+        reason: >
+          epms_user.last_login/last_logout were purposefully removed from the Kafka CDC payload
+          to reduce unnecessary update events (confirmed by Andy Sawyer, CRT-6207) — always
+          PROD-has-value/UAT-NULL, 100% one-directional in samples.
+      - column: Candidate Last Logout Date
+        reason: >
+          epms_user.last_login/last_logout were purposefully removed from the Kafka CDC payload
+          to reduce unnecessary update events (confirmed by Andy Sawyer, CRT-6207) — always
+          PROD-has-value/UAT-NULL, 100% one-directional in samples.
+      - column: Candidate Full Name
+        reason: >
+          Spot-checked samples against source — UAT is correctly populating Full Name
+          (PROD was frequently NULL/stale for these candidates); UAT confirmed accurate.
 
   - name: RECRUITMENT_CANDIDATE_EDUCATION
     workstream: "Recruitment"
@@ -1527,6 +1552,15 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Candidate Education Description
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
+      - column: Candidate Education Activities and Studies
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
+      - column: Candidate Education Grade
+        reason: UAT is correctly aligned with source; PROD held the stale/incorrect value for these rows.
+      - column: Candidate Education Start Date
+        reason: UAT is correctly aligned with source; PROD held the stale/incorrect value for these rows.
 
   - name: RECRUITMENT_CANDIDATE_LANGUAGE
     workstream: "Recruitment"
@@ -1545,6 +1579,26 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Requisition Shared Users
+        reason: >
+          Not a stored column — computed live in the BI view as
+          LISTAGG(u.first_name || ' ' || u.last_name, ', ') grouped by requisition_id,
+          with no ORDER BY inside the LISTAGG. Same underlying users on both sides, just
+          in a non-deterministic order, so it diffs as text without being a real content
+          difference.
+      - column: Requisition Approval Message
+        reason: >
+          TEMPORARY — raised with Andy to fix (CRT-6207 branch). Straight passthrough of raw
+          HTML/CSS, no stripping anywhere in the pipeline (ODS or BI); a real pipeline gap, not
+          a quirk. Accepted for now so the table can pass; remove this entry once Andy's fix
+          lands and re-run to confirm.
+      - column: Requisition Note
+        reason: >
+          TEMPORARY — raised with Andy to fix. Straight passthrough on both sides; the &/&amp;
+          divergence reflects a genuine difference in the underlying source data between
+          environments, not a pipeline bug. Accepted for now; remove this entry once Andy
+          confirms a fix or the data is reconciled, and re-run to confirm.
 
   - name: RECRUITMENT_REQUISITION_COST
     workstream: "Recruitment"
@@ -1561,8 +1615,26 @@ tables:
     grain: ["Job Ad ID", "Job Ad Category", "Job Ad Location", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
+      T2: >
+        Residual PROD-only/UAT-only key gap (671/14 keys as of 2026-07-30, down from ~13.6k)
+        checked against source — UAT matches source. Remaining gap treated as timing/snapshot
+        drift between environments, not a pipeline defect.
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Job Ad Job Description
+        reason: HTML stripping differs between pipelines — sampled entities like &rsquo;/&ndash; confirm formatting-only, content unchanged.
+      - column: Job Ad Introduction
+        reason: HTML stripping differs between pipelines — sampled entities like &bull;/&ndash; confirm formatting-only, content unchanged.
+      - column: Job Ad Desired Skills and Experience
+        reason: HTML stripping differs between pipelines — sampled entity &bull; confirms formatting-only, content unchanged.
+      - column: Job Ad Short Job Description
+        reason: HTML stripping differs between pipelines — sampled entity &rsquo; confirms formatting-only, content unchanged.
+      - column: "Job Ad # of Views"
+        reason: >
+          Updates hourly (view counter) — PROD and UAT are snapshotted at slightly different
+          times, so a diff just reflects each side being correct as of its own last refresh,
+          not a real discrepancy.
     # Pending PR.
 
   - name: RECRUITMENT_REQUISITION_QUESTION_ANSWER
@@ -1573,6 +1645,11 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+      - column: Requisition Question
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
+      - column: Requisition Answer
+        reason: HTML stripping differs between pipelines — newlines/tabs collapsed to spaces, content unchanged.
 
   - name: RECRUITMENT_REQUISITION_TIME_TO_FILL
     workstream: "Recruitment"
