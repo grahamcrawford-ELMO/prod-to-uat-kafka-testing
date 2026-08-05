@@ -582,8 +582,8 @@ tables:
   - name: HRCORE_AUDIT_HISTORY
     workstream: "HR Core"
     status: not_started
-    grain: ["Audit ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [REQUIRES_STATIC_START_POINT]
+    grain: ["Audit ID", "Audit Field", "CLIENT_NAME", "CLIENT_REGION"]
+    expected_blocked: []
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
@@ -861,6 +861,8 @@ tables:
       where: "prod_value::date <= '1970-01-01' or prod_value::date = '2772-12-31'"
     - column: Course Full Name
       reason: HTML stripping differs between pipelines
+    - column: Course Summary
+      reason: HTML stripping differs between pipelines
     # Grain FAIL: 6 duplicates.
 
   - name: LEARNING_CPD_PLAN
@@ -899,6 +901,10 @@ tables:
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Enrolment Activity Score
+      reason: decimal place rounding issue.
+      where: "round(prod_value, 2) = round(uat_value, 2)"
 
   - name: LEARNING_ENROLMENT_ACTIVITY_ACKNOWLEDGEMENT
     workstream: "Learning"
