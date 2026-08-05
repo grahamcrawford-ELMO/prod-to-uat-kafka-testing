@@ -94,6 +94,11 @@ tables:
     status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        This is a very small table, so the 4 record difference has breached the threshold.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # CRT-6248 lists CLIENT_REGION twice (typo) — corrected to NAME+REGION here.
 
 
@@ -103,15 +108,32 @@ tables:
     status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Approval Message
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: CONTRACT_WORKFLOW
     workstream: "Docs/Contracts"
-    status: not_started
+    status: completed
     grain: ["Contract ID", "CONTRACT_ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Contract Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Contract Accepted Signature
+      reason: Updated signatures in UAT compared to no signature in prod is a timing difference
+      where: "prod_value IS NULL"
+    - column: Contract Downloaded Date
+      reason: Dates in uat that are later than in prod or where prod is NULL is a timing difference
+    - column: Contract Accepted IP
+      reason: IP addresses in UAT where Prod is NULL is a timing difference
+      where: "prod_value IS NULL"
     # Grain incomplete: epms_contract.id missing from view (multiple contracts per assignment).
     # Pending PR.
 
@@ -123,6 +145,8 @@ tables:
     accept_diff:
       T2: >
         There are a number of clients that simply haven't synced to production, however are correctly coming through in UAT.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Document Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -133,14 +157,20 @@ tables:
     workstream: "Docs/Contracts"
     status: pending_changes in prod to allow for T0 pass
     grain: ["DOCUMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: []
+    expected_blocked: [DATA_TYPES]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Wide pivot (S1..S220 text + D1..D100 date/numeric slots) — T4 generator essential here.
 
   - name: DOCUMENT_FORM_FIELD_MAPPING
     workstream: "Docs/Contracts"
     status: completed
     grain: ["DOCUMENT_TEMPLATE_COLLATE_ID", "FORM_FIELD_COLLATE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: [NEEDS_STATIC_START_POINT]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Grain FAIL: 1 client with duplication (assetlink).
 
   - name: DOCUMENT_FORM_MAPPING
@@ -148,6 +178,9 @@ tables:
     status: completed
     grain: ["DOCUMENT_TEMPLATE_COLLATE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: DOCUMENT_TEMPLATE_DESCRIPTION
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -159,6 +192,9 @@ tables:
     status: not_started
     grain: ["EFFECTIVITY_TRANSACTION_ID", "RAW_FIELD_NAME", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [ ]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     exclude_columns:
     - column: Date Effectivity Comment
       reason: This field uses a html cleanup
@@ -182,6 +218,8 @@ tables:
         "I tested swsphn department IDs in TMS, and there was only 1 - id 1. As such, 2-15 are in the
         production warehouse in error.
         Department 1 in mariansw does exist within TMS."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     exclude_columns:
     - column: Department Description
       reason: This field uses a html cleanup
@@ -200,7 +238,15 @@ tables:
     status: completed
     grain: ["Job Role ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Not used by any ThoughtSpot model currently.
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Job Role Skills and Experience
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Job Role Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+
 
   - name: GENERAL_LOCATION
     workstream: "General"
@@ -210,6 +256,8 @@ tables:
     accept_diff:
       T2: >
         "I tested a number of the records only in UAT and found them all to exist in TMS"
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Location Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -245,6 +293,9 @@ tables:
     status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Note Text
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -260,6 +311,8 @@ tables:
       T2: >
         "I tested a number of the records only in Prod and found none of them to exist in TMS.
         Likewise I tested the mariansw records in UAT and found them to exist in TMS."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Position Qualifications
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -281,30 +334,52 @@ tables:
       reason: As with Position Actual FTE, I found UAT to be correct.
     - column: Position Job Role Title
       reason: I tested mayers and found that they all had values matching with UAT.
+    - column: Position Actual Salary
+      reason: Per Graham, we have rounded to 2 decimal places..
+      where: "round(prod_value, 2) = round(uat_value, 2)"
+    - column: Position Budgeted Salary
+      reason: Per Graham, we have rounded to 2 decimal places..
+      where: "round(prod_value, 2) = round(uat_value, 2)"
+    - column: Position Budgeted FTE
+      reason: Per Graham, we have rounded to 2 decimal places..
+      where: "round(prod_value, 2) = round(uat_value, 2)"
 
   - name: GENERAL_SECURITY_PROFILE
     workstream: "General"
     status: completed
     grain: ["ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Security Profile Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
     - column: Security Profile Type Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: Security Profile Modified Date
+      reason: There are a smal number of records - 165 - where the modified date in UAT is after that in Prod, suggesting Prod is out of sync.
 
   - name: GENERAL_SKILLS
     workstream: "General"
     status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # completed through ipynb
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Skill Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: GENERAL_TASK
     workstream: "General"
     status: completed
     grain: ["Task Assignment ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA]
+    expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Task Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -314,6 +389,9 @@ tables:
     status: skipped
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [KAFKA]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     exclude_columns:
     - column: User Last Login Date
       reason: This field is no longer available through Kafka
@@ -343,6 +421,9 @@ tables:
     status: completed
     grain: ["User Contact ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # completed through ipynb
 
   - name: GENERAL_USER_EDUCATION
@@ -350,13 +431,23 @@ tables:
     status: completed
     grain: ["User Education ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # completed through ipynb
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: User Education Description
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: User Education Activities and Societies
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
 
   - name: GENERAL_USER_EMERGENCY_CONTACT
     workstream: "General"
     status: completed
     grain: ["Emergency Contact ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # completed through ipynb
 
   - name: GENERAL_USER_LEGAL_ENTITY
@@ -368,18 +459,26 @@ tables:
       T3: >
         "Checking the dates, this appears to be the issue with DMS failure on 29/04/2026. These logs were lost from prod
         and so prod shows the data prior to this data if there have been no future changes since this date."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: GENERAL_USER_MANAGER
     workstream: "General"
     status: skipped
     grain: ["Manager ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: GENERAL_USER_MANAGER_DEPARTMENT
     workstream: "General"
     status: skipped
     grain: ["Department Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Bridge table.
 
   - name: GENERAL_USER_MANAGER_LOCATION
@@ -387,6 +486,9 @@ tables:
     status: skipped
     grain: ["Location Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Bridge table.
     # Known: 'location is disabled' is numeric in PROD BI view but bool in the model — PROD view likely stale.
 
@@ -395,18 +497,23 @@ tables:
     status: completed
     grain: ["Position Internal ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Bridge table.
 
   - name: GENERAL_USER_MODEL
     workstream: "General"
     status: completed
     grain: ["User ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [KAFKA]
+    expected_blocked: []
     accept_diff:
       T2: >
         "I tested over 1,000 records that were showing in UAT but not in Prod, and found them all to be in the TMS. This was across 3 tenants.
         I tested additional records that were showing in Prod and not UAT, and found none of them in the TMS.
         I am comfortable that UAT is accurate."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     exclude_columns:
     - column: User Last Login Date
       reason: This field is no longer available through Kafka
@@ -436,12 +543,18 @@ tables:
     status: completed
     grain: ["Next of Kin ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: GENERAL_USER_TERMINATION
     workstream: "General"
     status: not_started
     grain: ["Termination ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Termination Custom Type
       reason: It appears in Prod this has been set to lower(). Checking with Graham the preference is to leave this as proper case.
@@ -454,7 +567,10 @@ tables:
     workstream: "Misc"
     status: not_started
     grain: ["REFERENCE_TYPE", "REFERENCE_CODE"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     tenant_join: false
     # Reference list — grain has NO client columns, so the active-tenants join is disabled for this table.
     # Duplicate caused by BOOLEAN, possibly from payroll_data work.
@@ -465,7 +581,10 @@ tables:
     workstream: "HR Core"
     status: not_started
     grain: ["Audit ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: [REQUIRES_STATIC_START_POINT]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Grain FAIL, largely centurion — presumed DB-restore fallout (also faithapitestsite, mooresapitestsite).
 
   - name: HRCORE_LEAVE_BALANCE
@@ -476,6 +595,8 @@ tables:
     accept_diff:
       T2: >
         We are seeing far more records in UAT compared to Prod. I checked a number and was able to find them all in TMS.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Balance Amount
       reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
@@ -487,6 +608,9 @@ tables:
     status: completed
     grain: ["Leave Request ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Leave Request Initial Total Hours
       reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
@@ -498,6 +622,9 @@ tables:
     status: completed
     grain: ["Leave Approval ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: HRCORE_LEAVE_TRANSACTION
     workstream: "HR Core"
@@ -508,6 +635,8 @@ tables:
       T2: >
         We are seeing far more records in UAT compared to Prod. I checked a number which are sourced ultimately from 
         `epms_leave_bucket_transaction` and was able to find them all in TMS.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: HRCORE_TURNOVER_YEARLY
     workstream: "HR Core"
@@ -519,20 +648,28 @@ tables:
         There are some big mismatches in the turnover numbers, but I have checked a number of them and found that UAT 
         is correct. The production warehouse is stale. There are also some single headcount mismatches, which appear 
         to be related to whether 'bad data' was filtered - i.e. excluding unix epoch 0.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Aggregate table — values are sums; float/rounding triage matters most.
 
   - name: HRCORE_USER_BANK_ACCOUNT
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Technically should include SOURCE_TABLE (AU+UK tables UNIONed).
 
   - name: HRCORE_USER_DIVERSITY
     workstream: "HR Core"
     status: completed
     grain: ["USER_ID", "ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
+    expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Missing is_deleted=0 filter; still duplicating.
     # Fixed after PR merge.
 
@@ -541,19 +678,40 @@ tables:
     status: not_started
     grain: ["USER_ID", "Employment ID", "Employment Payroll Provider", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-    # Payroll Provider stays in grain — identical records can exist across providers.
+    accept_diff:
+      T2: >
+        There appears to be a significant issue with respect to marketplacefresh in production.
+        I have checked a number of records that exist in prod and found that these are all in TMS but
+        marked as 'deleted'. It appears that the production warehouse is stale for this client.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Employment Rate
+      reason: This is a rounding issue with 5dp in prod and 4 dp in UAT.
+    - column: Employment Standard Hours Per Week
+      reason: Per Graham, all fields should be two decimal places with the exception of the fx column (not this column)
+    - column: Employment Annual Salary with Super
+      reason: PThere are known issues in `csmgold9` and `elmosupportteam` across a number of reports and tables due to stale data in prod.
+    - column: Employment Modified Date
+      reason: Modified dates for a number of records are more recent in UAT than in prod. I have checked a number of these and found that the UAT records are correct. The production warehouse is stale.
 
   - name: HRCORE_USER_KIWISAVER_NZ
     workstream: "HR Core"
     status: not_started
     grain: ["Kiwisaver ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: HRCORE_USER_LEAVE_POLICY
     workstream: "HR Core"
     status: completed
     grain: ["Leave Policy ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Leave Policy Description
       reason: HTML stripping differs between pipelines
@@ -564,12 +722,21 @@ tables:
     status: completed
     grain: ["Pension ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: HRCORE_USER_SUPERANNUATION
     workstream: "HR Core"
     status: completed
     grain: ["Superannuation ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T2: >
+        This appears to be stale data in production. I checked a number of records on both sides and
+        found Prod inconsistent with TMS, while UAT was consistent with TMS. I am comfortable that UAT is correct.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: HRCORE_USER_TAXATION
     workstream: "HR Core"
@@ -580,6 +747,8 @@ tables:
       T2: >
         There are a significant number of records from `epms_hrcore_tfn` that are in UAT but not in production.
         I tested a number of them and found them all to exist in TMS, not flagged as deleted. Prod appears to be stale.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Taxation Has Dependent Children
       reason: >
@@ -604,13 +773,16 @@ tables:
     status: completed
     grain: ["ASSIGNMENT_ID", "USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
-
-  - name: HRCORE_USER_WORK_PATTERN_WEEKS
-    workstream: "HR Core"
-    status: completed
-    grain: ["WORK_PATTERN_ID", "Work Week", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
-    # Grain check: DON'T KNOW (FAIL) per CRT-6248.
+    accept_diff:
+      T2: >
+        The differences here come from the `work_pattern__work_patterns` table which is a dbt snapshot. This was not changed
+        between prod and uat, however snapshots in UAT will be out of sync with prod so we can't test this table.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: Work Pattern Name
+      reason: >
+        This is from the `work_pattern__work_patterns` snapshot, which is not in sync between prod and uat. The differences are expected.
 
   - name: HRCORE_WGEA
     workstream: "HR Core"
@@ -622,7 +794,19 @@ tables:
         There are a significant number of records from `epms_hrcore_wgea_snapshot` in `pms_communityaccessability` that 
         are in UAT but not in production.
         I tested a number of them and found them all to exist in TMS, not flagged as deleted. Prod appears to be stale.
-    # Genuine duplication — intended 1 USER_ID per 'WGEA Snapshot Date'.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: WGEA Snapshot Date
+      reason: >
+        These fields should really be date, not datetime. The difference is timezone, which gives source is date-only
+        is not relevant.
+      where: "date(prod_value) = date(uat_value)"
+    - column: WGEA Employee Start Date
+      reason:  >
+        These fields should really be date, not datetime. The difference is timezone, which gives source is date-only
+        is not relevant.
+      where: "date(prod_value) = date(uat_value)"
 
 
   # ── Learning ────────────────────────────────────────────────────
@@ -635,6 +819,8 @@ tables:
       reason: HTML stripping differs between pipelines
     accept_diff:
       T2: "Tested and verified that production has stale data"
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # 233 duplicates — COURSE_ID allowed as both Required and Recommended; suspected app bug.
     # Pending PR.
 
@@ -642,15 +828,19 @@ tables:
     workstream: "Learning"
     status: completed
     grain: ["Learning Cost ID", "USER_LEARNING_COST_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [GRAIN]
-    # Grain PASS after adding USER_LEARNING_COST_ID (the user's learning-cost id, NOT USER_ID).
-    # Pending PR.
+    expected_blocked: []
+    accept_diff:
+      T4: >
+        We do not expect T4 to pass.
 
   - name: LEARNING_COURSE
     workstream: "Learning"
     status: not_started
     grain: ["Course ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN, ]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Grain FAIL: 6 duplicates.
 
   - name: LEARNING_CPD_PLAN
@@ -658,6 +848,9 @@ tables:
     status: not_started
     grain: null
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # No grain recorded in CRT-6248 (Pending PR).
 
   - name: LEARNING_ENROLMENT
@@ -665,6 +858,9 @@ tables:
     status: in_progress
     grain: ["Enrolment Id", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # NB: 'Enrolment Id' — lowercase d, case-sensitive.
 
   - name: LEARNING_ENROLMENT_ACTIVITY
@@ -672,12 +868,18 @@ tables:
     status: not_started
     grain: ["Enrolment Activity ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: LEARNING_ENROLMENT_ACTIVITY_ACKNOWLEDGEMENT
     workstream: "Learning"
     status: not_started
     grain: ["Acknowledgement ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Acknowledgement Introduction
       reason: HTML stripping differs between pipelines
@@ -691,6 +893,9 @@ tables:
     status: not_started
     grain: ["Face to Face Signup Signup ID", "Face to Face Session ID", "COURSE_MODULE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # 'Signup Signup' is not a typo — column name per CRT-6248.
     
   - name: LEARNING_ENROLMENT_ACTIVITY_FILE_SUBMISSION
@@ -699,7 +904,53 @@ tables:
     grain: ["File Submission ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
-      T2: "Tested and verified that production has stale data SELECT COUNT(*) as c, 964 - COUNT(*) as diff, 964 as in_bi FROM epms_course_activity_fileupload_submission WHERE id IN id IN (498,1323,400,672,601,821,655,323,1027,954,326,1091,604,1041,533,1010,1063,109,560,458,880,1173,843,1339,161,1037,13,789,1099,567,970,380,94,354,1389,413,1003,550,262,894,850,438,1132,78,671,464,470,1163,388,1669,507,787,405,635,974,1279,61,325,579,308,811,330,127,1033,385,114,392,363,856,372,254,265,968,312,126,987,960,1102,626,353,87,1425,1238,230,719,371,403,76,437,877,60,425,1189,1544,978,667,119,955,895,580,1139,465,1234,897,301,1182,286,118,1012,1317,1020,1140,1679,873,518,1050,1263,395,368,898,1315,174,493,920,988,387,1128,461,885,248,63,1228,1054,445,84,570,1433,1584,97,411,378,302,1635,935,969,956,784,1316,1220,1124,352,229,999,272,220,143,587,1135,1178,336,929,958,845,494,1006,891,1125,469,327,1255,846,622,215,495,600,875,77,243,345,860,971,162,121,317,634,1103,1064,190,872,1291,559,1011,1201,58,1143,1262,911,1087,1401,415,1071,1206,1120,1662,283,99,936,1116,212,155,1122,1,832,945,291,275,1229,847,1126,156,855,1121,1141,1191,876,590,904,645,1144,142,852,206,391,1299,896,57,442,1292,982,1038,235,424,718,1023,463,849,1608,1508,263,500,799,449,1025,608,1059,1149,12,414,232,1162,1200,952,244,460,1318,888,420,918,1322,854,909,1637,882,1254,201,786,1784,467,434,715,346,1409,271,1237,278,349,1753,1138,749,290,1109,1709,536,128,991,129,237,170,998,938,474,366,324,186,86,1110,373,15,737,1024,431,169,1119,831,609,359,796,1410,289,261,950,436,204,435,471,340,223,523,1146,270,103,269,1107,790,292,738,1427,900,196,1111,318,922,16,284,124,430,1134,575,621,306,475,1145,194,1061,163,989,83,1257,834,357,1304,296,933,444,358,1507,871,809,788,506,179,222,914,1188,1194,581,176,251,365,1019,1009,941,98,412,713,942,640,328,147,360,236,1160,93,996,62,1300,555,892,901,339,295,214,1133,805,1115,1156,1055,993,202,839,957,309,868,1022,1185,513,1127,297,795,928,468,217,858,383,1176,1004,883,418,135,643,499,406,617,138,943,1049,133,554,835,780,1578,792,1327,268,246,151,180,937,610,148,107,348,281,417,1685,347,252,369,519,1130,183,255,299,985,203,837,447,1157,240,367,335,889,965,245,193,300,381,116,428,1333,828,1296,462,497,629,56,177,848,934,167,191,256,304,975,1603,344,1094,446,931,944,100,1554,139,266,423,224,568,219,1047,1413,1105,384,277,1108,874,398,343,1390,393,1513,940,250,983,1114,1035,1293,838,990,1235,782,173,111,1029,332,247,459,59,984,305,836,416,967,1343,864,137,264,946,595,200,1100,1256,810,1164,1363,53,919,1101,113,1117,1183,101,1239,466,1203,973,1651,231,1154,1407,1232,131,1158,166,1159,1169,1046,1040,1048,817,1278,117,89,812,187,1131,1083,1725,807,1605,337,382,820,450,977,154,102,607,1028,916,307,1582,1097,1271,1230,1030,1090,433,869,618,535,110,257,995,426,576,140,844,813,1106,216,1034,1247,259,800,912,641,172,90,443,145,1190,342,781,646,1289,341,972,238,1325,578,859,267,280,1294,1056,288,136,925,1677,120,108,1039,150,249,407,396,361,287,594,331,1174,429,639,1147,824,720,878,14,379,890,165,241,213,1180,1069,182,1273,1007,630,1167,303,234,552,842,994,106,815,1096,1712,104,1335,1501,886,1313,557,1095,210,522,185,1295,75,258,319,915,1432,218,164,620,913,1179,1045,397,496,1312,144,930,419,293,611,1181,311,582,884,632,1242,205,322,549,1013,556,188,1148,402,355,1249,1186,122,279,1259,905,1226,394,947,408,593,409,953,791,908,827,1193,1674,239,351,879,980,932,525,814,1005,221,1347,910,619,441,356,473,178,861,647,1371,577,1021,386,1123,242,623,175,862,551,1089,1596,141,806,857,364,282,1287,1137,830,439,964,605,887,1165,96,314,276,603,1785,1342,833,320,1352,338,1272,1625,181,1142,350,149,1036,798,923,717,644,616,132,22,472,123,1187,189,2,504,1184,906,631,804,1341,389,853,1177,233,841,1437,313,1644,1314,534,321,951,1113,1400,1150,432,592,826,421,569,146,524,1112,801,1155,130,1219,917,1258,329,298,816,440,1018,903,1670,1202,1166,285,310,404,184,1382,1057,1303,1324,881,1297,1301,1008,370,211,73,422,294,902,168,362,1267,125,197,401,1736,851,171,273,1092,74,1129,949,1205,1524,1118,712,870,867,105,558,1503,1058,907,153,921,198,1136,1053,448,1431,377,192,274,1168,926,1326,115,939,333,207,390,88,893,648,410,1606,508,927,1026,1192,1104,95,112,253,152,334,1553,1800,633,899,1093,260,808,1334,840,981,65,134,1068,997,777,199,195,561,1175,399)"
+      T2: >
+        "Tested and verified that production has stale data SELECT COUNT(*) as c, 964 - COUNT(*) 
+        as diff, 964 as in_bi FROM epms_course_activity_fileupload_submission WHERE id IN id IN 
+        (498,1323,400,672,601,821,655,323,1027,954,326,1091,604,1041,533,1010,1063,109,560,458,880,
+        1173,843,1339,161,1037,13,789,1099,567,970,380,94,354,1389,413,1003,550,262,894,850,438,1132,
+        78,671,464,470,1163,388,1669,507,787,405,635,974,1279,61,325,579,308,811,330,127,1033,385,114,
+        392,363,856,372,254,265,968,312,126,987,960,1102,626,353,87,1425,1238,230,719,371,403,76,437,
+        877,60,425,1189,1544,978,667,119,955,895,580,1139,465,1234,897,301,1182,286,118,1012,1317,
+        1020,1140,1679,873,518,1050,1263,395,368,898,1315,174,493,920,988,387,1128,461,885,248,63,
+        1228,1054,445,84,570,1433,1584,97,411,378,302,1635,935,969,956,784,1316,1220,1124,352,229,
+        999,272,220,143,587,1135,1178,336,929,958,845,494,1006,891,1125,469,327,1255,846,622,215,495,
+        600,875,77,243,345,860,971,162,121,317,634,1103,1064,190,872,1291,559,1011,1201,58,1143,1262,
+        911,1087,1401,415,1071,1206,1120,1662,283,99,936,1116,212,155,1122,1,832,945,291,275,1229,847,
+        1126,156,855,1121,1141,1191,876,590,904,645,1144,142,852,206,391,1299,896,57,442,1292,982,1038,
+        235,424,718,1023,463,849,1608,1508,263,500,799,449,1025,608,1059,1149,12,414,232,1162,1200,952,244,
+        460,1318,888,420,918,1322,854,909,1637,882,1254,201,786,1784,467,434,715,346,1409,271,1237,278,349,
+        1753,1138,749,290,1109,1709,536,128,991,129,237,170,998,938,474,366,324,186,86,1110,373,15,737,1024,
+        431,169,1119,831,609,359,796,1410,289,261,950,436,204,435,471,340,223,523,1146,270,103,269,1107,790,
+        292,738,1427,900,196,1111,318,922,16,284,124,430,1134,575,621,306,475,1145,194,1061,163,989,83,1257,
+        834,357,1304,296,933,444,358,1507,871,809,788,506,179,222,914,1188,1194,581,176,251,365,1019,1009,941,
+        98,412,713,942,640,328,147,360,236,1160,93,996,62,1300,555,892,901,339,295,214,1133,805,1115,1156,
+        1055,993,202,839,957,309,868,1022,1185,513,1127,297,795,928,468,217,858,383,1176,1004,883,418,135,
+        643,499,406,617,138,943,1049,133,554,835,780,1578,792,1327,268,246,151,180,937,610,148,107,348,281,
+        417,1685,347,252,369,519,1130,183,255,299,985,203,837,447,1157,240,367,335,889,965,245,193,300,381,
+        116,428,1333,828,1296,462,497,629,56,177,848,934,167,191,256,304,975,1603,344,1094,446,931,944,100,
+        1554,139,266,423,224,568,219,1047,1413,1105,384,277,1108,874,398,343,1390,393,1513,940,250,983,1114,
+        1035,1293,838,990,1235,782,173,111,1029,332,247,459,59,984,305,836,416,967,1343,864,137,264,946,595,
+        200,1100,1256,810,1164,1363,53,919,1101,113,1117,1183,101,1239,466,1203,973,1651,231,1154,1407,1232,
+        131,1158,166,1159,1169,1046,1040,1048,817,1278,117,89,812,187,1131,1083,1725,807,1605,337,382,820,
+        450,977,154,102,607,1028,916,307,1582,1097,1271,1230,1030,1090,433,869,618,535,110,257,995,426,576,
+        140,844,813,1106,216,1034,1247,259,800,912,641,172,90,443,145,1190,342,781,646,1289,341,972,238,1325,
+        578,859,267,280,1294,1056,288,136,925,1677,120,108,1039,150,249,407,396,361,287,594,331,1174,429,639,
+        1147,824,720,878,14,379,890,165,241,213,1180,1069,182,1273,1007,630,1167,303,234,552,842,994,106,815,
+        1096,1712,104,1335,1501,886,1313,557,1095,210,522,185,1295,75,258,319,915,1432,218,164,620,913,1179,
+        1045,397,496,1312,144,930,419,293,611,1181,311,582,884,632,1242,205,322,549,1013,556,188,1148,402,355,
+        1249,1186,122,279,1259,905,1226,394,947,408,593,409,953,791,908,827,1193,1674,239,351,879,980,932,525,
+        814,1005,221,1347,910,619,441,356,473,178,861,647,1371,577,1021,386,1123,242,623,175,862,551,1089,1596,
+        141,806,857,364,282,1287,1137,830,439,964,605,887,1165,96,314,276,603,1785,1342,833,320,1352,338,1272,
+        1625,181,1142,350,149,1036,798,923,717,644,616,132,22,472,123,1187,189,2,504,1184,906,631,804,1341,389,
+        853,1177,233,841,1437,313,1644,1314,534,321,951,1113,1400,1150,432,592,826,421,569,146,524,1112,801,1155,
+        130,1219,917,1258,329,298,816,440,1018,903,1670,1202,1166,285,310,404,184,1382,1057,1303,1324,881,1297,
+        1301,1008,370,211,73,422,294,902,168,362,1267,125,197,401,1736,851,171,273,1092,74,1129,949,1205,1524,
+        1118,712,870,867,105,558,1503,1058,907,153,921,198,1136,1053,448,1431,377,192,274,1168,926,1326,115,939,
+        333,207,390,88,893,648,410,1606,508,927,1026,1192,1104,95,112,253,152,334,1553,1800,633,899,1093,260,808,
+        1334,840,981,65,134,1068,997,777,199,195,561,1175,399)"
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
       
   - name: LEARNING_ENROLMENT_ACTIVITY_QUIZ_SUBMISSION
     workstream: "Learning"
@@ -717,6 +968,8 @@ tables:
       reason: HTML stripping differs between pipelines
     accept_diff:
       t2: "Tested and verified that production has stale data - verified with hiltonfoods"
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # 149 duplicates, PR pending.
     # Doc §2.3: known PROD-only quiz records absent from TMS — expect PROD-only rows.
 
@@ -725,12 +978,17 @@ tables:
     status: in_progress
     grain: ["Enrolment Completion History ID", "ENROLMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: LEARNING_ENROLMENT_OMITTED
     workstream: "Learning"
     status: not_started
     grain: ["USER_ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: "T4 tests are expected to fail and probably shouldn't be included in the test suite."
     # Expensive view (~6 min single scan) — dominates run time; consider a bigger warehouse.
 
   - name: LEARNING_EXTERNAL_TRAINING
@@ -738,6 +996,9 @@ tables:
     status: completed
     grain: ["External Training ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Completed separately.
 
   - name: LEARNING_EXTERNAL_TRAINING_TEMPLATE
@@ -745,6 +1006,9 @@ tables:
     status: completed
     grain: ["External Training Template ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Completed separately (CRT-6232).
     # Whitespace TRIM alignment resolved.
 
@@ -767,6 +1031,9 @@ tables:
     status: completed
     grain: ["Workflow ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Workflow Description
       reason: HTML stripping differs between pipelines
@@ -783,6 +1050,8 @@ tables:
         "A good number of these in prod not in uat have no ACTIVITY_ASSIGNMENT_ID, however the equivalent in uat has values assigned. Because this
         is a grain key, they show as mis-matches on both sides.
         There are also a number of centurion records, which we know to be an issue currently."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Activity Title
       reason: HTML stripping differs between pipelines
@@ -792,24 +1061,36 @@ tables:
     status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_DOCUMENT
     workstream: "Onboarding"
     status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_EMAIL
     workstream: "Onboarding"
     status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "EMAIL_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_PROFILE_TASK
     workstream: "Onboarding"
     status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "PROFILE_TASK_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Pending PR.
 
   - name: ONBOARDING_WORKFLOW_ACTIVITY_TASK
@@ -817,6 +1098,9 @@ tables:
     status: to_be_deleted
     grain: ["WORKFLOW_ACTIVITY_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
 
   # ── Misc ────────────────────────────────────────────────────────
@@ -829,6 +1113,8 @@ tables:
       T2: >
         "Source for elmo_au data comes from epms_hrcore_employment_detail. I tested a number of the ids from this table in TMS and found that
         all records were marked as 'is_deleted', so should not be appearing in the model. In this case, UAT is aligned with TMS."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: PAY_RATE
       reason: This appears to be rounding - 45.63569 vs. 45.6357 for example.
@@ -846,6 +1132,8 @@ tables:
       T2: >
         "Production contains a bad join that does not include the client_name or client_region, causing fan out. This has been
         addressed in the UAT environment."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: IS_CURRENT
       reason: >
@@ -863,6 +1151,8 @@ tables:
       T2: >
         "tested the largest gap - zero records in uat for swsphn. Running `SELECT * FROM pms_swsphn.epms_ap_performance_ap`
         in TMS resulted in only one record which showed as deleted."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Appraisal Description
       reason: HTML stripping differs between pipelines
@@ -889,6 +1179,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Grain FAIL — needs epms_ap_performance_workflow.id; also 1:many comments per phase.
     # Pending PR.
 
@@ -897,12 +1190,18 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_360_QUESTION_ANSWER
     workstream: "Performance"
     status: in_progress
     grain: ["ID", "SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # ID added for 1:many Q:A.
     # Pending PR.
 
@@ -911,12 +1210,18 @@ tables:
     status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_CHECKPOINT_QUESTION_ANSWER
     workstream: "Performance"
     status: in_progress
     grain: ["SECTION_ITEM_ID", "CHECKPOINT_ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # CHECKPOINT_ANSWER_ID added to grain — PR to be raised.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY
@@ -924,12 +1229,18 @@ tables:
     status: in_progress
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY_BEHAVIOUR
     workstream: "Performance"
     status: in_progress
     grain: ["COMPETENCY_ID", "Behaviour Level", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Grain FAIL: 8 duplicates, 1 client — app bug never cleaned up.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_COMPETENCY_NOTES
@@ -937,6 +1248,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -950,6 +1264,8 @@ tables:
         "tested the largest gap - zero records in uat for swsphn and found that there were no records for 
         this client. I also tested the second largest - basics - and found that the records did exist
         within the TMS."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Development Description
       reason: HTML stripping differs between pipelines
@@ -966,6 +1282,8 @@ tables:
         "tested the largest gap - zero records in uat for swsphn and found that there were no records for 
         this client. I also tested the second largest - basics - and found that the records did exist
         within the TMS."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Action Title
       reason: HTML stripping differs between pipelines
@@ -975,6 +1293,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Needs epms_note.id AS ID; another SELECT * to fix.
     # Pending PR.
 
@@ -983,6 +1304,9 @@ tables:
     status: completed
     grain: ["SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Goal Description
       reason: HTML stripping differs between pipelines
@@ -1000,6 +1324,9 @@ tables:
     status: in_progress
     grain: ["SECTION_ITEM_ID", "MEASUREMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # After fix, still 3 duplicates.
 
   - name: PERFORMANCE_APPRAISAL_SECTION_GOAL_NOTES
@@ -1007,6 +1334,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -1015,6 +1345,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Needs epms_note.id AS ID.
     # Pending PR.
 
@@ -1023,6 +1356,9 @@ tables:
     status: in_progress
     grain: ["ID", "SECTION_ITEM_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # 'Looks like this was missed entirely' per CRT-6248.
 
 
@@ -1037,6 +1373,8 @@ tables:
         There are a number of records that exist in UAT not prod. All of these are marked as deleted in the TMS database
         however there is no logic in the system to stop deleted records coming through, so this looks to be a glitch
         in production.
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: MAPPING_STATUS
       reason: >
@@ -1063,6 +1401,9 @@ tables:
     status: not_started
     grain: ["POSITION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Wide pivot.
     # Same Position Profile ODS caveat applies.
 
@@ -1073,12 +1414,18 @@ tables:
     status: not_started
     grain: ["Job Application ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_APPLICATION_INTERVIEW
     workstream: "Recruitment"
     status: not_started
     grain: ["Interview ID", "INTERVIEW_ASSIGNMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # BI logic bug: missing is_deleted logic + grain key (same user can join same interview).
     # Pending PR.
 
@@ -1087,12 +1434,18 @@ tables:
     status: not_started
     grain: ["Job Offer ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_APPLICATION_QUESTION_ANSWER
     workstream: "Recruitment"
     status: not_started
     grain: ["JOB_APPLICATION_ID", "ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Pending PR.
 
   - name: RECRUITMENT_APPLICATION_TIME_TO_HIRE
@@ -1100,6 +1453,9 @@ tables:
     status: not_started
     grain: ["JOB_APPLICATION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Pending PR (missing business rules); 13 dups remain after fix — multiple accepted offers, decision needed.
 
   - name: RECRUITMENT_CANDIDATE
@@ -1107,36 +1463,54 @@ tables:
     status: not_started
     grain: ["CANDIDATE_ID", "Candidate Is External", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_CANDIDATE_EDUCATION
     workstream: "Recruitment"
     status: not_started
     grain: ["Candidate Education ID", "CANDIDATE_ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_CANDIDATE_LANGUAGE
     workstream: "Recruitment"
     status: not_started
     grain: ["User Language ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_REQUISITION
     workstream: "Recruitment"
     status: not_started
     grain: ["Requisition ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_REQUISITION_COST
     workstream: "Recruitment"
     status: not_started
     grain: ["Cost ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_REQUISITION_JOB_AD
     workstream: "Recruitment"
     status: not_started
     grain: ["Job Ad ID", "Job Ad Category", "Job Ad Location", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Pending PR.
 
   - name: RECRUITMENT_REQUISITION_QUESTION_ANSWER
@@ -1144,18 +1518,27 @@ tables:
     status: not_started
     grain: ["REQUISITION_ID", "QUESTION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_REQUISITION_TIME_TO_FILL
     workstream: "Recruitment"
     status: not_started
     grain: ["REQUISITION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
   - name: RECRUITMENT_TALENT_POOL
     workstream: "Recruitment"
     status: not_started
     grain: ["Talent Pool ID", "CANDIDATE_ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
 
 
   # ── Rewards ─────────────────────────────────────────────────────
@@ -1197,6 +1580,8 @@ tables:
       T2: >
         "The issues were in client swsphn, where prod was showing 518 records, not in uat. On checking back to the primary table
         in TMS, there were no records for this client. Therefore prod is stale."
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Recommendation Comment
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -1208,6 +1593,9 @@ tables:
     status: in_progress
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     accepted_columns:
     - column: Trophy Description
       reason: This uses a html stripping macro so is expected to be marginally different in structure.
@@ -1240,6 +1628,9 @@ tables:
     status: not_started
     grain: ["FIELD_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # View — re-derives on read.
 
   - name: USER_PROFILE_DATA_PIVOT_VW
@@ -1247,4 +1638,7 @@ tables:
     status: not_started
     grain: ["USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
+    accept_diff:
+      T4: >
+        T4 is very unlikely to map simply as a result of timing.
     # Wide pivot (CRT-6248 row names it USER_PROFILE_DATA_PIVOT_VW; tracker name used here).
