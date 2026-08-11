@@ -236,6 +236,23 @@ def test_8_encrypted_only_run_skipped():
     return ok
 
 
+def test_8b_encrypted_run_reads_processed_folder():
+    print("a run holding only .pgp reads its plain CSV from processed/ at the same timestamp")
+    rows = 'id,client_name,client_region,status\n1,uat1,SYD,A\n'
+    objs = {
+        f"{RS}/uat1/20260729223000/learning_enrolment.csv.pgp": "binary",
+        f"{RS}/processed/uat1/20260729223000/learning_enrolment.csv": rows,
+        f"{SF}/uat1/20260729224500/learning_enrolment.csv": rows,
+    }
+    source = S3Source(FakeS3(objs), BASE_CFG["csv"])
+    rs, sf = pair_runs(source, "uat1")
+    ok = check("kept the newest timestamp", rs.timestamp, "20260729223000")
+    ok &= check("read from processed/", rs.prefix, f"{RS}/processed/uat1/20260729223000")
+    ok &= check("plain csv found", "learning_enrolment" in rs.files, True)
+    ok &= check("not reported encrypted_only", rs.encrypted_only, False)
+    return ok
+
+
 def test_9_missing_view_blocked():
     print("view present on one side only -> BLOCKED at C0")
     rows = 'id,client_name,client_region,status\n1,uat1,SYD,A\n'
@@ -517,7 +534,7 @@ def test_shared_views_and_grain_casing():
     # Every filled grain carries the tenant keys.
     ok &= check("filled csv grains include both tenant keys",
                 [n for n, g in csv_v.items()
-                 if g and not {"client_name", "client_region"} <= set(g)], [])
+                 if g and not {"client_name", "region"} <= set(g)], [])
 
     # dwi_work_pattern.sql aliases wpu.id as `assigment_id` - single m. Silently
     # "correcting" it would drop the column from the key, not raise.
