@@ -44,7 +44,8 @@ csv:
   # with --redshift-run / --snowflake-run.
   clients:
     # - uat1
-    - skillsconsulting
+    # - skillsconsulting
+    - csc
 
   normalisation:
     trim_text: true
@@ -226,7 +227,7 @@ views:
   - name: performance_appraisal_section_checkpoint
     grain: [section_item_id, client_name, region]
   - name: performance_appraisal_section_checkpoint_question_answer
-    grain: [section_item_id, checkpoint_answer_id, client_name, region]
+    grain: [section_item_id, checkpoint_question_id, reviewer_id, client_name, region]
   - name: performance_appraisal_section_competency
     grain: [section_item_id, client_name, region]
   - name: performance_appraisal_section_development
@@ -242,7 +243,7 @@ views:
   - name: performance_appraisal_section_question360_answer
     grain: [id, section_item_id, client_name, region]
   - name: performance_appraisal_section_question_answer
-    grain: [id, section_item_id, client_name, region]
+    grain: [id, question_id, appraisal_id, client_name, region]
   - name: performance_appraisal_template
     grain: [id, client_name, region]
   - name: performance_appraisal_template_phase
@@ -256,7 +257,7 @@ views:
   - name: performance_competency
     grain: [id, client_name, region]
   - name: performance_competency_behaviour
-    grain: [competency_id, behaviour_level, client_name, region]
+    grain: [id, client_name, region]
   - name: performance_goals
     grain: [id, client_name, region]
   - name: performance_notes
