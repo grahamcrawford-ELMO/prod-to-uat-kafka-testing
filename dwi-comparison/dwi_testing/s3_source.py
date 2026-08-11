@@ -92,13 +92,36 @@ class S3Source:
             return self.snowflake_bucket, self.snowflake_prefix
         raise ValueError(f"unknown side {side!r}")
 
-    def discover_run(self, side, client, timestamp=None, prefer_plain_csv=True):
+    @staticmethod
+    def _split_plain_encrypted(keys):
+        plain, enc = {}, False
+        for key in keys:
+            name = key.rsplit("/", 1)[-1]
+            low = name.lower()
+            if low.endswith(".pgp"):
+                enc = True
+                continue
+            if low == "marker.json":
+                continue
+            if ".csv" not in low:
+                continue
+            view = low.split(".csv", 1)[0]
+            plain[view] = key
+        return plain, enc
+
+    def discover_run(self, side, client, timestamp=None, prefer_plain_csv=True,
+                      check_processed=False):
         """Resolve one side's run folder.
 
         With no timestamp, walks candidate runs newest-first and returns the
         first that still contains plain .csv files. If every run is already
         encrypted, returns the newest with encrypted_only=True so the caller
         can report BLOCKED instead of silently comparing nothing.
+
+        On the redshift side, a run that has already been PGP-encrypted in
+        place moves its plain originals to processed/{client}/{ts}/ at that
+        same timestamp. When check_processed is set, an encrypted-only run is
+        re-checked there before falling back to an older run.
         """
         bucket, base = self._side(side)
         runs = [timestamp] if timestamp else list(reversed(self.list_runs(side, client)))
@@ -107,21 +130,14 @@ class S3Source:
         newest_encrypted = None
         for ts in runs:
             prefix = f"{base}/{client}/{ts}"
-            keys = self._list_keys(bucket, prefix)
-            plain = {}
-            enc = False
-            for key in keys:
-                name = key.rsplit("/", 1)[-1]
-                low = name.lower()
-                if low.endswith(".pgp"):
-                    enc = True
-                    continue
-                if low == "marker.json":
-                    continue
-                if ".csv" not in low:
-                    continue
-                view = low.split(".csv", 1)[0]
-                plain[view] = key
+            plain, enc = self._split_plain_encrypted(self._list_keys(bucket, prefix))
+            if not plain and enc and check_processed:
+                processed_prefix = f"{base}/processed/{client}/{ts}"
+                processed_plain, _ = self._split_plain_encrypted(
+                    self._list_keys(bucket, processed_prefix))
+                if processed_plain:
+                    return RunFolder(side, bucket, processed_prefix, ts, processed_plain,
+                                      encrypted_only=False)
             run = RunFolder(side, bucket, prefix, ts, plain, encrypted_only=bool(enc and not plain))
             if plain or not prefer_plain_csv or timestamp:
                 return run
@@ -156,7 +172,7 @@ class S3Source:
 
 def pair_runs(source: S3Source, client, redshift_ts=None, snowflake_ts=None):
     """Pair the latest (or pinned) run folder on each side."""
-    rs = source.discover_run("redshift", client, redshift_ts)
+    rs = source.discover_run("redshift", client, redshift_ts, check_processed=True)
     sf = source.discover_run("snowflake", client, snowflake_ts)
     logging.info("%s: redshift %s <-> snowflake %s", client, rs.timestamp, sf.timestamp)
     return rs, sf
