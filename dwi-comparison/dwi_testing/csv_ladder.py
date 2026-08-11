@@ -31,6 +31,19 @@ from .common import (
 import hashlib
 
 
+def _key_sort(key):
+    """Sort a grain-key tuple that may hold None in some positions.
+
+    A grain column can be NULL for some rows and populated for others (e.g. a
+    UNION'd view where one branch has no matching value), so two keys tying on
+    an earlier column can need to compare None against a string on a later
+    one - which raises TypeError in Python 3. Sorting on (is_none, value) per
+    column keeps None keys ordered (before real values) without ever
+    comparing across types.
+    """
+    return tuple((v is None, v) for v in key)
+
+
 class CsvComparer:
     def __init__(self, source, cfg, dry_run=False):
         self.source = source
@@ -158,7 +171,7 @@ class CsvComparer:
             return {"status": SKIP, "reason": "no grain resolved for this view"}
         n = int(self.defaults.get("sample_rows", 25))
         lk, rk = set(left["rows"]), set(right["rows"])
-        only_l, only_r = sorted(lk - rk), sorted(rk - lk)
+        only_l, only_r = sorted(lk - rk, key=_key_sort), sorted(rk - lk, key=_key_sort)
         denom = max(len(lk), len(rk))
         worst = max(len(only_l), len(only_r))
         out = {
@@ -192,7 +205,7 @@ class CsvComparer:
         """Per-column mismatch counts over shared keys, with accepted-column handling."""
         if not grain:
             return {"status": SKIP, "reason": "no grain resolved - cannot align rows"}
-        shared = sorted(set(left["rows"]) & set(right["rows"]))
+        shared = sorted(set(left["rows"]) & set(right["rows"]), key=_key_sort)
         if not shared:
             return {"status": SKIP, "reason": "no shared keys between the two extracts",
                     "shared_keys": 0}

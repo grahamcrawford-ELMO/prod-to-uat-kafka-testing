@@ -253,6 +253,31 @@ def test_8b_encrypted_run_reads_processed_folder():
     return ok
 
 
+def test_8c_null_grain_column_does_not_crash_sort():
+    print("a grain column that is NULL on some rows and set on others must not crash the sort")
+    # id=1 ties on both sides; the tie-break column (sub_id) is None for one
+    # row and a string for the other - exactly what a UNION'd DWI view like
+    # dwi_learning_enrolment_completion_history produces when only one branch
+    # populates that column.
+    rows = ('id,sub_id,client_name,client_region,status\n'
+            '1,A,uat1,SYD,Complete\n'
+            '1,,uat1,SYD,InProgress\n')
+    cfg = copy.deepcopy(BASE_CFG)
+    cfg["csv"]["views"] = [{"name": "learning_enrolment",
+                             "grain": ["id", "sub_id", "client_name", "client_region"]}]
+    objs = {
+        f"{RS}/uat1/20260729223000/learning_enrolment.csv": rows,
+        f"{SF}/uat1/20260729224500/learning_enrolment.csv": rows,
+    }
+    source = S3Source(FakeS3(objs), cfg["csv"])
+    rs, sf = pair_runs(source, "uat1")
+    r = CsvComparer(source, cfg).run_view("uat1", "learning_enrolment", rs, sf)
+    ok = check("no crash - verdict computed", r["verdict"] in (PASS, ACC, FAIL), True)
+    ok &= check("C3 ran instead of erroring", r["tiers"]["C3"]["status"] in (PASS, ACC, FAIL), True)
+    ok &= check("C4 ran instead of erroring", r["tiers"]["C4"]["status"] in (PASS, ACC, FAIL), True)
+    return ok
+
+
 def test_9_missing_view_blocked():
     print("view present on one side only -> BLOCKED at C0")
     rows = 'id,client_name,client_region,status\n1,uat1,SYD,A\n'

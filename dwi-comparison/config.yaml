@@ -175,7 +175,7 @@ views:
   - name: learning_enrolment_activity
     grain: [id, client_name, region]
   - name: learning_enrolment_completion_history
-    grain: [id, course_enrolment_id, client_name, region]
+    grain: [id, course_id, course_enrolment_id, client_name, region]
   - name: learning_external_training
     grain: [id, client_name, region]
     accepted_columns:
