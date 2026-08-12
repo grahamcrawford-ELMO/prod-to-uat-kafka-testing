@@ -174,6 +174,9 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: description
         reason: "HTML stripping differs between pipelines"
+      - column: time_submitted
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: time_marked
   - name: learning_assignment_rule
     grain: [id, client_name, region]
     accepted_columns:
@@ -220,6 +223,15 @@ views:
         reason: "HTML stripping differs between pipelines"
   - name: learning_cpd_plan
     grain: [id, user_id, client_name, region]
+    accepted_columns:
+      - column: starttime
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: endtime
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_cpd_plan_course
     grain: [id, user_id, type, client_name, region]
     accepted_columns:
@@ -275,11 +287,15 @@ views:
       - column: content
         reason: "HTML stripping differs between pipelines"
       - column: context
-        reason: "HTML stripping differs between pipelines"        
+        reason: "HTML stripping differs between pipelines"    
+      - column: certificate
+        reason: "HTML stripping differs between pipelines"
+      - column: course_title
+        reason: "HTML stripping differs between pipelines"    
   - name: learning_external_training
     grain: [id, client_name, region]
     accepted_columns:
-      - column: expiry_date
+      - column: expirydate
         reason: "Prod sentinel dates on/before 1971-01-01 are correctly nulled in UAT"
         where: "prod_value::date <= '1971-01-01'"
       - column: completiondate
@@ -361,6 +377,14 @@ views:
         reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
       - column: managercompetencyscore
         reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: selfdevelopmentscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: managerdevelopmentscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: selfgoalscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: managergoalscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
       - column: manager_id
         reason: "UAT DB is correct"
   - name: performance_appraisal_phase
@@ -403,6 +427,9 @@ views:
         reason: "Duplicate also exists in redshift."
   - name: performance_appraisal_section_competency
     grain: [section_item_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_development
     grain: [section_item_id, client_name, region]
     accepted_columns:
@@ -440,6 +467,9 @@ views:
         reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_question_answer
     grain: [id, question_id, appraisal_id, client_name, region]
+    accepted_columns:
+      - column: answer_date
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_template
     grain: [id, client_name, region]
     accepted_columns:
