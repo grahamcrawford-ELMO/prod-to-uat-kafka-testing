@@ -43,8 +43,8 @@ csv:
   # Newest run folder per client on each side is auto-discovered. Pin a pair
   # with --redshift-run / --snowflake-run.
   clients:
-    # - uat1
-    # - skillsconsulting
+    - uat1
+    - skillsconsulting
     - csc
 
   normalisation:
@@ -161,6 +161,10 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: private_instruction
         reason: "HTML stripping differs between pipelines"
+      - column: max_capacity
+        reason: "UAT has NULL for unlimited; PROD has 0 for unlimited"
+      - column: min_capacity
+        reason: "UAT has NULL for unlimited; PROD has 0 for unlimited"
   - name: learning_activity_quiz_submissions
     grain: [id, client_name, region]
     accepted_columns:
@@ -188,6 +192,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: timemodified
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: fullname
+        reason: "HTML stripping differs between pipelines"
   - name: learning_course_face_to_face_session
     grain: [id, session_id, section_id, session_status_code, client_name, region]
     accepted_columns:
@@ -203,6 +209,10 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: private_instruction
         reason: "HTML stripping differs between pipelines"
+      - column: max_capacity
+        reason: "UAT has NULL for unlimited; PROD has 0 for unlimited"
+      - column: min_capacity
+        reason: "UAT has NULL for unlimited; PROD has 0 for unlimited"
   - name: learning_course_section
     grain: [id, client_name, region]
     accepted_columns:
@@ -323,6 +333,8 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: deleted_time
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: load_ts
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: performance_360_questions
     grain: [id, client_name, region]
     accepted_columns:
@@ -345,6 +357,12 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: description
         reason: "HTML stripping differs between pipelines"
+      - column: selfcompetencyscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: managercompetencyscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: manager_id
+        reason: "UAT DB is correct"
   - name: performance_appraisal_phase
     grain: [id, client_name, region]
     accepted_columns:
@@ -357,6 +375,8 @@ views:
       - column: enddate
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: comment
+        reason: "HTML stripping differs between pipelines"
+      - column: comment_user
         reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section
     grain: [id, client_name, region]
@@ -379,6 +399,8 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: description
         reason: "HTML stripping differs between pipelines"
+      - column: answer_from
+        reason: "Duplicate also exists in redshift."
   - name: performance_appraisal_section_competency
     grain: [section_item_id, client_name, region]
   - name: performance_appraisal_section_development
