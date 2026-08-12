@@ -262,6 +262,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: retrain_open_date
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: learning_enrolment_activity
     grain: [id, client_name, region]
     accepted_columns:
@@ -311,6 +313,9 @@ views:
         reason: "HTML stripping differs between pipelines"
   - name: learning_location_courses
     grain: [id, location_id, course_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: learning_position_courses
     grain: [id, position_id, course_id, client_name, region]
     accepted_columns:
@@ -385,6 +390,10 @@ views:
         reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
       - column: managergoalscore
         reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: selfscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference, data matches"
+      - column: reviewerscore
+        reason: "Column type changed to NUMBER(38,0) - format-only difference"
       - column: manager_id
         reason: "UAT DB is correct"
   - name: performance_appraisal_phase
@@ -442,6 +451,10 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: completedatdate
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: title
+        reason: "HTML stripping differs between pipelines"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_goal
     grain: [section_item_id, client_name, region]
     accepted_columns:
