@@ -159,15 +159,32 @@ tables:
     grain: ["DOCUMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [DATA_TYPES]
     accept_diff:
+      T3: >
+        This is a mixture of html stripped data, and also arrays which may generate in different orders. The differences are expected.
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: S1
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: S2
+      reason: This uses an array which may generate in different orders.
+    - column: S3
+      reason: This uses a html stripping macro so is expected to be marginally different in structure.
+    - column: S4
+      reason: This uses an array which may generate in different orders.
+    - column: S5
+      reason: This uses an array which may generate in different orders.
+    - column: S6
+      reason: This uses an array which may generate in different orders.
+    - column: S7
+      reason: This uses an array which may generate in different orders.
     # Wide pivot (S1..S220 text + D1..D100 date/numeric slots) — T4 generator essential here.
 
   - name: DOCUMENT_FORM_FIELD_MAPPING
     workstream: "Docs/Contracts"
     status: completed
     grain: ["DOCUMENT_TEMPLATE_COLLATE_ID", "FORM_FIELD_COLLATE_ID", "CLIENT_NAME", "CLIENT_REGION"]
-    expected_blocked: [NEEDS_STATIC_START_POINT]
+    expected_blocked: []
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
@@ -189,7 +206,7 @@ tables:
   # ── General ─────────────────────────────────────────────────────
   - name: GENERAL_DATE_EFFECTIVITY
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["EFFECTIVITY_TRANSACTION_ID", "RAW_FIELD_NAME", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [ ]
     accept_diff:
@@ -551,7 +568,7 @@ tables:
 
   - name: GENERAL_USER_TERMINATION
     workstream: "General"
-    status: not_started
+    status: completed
     grain: ["Termination ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -567,7 +584,7 @@ tables:
   # ── Misc ────────────────────────────────────────────────────────
   - name: GLOBAL_CONSOLIDATED_REFERENCE
     workstream: "Misc"
-    status: not_started
+    status: completed
     grain: ["REFERENCE_TYPE", "REFERENCE_CODE"]
     expected_blocked: []
     accept_diff:
@@ -581,7 +598,7 @@ tables:
   # ── HR Core ─────────────────────────────────────────────────────
   - name: HRCORE_AUDIT_HISTORY
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Audit ID", "Audit Field", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -630,7 +647,7 @@ tables:
 
   - name: HRCORE_LEAVE_TRANSACTION
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Leave Transactions ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -677,7 +694,7 @@ tables:
 
   - name: HRCORE_USER_EMPLOYMENT_DETAIL
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["USER_ID", "Employment ID", "Employment Payroll Provider", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -699,7 +716,7 @@ tables:
 
   - name: HRCORE_USER_KIWISAVER_NZ
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["Kiwisaver ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -790,10 +807,13 @@ tables:
     - column: Work Pattern Name
       reason: >
         This is from the `work_pattern__work_patterns` snapshot, which is not in sync between prod and uat. The differences are expected.
+    - column: Work Pattern Description
+      reason: >
+        This is html-stripped, and so differences are expected between prod and uat. The differences are expected.
 
   - name: HRCORE_WGEA
     workstream: "HR Core"
-    status: not_started
+    status: completed
     grain: ["USER_ID", "WGEA ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -842,7 +862,7 @@ tables:
 
   - name: LEARNING_COURSE
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Course ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN, ]
     accept_diff:
@@ -904,7 +924,7 @@ tables:
 
   - name: LEARNING_ENROLMENT_ACTIVITY
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Enrolment Activity ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -916,7 +936,7 @@ tables:
 
   - name: LEARNING_ENROLMENT_ACTIVITY_ACKNOWLEDGEMENT
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Acknowledgement ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     accept_diff:
@@ -932,7 +952,7 @@ tables:
 
   - name: LEARNING_ENROLMENT_ACTIVITY_F2F_SESSION_SIGNUP
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["Face to Face Signup Signup ID", "Face to Face Signup Session ID", "COURSE_MODULE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [MDL_COURSE_MODULE]
     accepted_columns:
@@ -962,7 +982,7 @@ tables:
     
   - name: LEARNING_ENROLMENT_ACTIVITY_FILE_SUBMISSION
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["File Submission ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1054,7 +1074,7 @@ tables:
 
   - name: LEARNING_ENROLMENT_OMITTED
     workstream: "Learning"
-    status: not_started
+    status: completed
     grain: ["USER_ID", "COURSE_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1250,6 +1270,12 @@ tables:
     - column: Appraisal Current Phase Defined End Date
       reason: Bad dates in prod have been cleansed in UAT
       where: year(prod_value) <= 1980
+    - column: MANAGER_ID
+      reason: >
+        It appears that ndia is out of sync in prod. I checked against a number of records and found uat to be consistent.
+        select *
+        from pms_ndia.epms_ap_performance_ap
+        where id in(182200,178067,178043,181804,185028,183742,182838,183185)
 
   - name: PERFORMANCE_APPRAISAL_PHASE
     workstream: "Performance"
@@ -1486,12 +1512,22 @@ tables:
 
   - name: POSITION_PROFILE_DATA_PIVOT
     workstream: "Pivots/Views"
-    status: not_started
+    status: completed
     grain: ["POSITION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: S2
+      reason: >
+        This appears to be an inconsistency within the production data warehouse.
+    - column: S3
+      reason: >
+        This appears to be an inconsistency within the production data warehouse.
+    - column: S4
+      reason: >
+        This appears to be an inconsistency within the production data warehouse.
     # Wide pivot.
     # Same Position Profile ODS caveat applies.
 
@@ -1499,7 +1535,7 @@ tables:
   # ── Recruitment ─────────────────────────────────────────────────
   - name: RECRUITMENT_APPLICATION
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Job Application ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1508,7 +1544,7 @@ tables:
 
   - name: RECRUITMENT_APPLICATION_INTERVIEW
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Interview ID", "INTERVIEW_ASSIGNMENT_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1522,7 +1558,7 @@ tables:
 
   - name: RECRUITMENT_APPLICATION_JOB_OFFER
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Job Offer ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1531,7 +1567,7 @@ tables:
 
   - name: RECRUITMENT_APPLICATION_QUESTION_ANSWER
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["JOB_APPLICATION_ID", "ANSWER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1546,7 +1582,7 @@ tables:
 
   - name: RECRUITMENT_APPLICATION_TIME_TO_HIRE
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["JOB_APPLICATION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN]
     accept_diff:
@@ -1556,7 +1592,7 @@ tables:
 
   - name: RECRUITMENT_CANDIDATE
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["CANDIDATE_ID", "Candidate Is External", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1582,7 +1618,7 @@ tables:
 
   - name: RECRUITMENT_CANDIDATE_EDUCATION
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Candidate Education ID", "CANDIDATE_ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1600,7 +1636,7 @@ tables:
 
   - name: RECRUITMENT_CANDIDATE_LANGUAGE
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Language ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1609,7 +1645,7 @@ tables:
 
   - name: RECRUITMENT_REQUISITION
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Requisition ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1638,7 +1674,7 @@ tables:
 
   - name: RECRUITMENT_REQUISITION_COST
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Cost ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1647,7 +1683,7 @@ tables:
 
   - name: RECRUITMENT_REQUISITION_JOB_AD
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Job Ad ID", "Job Ad Category", "Job Ad Location", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1675,7 +1711,7 @@ tables:
 
   - name: RECRUITMENT_REQUISITION_QUESTION_ANSWER
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["REQUISITION_ID", "QUESTION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1689,7 +1725,7 @@ tables:
 
   - name: RECRUITMENT_REQUISITION_TIME_TO_FILL
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["REQUISITION_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1698,7 +1734,7 @@ tables:
 
   - name: RECRUITMENT_TALENT_POOL
     workstream: "Recruitment"
-    status: not_started
+    status: completed
     grain: ["Talent Pool ID", "CANDIDATE_ID", "IS_EXTERNAL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1709,28 +1745,28 @@ tables:
   # ── Rewards ─────────────────────────────────────────────────────
   - name: REWARDS_AWARDING
     workstream: "Rewards"
-    status: not_started
+    status: completed
     grain: null
     expected_blocked: [GRAIN, REMOVAL]
     # SET FOR REMOVAL/REFACTORING — not in production.
 
   - name: REWARDS_AWARD_CONFIG
     workstream: "Rewards"
-    status: not_started
+    status: completed
     grain: null
     expected_blocked: [GRAIN, REMOVAL]
     # SET FOR REMOVAL — not in ThoughtSpot production.
 
   - name: REWARDS_NOMINATION
     workstream: "Rewards"
-    status: not_started
+    status: completed
     grain: null
     expected_blocked: [GRAIN, REMOVAL]
     # SET FOR REMOVAL — not in ThoughtSpot production.
 
   - name: REWARDS_POINTS
     workstream: "Rewards"
-    status: not_started
+    status: completed
     grain: ["ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [GRAIN, REMOVAL]
     # Grain FAIL (needs epms_reward_point_transaction.id).
@@ -1767,7 +1803,7 @@ tables:
 
   - name: REWARDS_VOTE
     workstream: "Rewards"
-    status: not_started
+    status: completed
     grain: ["AWARD_ID", "VOTED_USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: [REMOVAL]
     # 'Not doing.
@@ -1777,7 +1813,7 @@ tables:
   # ── Misc ────────────────────────────────────────────────────────
   - name: THOUGHTSPOT_USER_MANAGER_ACL
     workstream: "Misc"
-    status: not_started
+    status: completed
     grain: ["MANAGER_ID", "USER_ID", "LEVEL", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1790,7 +1826,7 @@ tables:
   # ── Pivots/Views ────────────────────────────────────────────────
   - name: USER_PROFILE_DATA_MAPPING_VW
     workstream: "Pivots/Views"
-    status: not_started
+    status: completed
     grain: ["FIELD_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
@@ -1803,10 +1839,45 @@ tables:
 
   - name: USER_PROFILE_DATA_PIVOT_VW
     workstream: "Pivots/Views"
-    status: not_started
+    status: completed
     grain: ["USER_ID", "CLIENT_NAME", "CLIENT_REGION"]
     expected_blocked: []
     accept_diff:
       T4: >
         T4 is very unlikely to map simply as a result of timing.
+    accepted_columns:
+    - column: S1
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S2
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S3
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S4
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S5
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S6
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S7
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S8
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S9
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S10
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+    - column: S11
+      reason: Data in source has been updated to the text `NULL` however this hasn't come through to PROD.
+      where: "uat_value::string = 'NULL'"
+
     # Wide pivot (CRT-6248 row names it USER_PROFILE_DATA_PIVOT_VW; tracker name used here).
