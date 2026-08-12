@@ -43,7 +43,7 @@ csv:
   # Newest run folder per client on each side is auto-discovered. Pin a pair
   # with --redshift-run / --snowflake-run.
   clients:
-    # - uat1
+    - uat1
     - skillsconsulting
     - csc
     - catercare
