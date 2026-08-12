@@ -142,6 +142,25 @@ views:
   # ── Learning ─── 17 views, 17 with grain
   - name: learning_activity_face_to_face_session_signups
     grain: [signup_id, session_id, course_module_id, client_name, region]
+    accepted_columns:
+      - column: signup_created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: signup_last_updated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: session_created_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: session_last_updated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: start_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: finish_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
+      - column: instruction
+        reason: "HTML stripping differs between pipelines"
+      - column: private_instruction
+        reason: "HTML stripping differs between pipelines"
   - name: learning_activity_quiz_submissions
     grain: [id, client_name, region]
     accepted_columns:
@@ -153,6 +172,11 @@ views:
         reason: "HTML stripping differs between pipelines"
   - name: learning_assignment_rule
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: timecreated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timemodified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_costs
     grain: [id, client_name, region]
   - name: learning_course
@@ -160,34 +184,112 @@ views:
     accepted_columns:
       - column: summary
         reason: "HTML stripping differs between pipelines"
+      - column: timecreated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timemodified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_course_face_to_face_session
     grain: [id, session_id, section_id, session_status_code, client_name, region]
+    accepted_columns:
+      - column: timecreated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timemodified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: starttime
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: finishtime
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: instruction
+        reason: "HTML stripping differs between pipelines"
+      - column: private_instruction
+        reason: "HTML stripping differs between pipelines"
   - name: learning_course_section
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: summary
+        reason: "HTML stripping differs between pipelines"
   - name: learning_cpd_plan
     grain: [id, user_id, client_name, region]
   - name: learning_cpd_plan_course
     grain: [id, user_id, type, client_name, region]
+    accepted_columns:
+      - column: timeended
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timedue
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timestarted
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_department_courses
     grain: [id, course_id, client_name, region]
   - name: learning_enrolment
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: timeenroled
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timecreated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timemodified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timestarted
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timeended
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timedue
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: retrain_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: retrain_open_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_enrolment_activity
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: timeenroled
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timecreated
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timemodified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timestarted
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timeended
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: timedue
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: learning_enrolment_completion_history
     grain: [id, course_id, course_enrolment_id, client_name, region]
+    accepted_columns:
+      - column: completed
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: started
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: content
+        reason: "HTML stripping differs between pipelines"
+      - column: context
+        reason: "HTML stripping differs between pipelines"        
   - name: learning_external_training
     grain: [id, client_name, region]
     accepted_columns:
       - column: expiry_date
         reason: "Prod sentinel dates on/before 1971-01-01 are correctly nulled in UAT"
         where: "prod_value::date <= '1971-01-01'"
+      - column: completiondate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
   - name: learning_external_training_template
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: learning_location_courses
     grain: [id, location_id, course_id, client_name, region]
   - name: learning_position_courses
     grain: [id, position_id, course_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
 
   # ── Recruitment ─── 11 views, 9 with grain
   - name: recruitment_candidate
@@ -215,57 +317,174 @@ views:
 
   # ── Performance ─── 26 views, 26 with grain
   - name: epms_ap_competency_behaviour
-    grain: [competency_id, behaviour_level, client_name, region]
+    grain: [id, competency_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
+      - column: deleted_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: performance_360_questions
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal
     grain: [id, current_phase, client_name, region]
+    accepted_columns:
+      - column: definedstartdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: definedenddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: phasestartdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: performancedefinedstartdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: performancedefinedenddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: deleted_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_phase
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: definedstartdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: definedenddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: startdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: enddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_checkpoint
     grain: [section_item_id, client_name, region]
+    accepted_columns:
+      - column: start_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_checkpoint_question_answer
     grain: [section_item_id, checkpoint_question_id, reviewer_id, client_name, region]
+    accepted_columns:
+      - column: answer
+        reason: "HTML stripping differs between pipelines"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_competency
     grain: [section_item_id, client_name, region]
   - name: performance_appraisal_section_development
     grain: [section_item_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_development_action
     grain: [section_item_id, id, client_name, region]
+    accepted_columns:
+      - column: startedatdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: completedatdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: performance_appraisal_section_goal
     grain: [section_item_id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_goal_measure
     grain: [section_item_id, measurement_id, client_name, region]
+    accepted_columns:
+      - column: completedat
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: startedat
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: checkeddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: performance_appraisal_section_potential
     grain: [section_item_id, client_name, region]
   - name: performance_appraisal_section_question360_answer
     grain: [id, section_item_id, client_name, region]
+    accepted_columns:
+      - column: answer
+        reason: "HTML stripping differs between pipelines"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_section_question_answer
     grain: [id, question_id, appraisal_id, client_name, region]
   - name: performance_appraisal_template
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_appraisal_template_phase
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: startdate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: enddate
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: performance_appraisal_template_section
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: start_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_checkpoint
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_checkpoint_questions
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_competency
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_competency_behaviour
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_goals
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_notes
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: content
+        reason: "HTML stripping differs between pipelines"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
   - name: performance_questions
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: performance_rating_system
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: description
+        reason: "HTML stripping differs between pipelines"
 
   # ── Onboarding ─── 7 views, 7 with grain
   - name: onboarding_workflow
