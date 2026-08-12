@@ -299,13 +299,13 @@ views:
 
   # ── Rewards ─── 9 views, 4 with grain
   - name: rewards_awarding
-    grain: []
+    grain: [id, region, client_name]
   - name: rewards_award_config
-    grain: []
+    grain: [id, region, client_name]
   - name: rewards_nominations
-    grain: []
+    grain: [id, award_workflow_nomination_id, nominee_user_id, nominator_user_id, client_region, client_name, created]
   - name: rewards_nomination_workflow
-    grain: []
+    grain: [id, region, client_name]
   - name: rewards_points
     grain: [id, client_name, region]
   - name: rewards_recommendations
@@ -318,7 +318,7 @@ views:
   - name: rewards_votes
     grain: [award_id, voted_user_id, client_name, region]
   - name: rewards_votes_workflow
-    grain: []
+    grain: [id, client_name, region]
 
   # ── Contract ─── 2 views, 0 with grain
   - name: contract_approval
