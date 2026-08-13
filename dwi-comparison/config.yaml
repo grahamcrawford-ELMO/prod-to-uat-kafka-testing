@@ -51,9 +51,6 @@ csv:
     - brams
     - sonder
     - atsichsbrisbane
-    - quantium
-    - staraviation
-    - etcltd
 
   normalisation:
     trim_text: true
@@ -748,6 +745,8 @@ views:
     status: completed
     accepted_columns:
       - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
 
   - name: rewards_nomination_workflow
