@@ -767,6 +767,7 @@ views:
   # ── Rewards ─── 9 views, 4 with grain
   - name: rewards_awarding
     grain: [id, region, client_name]
+    client_with_data: [catercare, achieveaus]
     status: completed
     accepted_columns:
       - column: created
@@ -775,9 +776,12 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: end_date
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
 
   - name: rewards_award_config
     grain: [id, region, client_name]
+    client_with_data: [uat1, skillsconsulting, catercare, achieveaus, brams, sonder]
     status: completed
     accepted_columns:
       - column: created
@@ -789,6 +793,7 @@ views:
 
   - name: rewards_nominations
     grain: [id, award_workflow_nomination_id, nominee_user_id, nominator_user_id, client_region, client_name]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: created
@@ -800,6 +805,7 @@ views:
 
   - name: rewards_nomination_workflow
     grain: [id, region, client_name]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: start_date
@@ -813,6 +819,7 @@ views:
 
   - name: rewards_points
     grain: [id, client_name, region]
+    client_with_data: [uat1, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: created
@@ -824,6 +831,7 @@ views:
 
   - name: rewards_recommendations
     grain: [id, client_name, region]
+    client_with_data: [uat1, skillsconsulting, csc, catercare, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: recommendation
@@ -835,6 +843,7 @@ views:
 
   - name: rewards_trophies
     grain: [id, client_name, region]
+    client_with_data: [uat1, csc, catercare, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: created
@@ -846,6 +855,7 @@ views:
 
   - name: rewards_votes
     grain: [award_id, voted_user_id, client_name, region]
+    client_with_data: [catercare, achieveaus, brams]
     status: completed - needs check on some columns
     accepted_columns:
       - column: created
@@ -865,6 +875,7 @@ views:
 
   - name: rewards_votes_workflow
     grain: [id, client_name, region]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: voting_workflow_start_date
