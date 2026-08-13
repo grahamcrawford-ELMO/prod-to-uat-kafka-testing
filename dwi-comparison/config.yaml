@@ -43,7 +43,7 @@ csv:
   # Newest run folder per client on each side is auto-discovered. Pin a pair
   # with --redshift-run / --snowflake-run.
   clients:
-    # - uat1
+    - uat1
     - skillsconsulting
     - csc
     - catercare
@@ -136,6 +136,17 @@ views:
         reason: "HTML stripping differs between pipelines"
   - name: hrcore_employment_detail
     grain: [id, origin_table, user_id, client_name, region]
+    accepted_columns:
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: rate
+        reason: "Column type changed to NUMBER - floating-point representation difference, data matches"
+      - column: annual_salary
+        reason: "Column type changed to NUMBER - floating-point representation difference, data matches"
+      - column: annual_salary_super
+        reason: "Column type changed to NUMBER - floating-point representation difference, data matches"
   - name: hrcore_kiwisaver
     grain: [id, client_name, region]
     accepted_columns:
@@ -155,6 +166,11 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: hrcore_legal_entity
     grain: [id, user_id, client_name, region]
+    accepted_columns:
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: hrcore_next_of_kin
     grain: [id, client_name, region]
     accepted_columns:
@@ -189,6 +205,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: declaration_date
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: payg_variation
+        reason: "Column type changed to NUMBER - floating-point representation difference, data matches"
   - name: hrcore_termination
     grain: [id, client_name, region]
     accepted_columns:
@@ -642,6 +660,17 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: onboarding_workflow_activity_course
     grain: [id, workflow_activity_id, client_name, region]
+    accepted_columns:
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: time_ended
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: time_started
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
   - name: onboarding_workflow_activity_document
     grain: [workflow_activity_id, client_name, region]
     accepted_columns:
@@ -653,6 +682,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: assignee_full_name
         reason: "HTML stripping differs between pipelines"
+      - column: expire_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: onboarding_workflow_activity_email
     grain: [workflow_activity_id, email_id, client_name, region]
     accepted_columns:
@@ -675,6 +706,8 @@ views:
       - column: due_date
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: assignee_full_name
+        reason: "HTML stripping differs between pipelines"
+      - column: description
         reason: "HTML stripping differs between pipelines"
 
   # ── Succession ─── 6 views, 0 with grain
