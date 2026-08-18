@@ -416,27 +416,70 @@ views:
 
   - name: recruitment_job_ad
     grain: [id, category, location, client_name, region]
+    status: completed
+    accepted_columns:
+      - column: start_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
+      - column: skills_and_experiences
+        reason: "HTML stripping differs between pipelines"
+      - column: introduction
+        reason: "HTML stripping differs between pipelines"
+      - column: short_description
+        reason: "HTML stripping differs between pipelines"
+      - column: salary_from
+        reason: "decimal place rounding"
 
   - name: recruitment_job_application
     grain: [id, client_name, region]
+    status: completed
+    accepted_columns:
+      - column: created_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: submit_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: time_to_hire_days
+        reason: "Each of these is one day out, based on timezone rounding"
+      - column: time_to_hire_hours
+        reason: "Each of these is one hour out, based on timezone rounding"
 
   - name: recruitment_job_application_question_answer
     grain: [job_application_id, answer_id, client_name, region]
+    status: not_started
 
   - name: recruitment_job_interview
     grain: [id, interview_assignment_id, client_name, region]
+    status: in_progress
+    accepted_columns:
+      - column: modified_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: due_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_time
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: notified_at
+        reason: This column in Redshift is still in unix epoch. Snowflake is actually a date.
 
   - name: recruitment_job_offer
     grain: [id, client_name, region]
+    status: not_started
 
   - name: recruitment_requisition
     grain: [id, client_name, region]
+    status: not_started
 
   - name: recruitment_requisition_question_answer
     grain: [requisition_id, question_id, client_name, region]
+    status: not_started
 
   - name: recruitment_talent_pool
     grain: [id, candidate_id, is_external, client_name, region]
+    status: not_started
 
   # ── Performance ─── 26 views, 26 with grain
   - name: epms_ap_competency_behaviour
@@ -737,33 +780,45 @@ views:
   # ── Rewards ─── 9 views, 4 with grain
   - name: rewards_awarding
     grain: [id, region, client_name]
+    client_with_data: [catercare, achieveaus]
     status: completed
     accepted_columns:
       - column: created
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: modified
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
 
   - name: rewards_award_config
     grain: [id, region, client_name]
+    client_with_data: [uat1, skillsconsulting, catercare, achieveaus, brams, sonder]
     status: completed
     accepted_columns:
       - column: created
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: modified
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
 
   - name: rewards_nominations
     grain: [id, award_workflow_nomination_id, nominee_user_id, nominator_user_id, client_region, client_name]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: created
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: modified
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: comment
+        reason: "HTML stripping differs between pipelines"
 
   - name: rewards_nomination_workflow
     grain: [id, region, client_name]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: start_date
@@ -777,6 +832,7 @@ views:
 
   - name: rewards_points
     grain: [id, client_name, region]
+    client_with_data: [uat1, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: created
@@ -788,28 +844,51 @@ views:
 
   - name: rewards_recommendations
     grain: [id, client_name, region]
+    client_with_data: [uat1, skillsconsulting, csc, catercare, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: recommendation
+        reason: "HTML stripping differs between pipelines"
+      - column: description
         reason: "HTML stripping differs between pipelines"
       - column: date_time
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
 
   - name: rewards_trophies
     grain: [id, client_name, region]
+    client_with_data: [uat1, csc, catercare, achieveaus, brams, atsichsbrisbane]
     status: completed
     accepted_columns:
       - column: created
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: updated
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: description
+        reason: "HTML stripping differs between pipelines"
 
   - name: rewards_votes
     grain: [award_id, voted_user_id, client_name, region]
-    status: not_started
+    client_with_data: [catercare, achieveaus, brams]
+    status: completed - needs check on some columns
+    accepted_columns:
+      - column: created
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: comment
+        reason: 
+      - column: award_workflow_voting_id
+        reason: 
+      - column: voter_user_id
+        reason: 
+      - column: team_name
+        reason: 
+      - column: is_deleted
+        reason: 
 
   - name: rewards_votes_workflow
     grain: [id, client_name, region]
+    client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
       - column: voting_workflow_start_date
