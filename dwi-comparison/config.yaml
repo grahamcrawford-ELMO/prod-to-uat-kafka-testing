@@ -90,6 +90,15 @@ views:
   # ── Core / shared ─── 6 views, 2 with grain
   - name: date_effectivity
     grain: [id, client_name, region]
+    accepted_columns:
+      - column: effective_from
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: effective_to
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: created_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: user_department
     grain: [id, client_name, region]
     accepted_columns:
@@ -99,16 +108,6 @@ views:
         reason: "LISTAGG of multiple competencies - order is not guaranteed"
       - column: development
         reason: "LISTAGG of multiple development items - order is not guaranteed"
-      - column: effective_from
-        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
-      - column: effective_to
-        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
-      - column: modified_at
-        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
-      - column: created_at
-        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
-      - column: description
-        reason: "HTML stripping differs between pipelines"
   - name: user_location
     grain: [id, client_name, region]
     accepted_columns:
