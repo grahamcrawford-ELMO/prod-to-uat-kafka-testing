@@ -126,6 +126,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: goals
         reason: "HTML stripping differs between pipelines"
+      - column: competencies
+        reason: "HTML stripping differs between pipelines"
       
   - name: work_pattern
     grain: [assigment_id, user_id, client_name, region]
@@ -430,13 +432,30 @@ views:
 
   # ── Recruitment ─── 11 views, 9 with grain
   - name: recruitment_candidate
-    grain: [user_id, role_id_code, phone_home, mobile, client_name, client_region]
+    grain: [user_id, role_id_code, phone_home, mobile, client_name, region]
+    accepted_columns:
+      - column: created 
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: last_login
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: expiry_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: modified
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: start_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: last_logout
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: end_date
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
 
   - name: recruitment_candidate_skills
-    grain: [id, user_id, title, client_name, client_region]
+    grain: [id, user_id, title, client_name, region]
 
   - name: recruitment_career_portal
     grain: [id, job_ad_id, client_name, region]
+    accept_diff:
+      C3: "job_ad_id doesnt have data in TMS, so UAT is correct"
 
   - name: recruitment_job_ad
     grain: [id, category, location, client_name, region]
@@ -456,6 +475,8 @@ views:
         reason: "HTML stripping differs between pipelines"
       - column: salary_from
         reason: "decimal place rounding"
+      - column: salary_to
+        reason: "decimal place rounding"
 
   - name: recruitment_job_application
     grain: [id, client_name, region]
@@ -473,11 +494,13 @@ views:
         reason: "Each of these is one hour out, based on timezone rounding"
 
   - name: recruitment_job_application_question_answer
-    grain: [job_application_id, category, question,answer, client_name, client_region]
-    status: not_started
+    grain: [job_application_id, category, question, answer, client_name, region]
+    status: completed
+    accept_diff:
+      C3: "question/answer are free text and part of the grain (no surrogate id available) - Redshift and Snowflake normalise quotes/whitespace/newlines in this text differently, so a subset of rows fail to key-match even though they're the same record. Confirmed by comparing samples: e.g. same job_application_id+category, answer differs only by smart-quote vs straight-quote and \\n vs \\n\\n. C4 still checks the matched subset for genuine column diffs."
 
   - name: recruitment_job_interview
-    grain: [id, requisition_id, interviewer_user_id, client_name, client_region]
+    grain: [id, requisition_id, interviewer_user_id, client_name, region]
     status: in_progress
     accepted_columns:
       - column: modified_at
@@ -501,6 +524,8 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: salary_offer
         reason: "decimal place rounding"
+      - column: user_message
+        reason: "HTML stripping differs between pipelines"
 
   - name: recruitment_requisition
     grain: [id, client_name, region]
@@ -520,16 +545,20 @@ views:
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: on_hold_date
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
+      - column: on_hold_at
+        reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
       - column: message
         reason: "HTML stripping differs between pipelines"
       - column: shared_users
         reason: "HTML stripping differs between pipelines"
 
   - name: recruitment_requisition_question_answer
-    grain: [req, qid, client_name, client_region]
+    grain: [req, qid, client_name, region]
     status: not_started
     accepted_columns:
       - column: question
+        reason: "HTML stripping differs between pipelines"
+      - column: answer
         reason: "HTML stripping differs between pipelines"
 
   - name: recruitment_talent_pool
@@ -863,7 +892,7 @@ views:
         reason: "HTML stripping differs between pipelines"
 
   - name: rewards_nominations
-    grain: [id, award_workflow_nomination_id, nominee_user_id, nominator_user_id, client_region, client_name]
+    grain: [id, award_workflow_nomination_id, nominee_user_id, nominator_user_id, region, client_name]
     client_with_data: [csc, catercare, achieveaus, brams]
     status: completed
     accepted_columns:
@@ -979,14 +1008,14 @@ views:
   - name: system_login_history
     grain: [id, client_name, region]
   - name: system_security_profiles
-    grain: [id, client_name, region]
+    grain: [id, user_id, client_name, region]
     accepted_columns:
       - column: description
         reason: "HTML stripping differs between pipelines"
       - column: updated_time
         reason: "Column type changed to TIMESTAMP_TZ - format-only difference, data matches"
   - name: system_tasks
-    grain: [id, client_name, region]
+    grain: [id, user_id, client_name, region]
     accepted_columns:
       - column: description
         reason: "HTML stripping differs between pipelines"
